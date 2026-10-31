@@ -80,6 +80,51 @@
     });
   });
 
+
+
+  // Osobne okno gwarancji SYSTEM ELITE — znajduje się poza tabelą porównawczą.
+  const guaranteeDialog = document.querySelector("#guarantee-dialog");
+  const guaranteeTrigger = document.querySelector(".guarantee-trigger");
+  const guaranteeClose = document.querySelector("[data-close-guarantee]");
+
+  guaranteeTrigger?.addEventListener("click", () => {
+    if (guaranteeDialog && typeof guaranteeDialog.showModal === "function") {
+      guaranteeDialog.showModal();
+    }
+  });
+  guaranteeClose?.addEventListener("click", () => guaranteeDialog?.close());
+  guaranteeDialog?.addEventListener("click", (event) => {
+    if (event.target === guaranteeDialog) guaranteeDialog.close();
+  });
+
+  // Subtelne animacje pojawiania się treści podczas przewijania strony.
+  const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const revealSelector = [
+      ".hero-copy", ".hero-plan-select", ".hero-plan-option", ".section-heading",
+      ".price-card", ".steps-list li", ".delivery-card", ".metamorphosis-board",
+      ".faq-list details", ".contact-card", ".contact-page > .eyebrow", ".contact-page > h1",
+      ".contact-page > .contact-lead"
+    ].join(",");
+    const revealItems = Array.from(document.querySelectorAll(revealSelector));
+    if (revealItems.length) {
+      revealItems.forEach((item, index) => {
+        item.setAttribute("data-reveal", "");
+        item.style.setProperty("--reveal-delay", `${Math.min(index % 4, 3) * 65}ms`);
+      });
+      document.documentElement.classList.add("motion-enabled");
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: "0px 0px -36px 0px" });
+      revealItems.forEach((item) => revealObserver.observe(item));
+    }
+  }
+
   const currentYear = document.querySelector("#current-year");
   if (currentYear) currentYear.textContent = String(new Date().getFullYear());
 

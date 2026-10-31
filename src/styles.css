@@ -633,110 +633,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
 }
 
 
-/* SYSTEM ELITE — goal guarantee badge and comparison explainer */
-.elite-guarantee-badge {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  margin-top: 28px;
-  padding: 12px 17px 13px;
-  border: 1px solid rgba(72, 125, 190, .62);
-  border-left: 3px solid #3978bd;
-  border-radius: 3px;
-  background: linear-gradient(100deg, rgba(25, 61, 101, .42), rgba(16, 29, 45, .22));
-  box-shadow: 0 8px 28px rgba(0,0,0,.16);
-}
-.elite-guarantee-kicker {
-  color: #8eb8e5;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: .17em;
-}
-.elite-guarantee-title {
-  color: #f2f6fb;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: .095em;
-}
-.guarantee-row th { color: #f0f2f5 !important; }
-.guarantee-available {
-  display: inline-block;
-  margin-right: 9px;
-  color: #a9c9ec;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .12em;
-}
-.guarantee-info {
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-}
-.guarantee-info summary {
-  display: inline-grid;
-  width: 23px;
-  height: 23px;
-  place-items: center;
-  border: 1px solid #527eac;
-  border-radius: 50%;
-  background: rgba(36, 76, 119, .22);
-  color: #b9d5f2;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1;
-  list-style: none;
-  transition: background .2s ease, color .2s ease, border-color .2s ease;
-}
-.guarantee-info summary::-webkit-details-marker { display: none; }
-.guarantee-info summary:hover, .guarantee-info[open] summary {
-  border-color: #8eb8e5;
-  background: #234b76;
-  color: #fff;
-}
-.guarantee-panel {
-  position: absolute;
-  z-index: 20;
-  top: calc(100% + 12px);
-  right: 0;
-  width: min(360px, calc(100vw - 48px));
-  padding: 20px;
-  border: 1px solid #355779;
-  border-radius: 5px;
-  background: #101923;
-  box-shadow: 0 18px 48px rgba(0,0,0,.55);
-  color: #e7edf4;
-  white-space: normal;
-}
-.guarantee-panel strong {
-  display: block;
-  margin-bottom: 12px;
-  color: #c3ddf8;
-  font-size: 11px;
-  line-height: 1.5;
-  letter-spacing: .04em;
-}
-.guarantee-panel p {
-  margin: 0 0 10px;
-  color: #c0cbd7;
-  font-size: 10px;
-  line-height: 1.75;
-}
-.guarantee-panel p:last-child { margin-bottom: 0; }
-.guarantee-panel .guarantee-conditions {
-  padding-top: 10px;
-  border-top: 1px solid rgba(142,184,229,.22);
-  color: #91a5ba;
-  font-size: 9px;
-}
-@media (max-width: 760px) {
-  .elite-guarantee-badge { margin-top: 22px; padding: 11px 14px 12px; }
-  .elite-guarantee-title { font-size: 10px; }
-  .guarantee-panel { right: -8px; width: min(320px, calc(100vw - 52px)); padding: 16px; }
-}
-
-
 /* Nawigacja do osobnej oferty planu indywidualnego */
 .individual-plan-link {
   display: inline-flex; align-items: center; justify-content: center; gap: 9px;
@@ -800,35 +696,185 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
 @media (max-width: 600px) { .individual-page .individual-hero h1 { font-size: clamp(53px,14vw,78px); } .individual-page .individual-lead { font-size: 12px; } .individual-page .duration-options { gap: 7px; } .individual-page .duration-option span { min-height: 62px; font-size: 23px; } .individual-page .order-form { grid-template-columns: 1fr; } .individual-page .form-field.full, .individual-page .form-consent { grid-column: auto; } }
 
 
-/* Gwarancja osiągnięcia celu — wyróżnik karty SYSTEM ELITE */
-.hero-plan-guarantee {
-  align-self: flex-start;
+
+
+/* ----------------------------------------------------------
+   SYSTEM FORMY — dopracowanie nawigacji, wyróżnień i ruchu
+   ---------------------------------------------------------- */
+.individual-plan-link { gap: 0; }
+.individual-plan-link span { display: none; }
+
+/* Karta PRO: odsunięcie opisu od etykiety POPULARNY WYBÓR. */
+.price-card-featured .card-meta {
+  min-height: 44px;
+  padding-top: 17px;
+}
+
+/* Narożna wstęga gwarancji w karcie SYSTEM ELITE — tekst pozostaje w całości czytelny na telefonie. */
+.hero-plan-option-elite { overflow: hidden; }
+.hero-plan-option-elite::before {
+  content: "GWARANCJA OSIĄGNIĘCIA CELU";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  width: min(225px, 75%);
+  padding: 7px 8px 7px 20px;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
+  border-bottom: 1px solid rgba(157, 190, 224, .42);
+  background: linear-gradient(100deg, #173657, #234d78);
+  color: #f5f8fc;
+  text-align: center;
+  font-size: 6.5px;
+  line-height: 1.25;
+  font-weight: 900;
+  letter-spacing: .075em;
+  box-shadow: 0 4px 14px rgba(0,0,0,.32);
+  pointer-events: none;
+}
+.hero-plan-option-elite .hero-plan-top span:last-child { visibility: hidden; }
+
+/* Przyciski Hero. */
+.hero-actions { align-items: center; gap: 16px 22px; }
+.hero-actions .button { min-width: 205px; }
+.hero-proof-link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  margin: 13px 0 -14px;
-  padding: 6px 9px;
-  border: 1px solid rgba(104, 151, 210, .62);
-  background: linear-gradient(100deg, #173657 0%, #10263e 100%);
-  color: #f2f5fa;
-  font-size: 7px;
-  line-height: 1.2;
-  font-weight: 850;
-  letter-spacing: .105em;
-  text-transform: uppercase;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, .2);
+  gap: 10px;
+  min-height: 48px;
+  color: #c6c6c0;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  transition: color .2s ease, transform .2s ease;
 }
-.hero-plan-guarantee span {
-  color: #a9c9ef;
+.hero-proof-link span { color: var(--accent); font-size: 15px; }
+.hero-proof-link:hover { color: var(--accent); transform: translateY(-2px); }
+
+/* Osobne, niezależne okno gwarancji — poza tabelą porównawczą. */
+.guarantee-trigger {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #527eac;
+  border-radius: 50%;
+  background: rgba(36,76,119,.22);
+  color: #b9d5f2;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+  vertical-align: middle;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
 }
-.hero-plan-option-elite h3 {
-  margin-top: 26px;
+.guarantee-trigger:hover { transform: scale(1.08); border-color: #8eb8e5; background: #234b76; color: #fff; }
+.guarantee-dialog {
+  width: min(620px, calc(100% - 32px));
+  max-width: 620px;
+  max-height: min(82vh, 760px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid #355779;
+  border-radius: 4px;
+  background: #101923;
+  color: #e7edf4;
+  box-shadow: 0 24px 80px rgba(0,0,0,.65);
 }
+.guarantee-dialog::backdrop { background: rgba(0,0,0,.76); backdrop-filter: blur(5px); }
+.guarantee-dialog-inner { position: relative; padding: clamp(24px, 5vw, 42px); }
+.guarantee-dialog-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(177,207,237,.34);
+  background: transparent;
+  color: #dbe8f6;
+  cursor: pointer;
+  font-size: 25px;
+  line-height: 1;
+  transition: background .2s ease, color .2s ease;
+}
+.guarantee-dialog-close:hover { background: #234b76; color: #fff; }
+.guarantee-dialog .eyebrow { padding-right: 42px; color: #a9c9ec; }
+.guarantee-dialog h2 { margin: 22px 0 21px; color: #f2f6fb; font-size: clamp(42px, 7vw, 64px); line-height: .9; }
+.guarantee-dialog h2 span { color: #9fc4ec; }
+.guarantee-dialog p:not(.eyebrow) { margin: 0 0 14px; color: #c0cbd7; font-size: 11px; line-height: 1.9; }
+.guarantee-dialog .guarantee-dialog-conditions {
+  margin-top: 22px !important;
+  padding-top: 17px;
+  border-top: 1px solid rgba(142,184,229,.22);
+  color: #91a5ba !important;
+  font-size: 9px !important;
+}
+
+/* Miejsce na prawdziwe zdjęcia metamorfoz — bez fikcyjnych opinii i efektów. */
+.metamorphoses { padding-top: 105px; padding-bottom: 105px; }
+.metamorphosis-board {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(170px,.75fr) minmax(0,1.25fr);
+  min-height: 275px;
+  overflow: hidden;
+  border: 1px solid #373733;
+  background: linear-gradient(115deg, #111 0%, #151512 58%, #0b0b0b 100%);
+}
+.metamorphosis-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #30302c;
+  color: rgba(231,200,75,.18);
+  font: 900 clamp(100px, 17vw, 220px)/.8 var(--display);
+  letter-spacing: -.06em;
+}
+.metamorphosis-mark span { margin-top: 15px; color: #77776e; font: 800 8px/1 var(--font); letter-spacing: .22em; }
+.metamorphosis-copy { align-self: center; max-width: 610px; padding: 35px clamp(24px, 5vw, 58px); }
+.metamorphosis-kicker { margin: 0 0 14px; color: var(--accent); font-size: 8px; font-weight: 900; letter-spacing: .16em; }
+.metamorphosis-copy h3 { margin: 0 0 15px; font-size: clamp(36px, 5vw, 58px); line-height: .9; }
+.metamorphosis-copy h3 span { color: #999991; }
+.metamorphosis-copy > p:last-child { max-width: 510px; margin: 0; color: #a4a49e; font-size: 10px; line-height: 1.9; }
+
+/* Kontakt: osobna podstrona w tym samym stylu wizualnym. */
+.contact-page { min-height: calc(100vh - 220px); padding-top: clamp(76px, 10vw, 130px); padding-bottom: 100px; }
+.contact-page h1 { max-width: 850px; margin: 22px 0; font-size: clamp(62px, 9vw, 112px); line-height: .86; }
+.contact-page h1 span { color: var(--accent); }
+.contact-lead { max-width: 650px; margin: 0; color: #aaa9a2; font-size: 12px; line-height: 1.9; }
+.contact-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin-top: 48px; }
+.contact-card { display: flex; min-width: 0; min-height: 190px; flex-direction: column; justify-content: space-between; padding: 25px 22px; border: 1px solid #353531; background: #101010; transition: transform .25s ease,border-color .25s ease,background .25s ease; }
+.contact-card:hover { transform: translateY(-4px); border-color: var(--accent); background: #151510; }
+.contact-card-label { margin: 0 0 32px; color: #85857e; font-size: 8px; font-weight: 900; letter-spacing: .15em; }
+.contact-card h2 { margin: 0 0 12px; font-size: clamp(26px,3vw,34px); }
+.contact-card a { overflow-wrap: anywhere; color: var(--accent); font-size: 10px; font-weight: 800; line-height: 1.6; }
+.contact-card a:hover { color: #fff; }
+.contact-footnote { margin: 28px 0 0; color: #777770; font-size: 9px; line-height: 1.8; }
+
+/* Delikatne animacje wejścia i hoverów. Respektują ustawienie ograniczenia ruchu. */
+.motion-enabled [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s ease var(--reveal-delay, 0ms), transform .7s cubic-bezier(.2,.7,.2,1) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.motion-enabled [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+.hero-plan-option, .price-card, .delivery-card, .contact-card { transition-timing-function: cubic-bezier(.2,.7,.2,1); }
 @media (max-width: 760px) {
-  .hero-plan-guarantee {
-    margin-top: 12px;
-    margin-bottom: -15px;
-    padding: 6px 8px;
-    font-size: 6.5px;
-  }
+  .hero-actions { align-items: stretch; flex-direction: column; gap: 12px; margin-top: 24px; }
+  .hero-actions .button { width: 100%; min-width: 0; }
+  .hero-proof-link { min-height: 42px; }
+  .hero-plan-option-elite::before { width: min(225px, 75%); padding: 6px 7px 6px 18px; font-size: 6px; }
+  .metamorphoses { padding-top: 75px; padding-bottom: 75px; }
+  .metamorphosis-board { grid-template-columns: 1fr; }
+  .metamorphosis-mark { display: none; }
+  .metamorphosis-copy { padding: 30px 24px; }
+  .contact-page h1 { font-size: clamp(57px,14vw,82px); }
+  .contact-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 34px; }
+  .contact-card { min-height: 150px; }
+  .guarantee-dialog-inner { padding: 27px 21px; }
 }
