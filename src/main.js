@@ -1,6 +1,95 @@
-const menu=document.querySelector('.menu-toggle');const nav=document.querySelector('.nav');menu?.addEventListener('click',()=>nav.classList.toggle('open'));nav?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
-let current=0;const slides=[...document.querySelectorAll('.review-slide')];const dots=[...document.querySelectorAll('#reviewDots button')];function showReview(n){current=(n+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle('active',i===current));dots.forEach((d,i)=>d.classList.toggle('on',i===current));}document.querySelector('#prevReview')?.addEventListener('click',()=>showReview(current-1));document.querySelector('#nextReview')?.addEventListener('click',()=>showReview(current+1));dots.forEach((d,i)=>d.addEventListener('click',()=>showReview(i)));
-const toast=document.querySelector('#toast');function notify(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3200)}
-document.querySelectorAll('.buy').forEach(button=>button.addEventListener('click',async()=>{const product=button.dataset.product;button.disabled=true;const old=button.textContent;button.textContent='CHWILA...';try{const response=await fetch('/api/create-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Nie udało się rozpocząć płatności.');if(data.url)location.href=data.url;else throw new Error('Brak adresu płatności.');}catch(e){notify(e.message||'Płatności zostaną uruchomione po konfiguracji Stripe.');button.disabled=false;button.textContent=old;}}));
+(() => {
+  "use strict";
 
-const paymentStatus=new URLSearchParams(location.search).get('payment');if(paymentStatus==='success')notify('Płatność została zakończona. Sprawdź swoją pocztę e-mail.');else if(paymentStatus==='cancelled')notify('Płatność została anulowana. Możesz wrócić do wyboru pakietu.');if(paymentStatus)history.replaceState({},'',location.pathname+location.hash);
+  const menuButton = document.querySelector(".menu-toggle");
+  const navigation = document.querySelector(".main-nav");
+
+  function closeMenu() {
+    if (!menuButton || !navigation) return;
+    navigation.classList.remove("open");
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "Otwórz menu");
+    document.body.classList.remove("menu-open");
+  }
+
+  menuButton?.addEventListener("click", () => {
+    const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+    menuButton.setAttribute("aria-expanded", String(!isOpen));
+    menuButton.setAttribute("aria-label", isOpen ? "Otwórz menu" : "Zamknij menu");
+    navigation?.classList.toggle("open", !isOpen);
+    document.body.classList.toggle("menu-open", !isOpen);
+  });
+
+  navigation?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMenu();
+  });
+
+  const toast = document.querySelector("#site-toast");
+  let toastTimeout;
+  function notify(message) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.add("show");
+    window.clearTimeout(toastTimeout);
+    toastTimeout = window.setTimeout(() => toast.classList.remove("show"), 5200);
+  }
+
+  // Checkout is deliberately disabled until Stripe payment confirmation and
+  // package fulfilment (START delivery / PRO-ELITE onboarding) are connected.
+  document.querySelectorAll(".buy-button[data-package]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const packageKey = button.dataset.package;
+      if (!packageKey) return;
+
+      const originalLabel = button.innerHTML;
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      button.textContent = "SPRAWDZAM...";
+
+      try {
+        const response = await fetch("/api/create-checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify({ package: packageKey })
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data.error || "Zakup online nie jest jeszcze dostępny.");
+        }
+        if (typeof data.url !== "string") {
+          throw new Error("Nie otrzymano bezpiecznego adresu płatności.");
+        }
+
+        const checkoutUrl = new URL(data.url);
+        if (checkoutUrl.protocol !== "https:" || checkoutUrl.hostname !== "checkout.stripe.com") {
+          throw new Error("Otrzymano nieprawidłowy adres płatności.");
+        }
+        window.location.assign(checkoutUrl.href);
+      } catch (error) {
+        notify(error instanceof Error ? error.message : "Nie udało się rozpocząć zakupu.");
+      } finally {
+        button.disabled = false;
+        button.removeAttribute("aria-busy");
+        button.innerHTML = originalLabel;
+      }
+    });
+  });
+
+  const currentYear = document.querySelector("#current-year");
+  if (currentYear) currentYear.textContent = String(new Date().getFullYear());
+
+  const paymentStatus = new URLSearchParams(window.location.search).get("payment");
+  if (paymentStatus === "success") {
+    notify("Płatność została zakończona. Informacje o realizacji zamówienia zostaną przekazane zgodnie z wybranym pakietem.");
+  } else if (paymentStatus === "cancelled") {
+    notify("Płatność została anulowana. Możesz wrócić do wyboru pakietu.");
+  }
+  if (paymentStatus) {
+    window.history.replaceState({}, "", `${window.location.pathname}${window.location.hash}`);
+  }
+})();
