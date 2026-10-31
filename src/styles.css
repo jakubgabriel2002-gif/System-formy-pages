@@ -798,3 +798,37 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
 .individual-page .individual-back { display: inline-flex; margin-top: 25px; color: #aaa99f; font-size: 9px; font-weight: 800; letter-spacing: .12em; }
 @media (max-width: 900px) { .individual-page .individual-pricing { grid-template-columns: 1fr; } .individual-page .individual-card { padding: 27px 24px; } }
 @media (max-width: 600px) { .individual-page .individual-hero h1 { font-size: clamp(53px,14vw,78px); } .individual-page .individual-lead { font-size: 12px; } .individual-page .duration-options { gap: 7px; } .individual-page .duration-option span { min-height: 62px; font-size: 23px; } .individual-page .order-form { grid-template-columns: 1fr; } .individual-page .form-field.full, .individual-page .form-consent { grid-column: auto; } }
+
+
+/* Gwarancja osiągnięcia celu — wyróżnik karty SYSTEM ELITE */
+.hero-plan-guarantee {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 13px 0 -14px;
+  padding: 6px 9px;
+  border: 1px solid rgba(104, 151, 210, .62);
+  background: linear-gradient(100deg, #173657 0%, #10263e 100%);
+  color: #f2f5fa;
+  font-size: 7px;
+  line-height: 1.2;
+  font-weight: 850;
+  letter-spacing: .105em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .2);
+}
+.hero-plan-guarantee span {
+  color: #a9c9ef;
+}
+.hero-plan-option-elite h3 {
+  margin-top: 26px;
+}
+@media (max-width: 760px) {
+  .hero-plan-guarantee {
+    margin-top: 12px;
+    margin-bottom: -15px;
+    padding: 6px 8px;
+    font-size: 6.5px;
+  }
+}
