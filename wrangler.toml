@@ -1,0 +1,6 @@
+name = "system-formy-public-site"
+compatibility_date = "2026-10-31"
+pages_build_output_dir = "."
+
+# Publiczny, niezależny serwis sprzedażowy. Nie zawiera logowania ani panelu aplikacji.
+# Stripe Price IDs i klucz API ustaw jako sekrety/zmienne w Cloudflare Pages.
