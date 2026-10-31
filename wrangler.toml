@@ -1,6 +1,6 @@
-name = "system-formy-public-site"
+name = "system-formy-pages"
 compatibility_date = "2026-10-31"
 pages_build_output_dir = "."
 
-# Publiczny, niezależny serwis sprzedażowy. Nie zawiera logowania ani panelu aplikacji.
-# Stripe Price IDs i klucz API ustaw jako sekrety/zmienne w Cloudflare Pages.
+# Publiczna strona sprzedażowa SYSTEM FORMY.
+# Nie włączaj checkoutu przed wdrożeniem webhooka i realizacji zamówień.
