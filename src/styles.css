@@ -631,3 +631,107 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
   .hero-plan-option h3 { font-size: 26px; }
   .hero-plan-bottom strong { font-size: 30px; }
 }
+
+
+/* SYSTEM ELITE — goal guarantee badge and comparison explainer */
+.elite-guarantee-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 28px;
+  padding: 12px 17px 13px;
+  border: 1px solid rgba(72, 125, 190, .62);
+  border-left: 3px solid #3978bd;
+  border-radius: 3px;
+  background: linear-gradient(100deg, rgba(25, 61, 101, .42), rgba(16, 29, 45, .22));
+  box-shadow: 0 8px 28px rgba(0,0,0,.16);
+}
+.elite-guarantee-kicker {
+  color: #8eb8e5;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .17em;
+}
+.elite-guarantee-title {
+  color: #f2f6fb;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .095em;
+}
+.guarantee-row th { color: #f0f2f5 !important; }
+.guarantee-available {
+  display: inline-block;
+  margin-right: 9px;
+  color: #a9c9ec;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+.guarantee-info {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.guarantee-info summary {
+  display: inline-grid;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border: 1px solid #527eac;
+  border-radius: 50%;
+  background: rgba(36, 76, 119, .22);
+  color: #b9d5f2;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  list-style: none;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.guarantee-info summary::-webkit-details-marker { display: none; }
+.guarantee-info summary:hover, .guarantee-info[open] summary {
+  border-color: #8eb8e5;
+  background: #234b76;
+  color: #fff;
+}
+.guarantee-panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 12px);
+  right: 0;
+  width: min(360px, calc(100vw - 48px));
+  padding: 20px;
+  border: 1px solid #355779;
+  border-radius: 5px;
+  background: #101923;
+  box-shadow: 0 18px 48px rgba(0,0,0,.55);
+  color: #e7edf4;
+  white-space: normal;
+}
+.guarantee-panel strong {
+  display: block;
+  margin-bottom: 12px;
+  color: #c3ddf8;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: .04em;
+}
+.guarantee-panel p {
+  margin: 0 0 10px;
+  color: #c0cbd7;
+  font-size: 10px;
+  line-height: 1.75;
+}
+.guarantee-panel p:last-child { margin-bottom: 0; }
+.guarantee-panel .guarantee-conditions {
+  padding-top: 10px;
+  border-top: 1px solid rgba(142,184,229,.22);
+  color: #91a5ba;
+  font-size: 9px;
+}
+@media (max-width: 760px) {
+  .elite-guarantee-badge { margin-top: 22px; padding: 11px 14px 12px; }
+  .elite-guarantee-title { font-size: 10px; }
+  .guarantee-panel { right: -8px; width: min(320px, calc(100vw - 52px)); padding: 16px; }
+}
