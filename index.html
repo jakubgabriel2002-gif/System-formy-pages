@@ -33,7 +33,7 @@
       <a href="#porownanie">PORÓWNANIE</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="header-cta" href="#oferta">POZNAJ PAKIETY <span aria-hidden="true">↗</span></a>
+    <a class="header-cta" href="#wybierz-plan">WYBIERZ PLAN</a>
   </header>
 
   <main id="main">
@@ -42,15 +42,39 @@
         <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / WSPÓŁPRACA TRENINGOWA</p>
         <h1 id="hero-title">ZBUDUJ SWOJĄ FORMĘ.<br><span>DZIAŁAJ WEDŁUG SYSTEMU.</span></h1>
         <p class="hero-lead">Trening bez przypadku. Jasny plan, konkretne działanie i system, który pomoże Ci konsekwentnie realizować swoje cele.</p>
-        <div class="hero-actions">
-          <a class="button button-light" href="#oferta">POZNAJ NASZE PAKIETY <span aria-hidden="true">↘</span></a>
-          <span class="hero-caption">3 POZIOMY WSPARCIA <i></i> JEDEN KIERUNEK: PROGRES</span>
-        </div>
       </div>
-      <div class="hero-principles" aria-label="Założenia SYSTEMU FORMY">
-        <div><span>01</span><strong>PLAN</strong><small>Wiesz, co robić.</small></div>
-        <div><span>02</span><strong>STRUKTURA</strong><small>Działasz według zasad.</small></div>
-        <div><span>03</span><strong>PROGRES</strong><small>Monitorujesz postępy.</small></div>
+
+      <div class="hero-plan-select" id="wybierz-plan" aria-labelledby="hero-plan-title">
+        <div class="hero-plan-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> WYBÓR WSPÓŁPRACY</p>
+            <h2 id="hero-plan-title">WYBIERZ SWÓJ PLAN</h2>
+          </div>
+          <p>Wybierz poziom wsparcia dopasowany do swojego celu i sposobu działania.</p>
+        </div>
+
+        <div class="hero-plan-grid">
+          <a class="hero-plan-option" href="#pakiet-start" aria-label="Zobacz pakiet SYSTEM START za 99 zł">
+            <div class="hero-plan-top"><span>PAKIET 01</span><span>DO SAMODZIELNEJ REALIZACJI</span></div>
+            <h3>SYSTEM START</h3>
+            <p>Gotowy plan treningowy do domu lub na siłownię.</p>
+            <div class="hero-plan-bottom"><strong>99 <small>zł</small></strong><span>POZNAJ PAKIET</span></div>
+          </a>
+
+          <a class="hero-plan-option hero-plan-option-featured" href="#pakiet-pro" aria-label="Zobacz pakiet SYSTEM PRO za 699 zł">
+            <div class="hero-plan-top"><span>PAKIET 02</span><span class="hero-plan-badge">POPULARNY WYBÓR</span></div>
+            <h3>SYSTEM PRO</h3>
+            <p>Indywidualny plan i kontrola postępów przez 8 tygodni.</p>
+            <div class="hero-plan-bottom"><strong>699 <small>zł</small></strong><span>POZNAJ PAKIET</span></div>
+          </a>
+
+          <a class="hero-plan-option" href="#pakiet-elite" aria-label="Zobacz pakiet SYSTEM ELITE za 1499 zł">
+            <div class="hero-plan-top"><span>PAKIET 03</span><span>12 TYGODNI WSPÓŁPRACY</span></div>
+            <h3>SYSTEM ELITE</h3>
+            <p>Kompleksowe wsparcie, cotygodniowa analiza i korekty.</p>
+            <div class="hero-plan-bottom"><strong>1499 <small>zł</small></strong><span>POZNAJ PAKIET</span></div>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -60,13 +84,13 @@
       <div class="section-heading">
         <div>
           <p class="eyebrow"><span class="eyebrow-line"></span> WYBIERZ POZIOM WSPARCIA</p>
-          <h2 id="offer-title">WYBIERZ SWÓJ<br><span>SYSTEM.</span></h2>
+          <h2 id="offer-title">POZNAJ SZCZEGÓŁY<br><span>PAKIETÓW.</span></h2>
         </div>
         <p class="section-intro">Każdy ma inny cel, możliwości i doświadczenie. Dlatego przygotowaliśmy trzy poziomy wsparcia, które pozwolą Ci wybrać rozwiązanie odpowiednie do Twoich potrzeb.</p>
       </div>
 
       <div class="pricing-grid">
-        <article class="price-card" aria-labelledby="start-title">
+        <article class="price-card" id="pakiet-start" aria-labelledby="start-title">
           <div class="card-meta"><span>01 / SYSTEM</span><span>PEŁNA SAMODZIELNOŚĆ</span></div>
           <div class="card-title-row"><h3 id="start-title">START</h3><span class="card-index">01</span></div>
           <p class="card-description">Twój początek. Konkretny plan. Pełna samodzielność.</p>
@@ -85,12 +109,12 @@
             <li>Arkusz monitorowania postępów</li>
           </ul>
           <div class="card-bottom">
-            <button class="button button-outline buy-button" type="button" data-package="start">WYBIERAM START <span aria-hidden="true">↗</span></button>
+            <button class="button button-outline buy-button" type="button" data-package="start">WYBIERAM START</button>
             <p class="card-note">Produkt cyfrowy. Materiały otrzymujesz automatycznie po zakupie. Realizujesz plan samodzielnie, bez indywidualnego prowadzenia.</p>
           </div>
         </article>
 
-        <article class="price-card price-card-featured" aria-labelledby="pro-title">
+        <article class="price-card price-card-featured" id="pakiet-pro" aria-labelledby="pro-title">
           <div class="popular-label">POPULARNY WYBÓR</div>
           <div class="card-meta"><span>02 / SYSTEM</span><span>INDYWIDUALNE WSPARCIE</span></div>
           <div class="card-title-row"><h3 id="pro-title">PRO</h3><span class="card-index">02</span></div>
@@ -113,12 +137,12 @@
             <li>Podsumowanie współpracy</li>
           </ul>
           <div class="card-bottom">
-            <button class="button button-light buy-button" type="button" data-package="pro">WYBIERAM PRO <span aria-hidden="true">↗</span></button>
+            <button class="button button-light buy-button" type="button" data-package="pro">WYBIERAM PRO</button>
             <p class="card-note">Czas współpracy: 8 tygodni.</p>
           </div>
         </article>
 
-        <article class="price-card" aria-labelledby="elite-title">
+        <article class="price-card" id="pakiet-elite" aria-labelledby="elite-title">
           <div class="card-meta"><span>03 / SYSTEM</span><span>MAKSYMALNY ZAKRES WSPARCIA</span></div>
           <div class="card-title-row"><h3 id="elite-title">ELITE</h3><span class="card-index">03</span></div>
           <p class="card-description">Najbardziej kompleksowe wsparcie. Pełna kontrola procesu.</p>
@@ -142,7 +166,7 @@
             <li>Rekomendacje dotyczące dalszego działania</li>
           </ul>
           <div class="card-bottom">
-            <button class="button button-outline buy-button" type="button" data-package="elite">WYBIERAM ELITE <span aria-hidden="true">↗</span></button>
+            <button class="button button-outline buy-button" type="button" data-package="elite">WYBIERAM ELITE</button>
             <p class="card-note">Czas współpracy: 12 tygodni.</p>
           </div>
         </article>
@@ -251,7 +275,7 @@
         <p class="eyebrow"><span class="eyebrow-line"></span> CZAS NA DZIAŁANIE</p>
         <h2 id="final-title">TWÓJ CEL.<br><span>TWÓJ SYSTEM.</span><br>TWOJA FORMA.</h2>
         <p>Nie odkładaj działania na później. Wybierz poziom wsparcia odpowiedni do swoich potrzeb i zacznij realizować swój plan.</p>
-        <a class="button button-light" href="#oferta">WYBIERAM SWÓJ SYSTEM <span aria-hidden="true">↗</span></a>
+        <a class="button button-light" href="#wybierz-plan">WYBIERAM SWÓJ SYSTEM</a>
       </div>
       <div class="final-cta-mark" aria-hidden="true">SF<span> / SYSTEM FORMY</span></div>
     </section>
