@@ -878,3 +878,50 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
   .contact-card { min-height: 150px; }
   .guarantee-dialog-inner { padding: 27px 21px; }
 }
+
+
+/* Wyróżnienie gwarancji w pełnym zakresie wsparcia SYSTEM ELITE. */
+.elite-guarantee-inline {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 11px;
+  width: fit-content;
+  margin: 17px 0 2px;
+  padding: 9px 12px;
+  border: 1px solid rgba(119, 161, 207, .55);
+  background: linear-gradient(100deg, rgba(25, 57, 91, .42), rgba(25, 57, 91, .12));
+}
+.elite-guarantee-inline span {
+  color: #9dbfe3;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .16em;
+}
+.elite-guarantee-inline strong {
+  color: #e5eef8;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+/* Social proof w Hero: samodzielny, transparentny przycisk z żółtą ramką. */
+.hero-proof-link {
+  justify-content: center;
+  min-height: 54px;
+  padding: 0 20px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  text-align: center;
+}
+.hero-proof-link:hover {
+  border-color: #f0d66b;
+  background: transparent;
+  color: #f0d66b;
+  transform: translateY(-2px);
+}
+@media (max-width: 760px) {
+  .hero-proof-link { width: 100%; min-height: 48px; }
+  .elite-guarantee-inline { margin-top: 14px; }
+}
