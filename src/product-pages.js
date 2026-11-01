@@ -64,8 +64,24 @@
   document.title = `${product.title.replace(/<[^>]+>/g, '').replace(/\./g, '')} — SYSTEM FORMY`;
   const bullets = product.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const steps = product.process.map((item, index) => `<article class="product-step"><b>0${index + 1}</b><strong>${['WYBIERASZ', 'UZUPEŁNIASZ', 'ROZPOCZYNASZ'][index]}</strong><p>${escapeHtml(item)}</p></article>`).join('');
+  const serviceProducts = new Set(['pro', 'elite', 'individual-monitor', 'individual-full']);
+  const needsEarlyServiceStart = serviceProducts.has(productKey);
+  const digitalContentProducts = new Set(['start', 'individual-basic']);
+  const isDigitalOnly = digitalContentProducts.has(productKey);
+  const digitalContentLabel = productKey === 'start'
+    ? 'Wyrażam uprzednią zgodę na rozpoczęcie dostarczania materiałów cyfrowych SYSTEM START przed upływem 14 dni. Przyjmuję do wiadomości, że po rozpoczęciu ich dostarczania utracę prawo odstąpienia od umowy w zakresie tych treści cyfrowych, jeżeli zostaną spełnione wszystkie warunki ustawowe.'
+    : 'Wyrażam uprzednią zgodę na rozpoczęcie dostarczania indywidualnego planu jako treści cyfrowej przed upływem 14 dni. Przyjmuję do wiadomości, że po rozpoczęciu jego dostarczania utracę prawo odstąpienia od umowy w zakresie tej treści cyfrowej, jeżeli zostaną spełnione wszystkie warunki ustawowe.';
+  const consentMarkup = `
+    <div class="checkout-consents" aria-labelledby="checkout-consents-title">
+      <p class="checkout-consents-title" id="checkout-consents-title">OŚWIADCZENIA PRZED ZAKUPEM</p>
+      <label class="checkout-consent"><input type="checkbox" data-consent="termsAccepted" required><span>Akceptuję <a href="/regulamin.html" target="_blank" rel="noopener">Regulamin sprzedaży i usług</a>. *</span></label>
+      <label class="checkout-consent"><input type="checkbox" data-consent="privacyAcknowledged" required><span>Potwierdzam, że zapoznałem(-am) się z <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityką prywatności</a>. *</span></label>
+      ${isDigitalOnly ? `<label class="checkout-consent"><input type="checkbox" data-consent="digitalContentConsent" required><span>${escapeHtml(digitalContentLabel)} *</span></label>` : ''}
+      ${needsEarlyServiceStart ? `<label class="checkout-consent"><input type="checkbox" data-consent="serviceStartRequested" required><span>Wyraźnie żądam rozpoczęcia świadczenia usługi przed upływem 14 dni. Przyjmuję do wiadomości, że w razie odstąpienia po rozpoczęciu usługi zapłacę proporcjonalnie za część usługi wykonaną do chwili odstąpienia, w tym za analizę i przygotowanie planu, jeżeli te prace zostały już wykonane. Przyjmuję również do wiadomości, że po pełnym wykonaniu usługi na moje wyraźne żądanie mogę utracić prawo odstąpienia, jeżeli zostaną spełnione wszystkie warunki ustawowe. *</span></label>` : ''}
+      <p class="checkout-consents-note">Oświadczenia dotyczące treści cyfrowej i wcześniejszego rozpoczęcia usługi są zapisywane przy zamówieniu. Gwiazdka oznacza oświadczenie wymagane do przejścia do płatności.</p>
+    </div>`;
   root.innerHTML = `
-    <a class="product-back" href="${productKey.startsWith('individual-') ? '/plan-indywidualny.html' : '/#oferta'}">← WRÓĆ DO ${productKey.startsWith('individual-') ? 'PLANÓW INDYWIDUALNYCH' : 'OFERTY'}</a>
+    <a class="product-back" href="${productKey.startsWith('individual-') ? '/plan-indywidualny.html' : '/#oferta'}">WRÓĆ DO ${productKey.startsWith('individual-') ? 'PLANÓW INDYWIDUALNYCH' : 'OFERTY'}</a>
     <p class="eyebrow"><span class="eyebrow-line"></span> ${escapeHtml(product.eyebrow)}</p>
     <h1>${product.title}</h1>
     <p class="product-subtitle">${escapeHtml(product.subtitle)}</p>
@@ -79,7 +95,8 @@
         <h2>${product.title}</h2>
         <div class="price-line"><strong>${product.price}</strong><span>zł</span></div>
         <p class="price-caption">${escapeHtml(product.duration)}</p>
-        <button class="button button-light" type="button" id="product-buy" data-product="${escapeHtml(productKey)}">KUPUJĘ I PRZECHODZĘ DO PŁATNOŚCI <span>↗</span></button>
+        ${consentMarkup}
+        <button class="button button-light" type="button" id="product-buy" data-product="${escapeHtml(productKey)}" disabled>KUPUJĘ I PRZECHODZĘ DO PŁATNOŚCI</button>
         <p class="checkout-microcopy">Płatność obsługuje Stripe. Po opłaceniu zamówienia wrócisz na stronę SYSTEM FORMY, gdzie pobierzesz materiały lub wypełnisz ankietę.</p>
         <p class="checkout-policy">Płatność jest jednorazowa. Przed zakupem sprawdź zakres świadczenia, czas trwania i warunki realizacji przedstawione na tej stronie.</p>
       </aside>
@@ -91,17 +108,32 @@
 
   const buy = document.querySelector('#product-buy');
   const status = document.querySelector('#product-buy-status');
+  const consentInputs = Array.from(root.querySelectorAll('[data-consent]'));
+  const readConsents = () => Object.fromEntries(consentInputs.map(input => [input.dataset.consent, input.checked]));
+  const updateBuyState = () => {
+    const complete = consentInputs.length > 0 && consentInputs.every(input => input.checked);
+    if (buy) buy.disabled = !complete || buy.dataset.loading === 'true';
+    return complete;
+  };
+  consentInputs.forEach(input => input.addEventListener('change', updateBuyState));
+  updateBuyState();
+
   buy?.addEventListener('click', async () => {
-    if (buy.disabled) return;
+    if (buy.disabled || !updateBuyState()) {
+      consentInputs.find(input => !input.checked)?.focus();
+      if (status) status.textContent = 'Zaznacz wszystkie wymagane oświadczenia, aby przejść do płatności.';
+      return;
+    }
+    buy.dataset.loading = 'true';
     buy.disabled = true;
-    const original = buy.innerHTML;
+    const original = 'KUPUJĘ I PRZECHODZĘ DO PŁATNOŚCI';
     buy.textContent = 'PRZYGOTOWUJĘ PŁATNOŚĆ…';
     status.textContent = '';
     try {
       const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ product: productKey })
+        body: JSON.stringify({ product: productKey, consents: readConsents() })
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || 'Nie udało się rozpocząć płatności.');
@@ -111,10 +143,21 @@
     } catch (error) {
       status.textContent = error instanceof Error ? error.message : 'Nie udało się rozpocząć płatności.';
       status.classList.add('realization-error');
-      buy.disabled = false;
-      buy.innerHTML = original;
+      buy.dataset.loading = 'false';
+      buy.disabled = !consentInputs.every(input => input.checked);
+      buy.textContent = original;
     }
   });
+
+  // Linki prawne są wspólne dla wszystkich podstron sprzedażowych.
+  const productFooter = document.querySelector('.product-footer');
+  if (productFooter && !productFooter.querySelector('.footer-legal-links')) {
+    const legalNav = document.createElement('nav');
+    legalNav.className = 'footer-legal-links';
+    legalNav.setAttribute('aria-label', 'Dokumenty prawne');
+    legalNav.innerHTML = '<a href="/regulamin.html">REGULAMIN</a><a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a><a href="/cookies.html">COOKIES</a>';
+    productFooter.appendChild(legalNav);
+  }
 
   const toast = document.querySelector('#site-toast');
   const params = new URLSearchParams(window.location.search);

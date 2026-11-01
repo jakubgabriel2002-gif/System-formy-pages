@@ -31,6 +31,16 @@
   const year = document.querySelector('#current-year');
   if (year) year.textContent = String(new Date().getFullYear());
 
+  // Zapewnia dostęp do dokumentów prawnych również w stopce planu indywidualnego.
+  document.querySelectorAll('.site-footer').forEach((footer) => {
+    if (footer.querySelector('a[href="/regulamin.html"]') || footer.querySelector('.footer-legal-links')) return;
+    const legalNav = document.createElement('nav');
+    legalNav.className = 'footer-legal-links';
+    legalNav.setAttribute('aria-label', 'Dokumenty prawne');
+    legalNav.innerHTML = '<a href="/regulamin.html">REGULAMIN</a><a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a><a href="/cookies.html">COOKIES</a>';
+    footer.appendChild(legalNav);
+  });
+
   // Animacje korzystają z istniejących reguł .motion-enabled [data-reveal]
   // w src/styles.css. Przy ograniczonym ruchu treść pozostaje widoczna.
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;

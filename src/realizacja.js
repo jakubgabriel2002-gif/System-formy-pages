@@ -6,6 +6,15 @@
   const year = document.querySelector('#current-year');
   if (year) year.textContent = String(new Date().getFullYear());
 
+  document.querySelectorAll('.site-footer').forEach((footer) => {
+    if (footer.querySelector('a[href="/regulamin.html"]') || footer.querySelector('.footer-legal-links')) return;
+    const legalNav = document.createElement('nav');
+    legalNav.className = 'footer-legal-links';
+    legalNav.setAttribute('aria-label', 'Dokumenty prawne');
+    legalNav.innerHTML = '<a href="/regulamin.html">REGULAMIN</a><a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a><a href="/cookies.html">COOKIES</a>';
+    footer.appendChild(legalNav);
+  });
+
   if (!root || !sessionId) {
     showError('Nie znaleziono identyfikatora zamówienia. Sprawdź wiadomość od Stripe lub wróć do oferty.');
     return;
@@ -70,30 +79,86 @@
   }
 
   function downloadCard(key, heading, description) {
-    return `<article class="download-option"><div><strong>${heading}</strong><span>${description}</span><button class="button button-light" type="button" data-download="${key}">POBIERZ PAKIET ↓</button></div></article>`;
+    return `<article class="download-option"><div><strong>${heading}</strong><span>${description}</span><button class="button button-light" type="button" data-download="${key}">POBIERZ PAKIET</button></div></article>`;
   }
 
   function renderIntake(data) {
+    const key = data.product_key;
+    const isElite = key === 'elite';
+    const isPro = key === 'pro';
+    const isIndividual = key.startsWith('individual-');
+    const individualFull = key === 'individual-full';
+    const individualMonitor = key === 'individual-monitor' || individualFull;
+    const surveyTitle = isElite ? 'ANKIETA SYSTEM ELITE' : isPro ? 'ANKIETA SYSTEM PRO' : 'ANKIETA PLANU INDYWIDUALNEGO';
+    const surveyIntro = isElite
+      ? 'Ta ankieta zbiera informacje do szczegółowej analizy i przygotowania Karty Celu ELITE. Cel, punkt startowy, wartość docelowa i metoda pomiaru zostaną wspólnie zweryfikowane przed rozpoczęciem gwarantowanej współpracy.'
+      : isPro
+        ? 'Ta ankieta pozwoli dopasować plan i osiem tygodni współpracy PRO do Twojego celu, doświadczenia, grafiku oraz warunków treningowych.'
+        : 'Ta ankieta służy przygotowaniu czterotygodniowego planu indywidualnego. Zakres dodatkowych pytań zależy od wybranego wariantu monitorowania i kontroli ćwiczeń.';
+
+    let productFields = '';
+    let detailNames = [];
+    if (isElite) {
+      detailNames = ['goalMetric', 'baselineValue', 'targetValue', 'measurementMethod', 'reportDay', 'weeklySchedule', 'nutrition', 'sleep', 'dailyActivity', 'barriers'];
+      productFields = `
+        <h2 class="survey-heading full">KARTA CELU ELITE</h2>
+        <p class="survey-note">Wskaż jeden główny, możliwy do obiektywnego sprawdzenia cel. Jeżeli okaże się nierealny lub niebezpieczny w zakładanym czasie, zaproponuję mierzalną alternatywę. Gwarancja obowiązuje dopiero po wspólnej akceptacji Karty Celu ELITE.</p>
+        <div class="form-field"><label for="goal-metric">JAKI WSKAŹNIK BĘDZIEMY OCENIAĆ? *</label><select id="goal-metric" name="goalMetric" data-survey-detail required><option value="">Wybierz</option><option value="masa">Masa ciała</option><option value="obwód">Obwód ciała</option><option value="siła">Wynik siłowy</option><option value="kondycja">Kondycja / wytrzymałość</option><option value="test">Wynik konkretnego testu</option><option value="inny">Inny mierzalny wskaźnik</option></select></div>
+        <div class="form-field"><label for="baseline-value">WARTOŚĆ POCZĄTKOWA I JEDNOSTKA *</label><input id="baseline-value" name="baselineValue" data-survey-detail required maxlength="160" placeholder="Np. 82 kg, 92 cm, 60 kg x 5 powtórzeń"></div>
+        <div class="form-field"><label for="target-value">WARTOŚĆ DOCELOWA I JEDNOSTKA *</label><input id="target-value" name="targetValue" data-survey-detail required maxlength="160" placeholder="Np. 78 kg, 86 cm, 70 kg x 5 powtórzeń"></div>
+        <div class="form-field"><label for="measurement-method">JAK BĘDZIEMY MIERZYĆ WYNIK? *</label><input id="measurement-method" name="measurementMethod" data-survey-detail required maxlength="500" placeholder="Opisz warunki pomiaru lub nazwę testu"></div>
+        <div class="form-field"><label for="report-day">W JAKI DZIEŃ MOŻESZ WYSYŁAĆ RAPORT? *</label><select id="report-day" name="reportDay" data-survey-detail required><option value="">Wybierz</option><option>Poniedziałek</option><option>Wtorek</option><option>Środa</option><option>Czwartek</option><option>Piątek</option><option>Sobota</option><option>Niedziela</option></select></div>
+        <div class="form-field full"><label for="weekly-schedule">JAK WYGLĄDA TWÓJ TYPOWY TYDZIEŃ I DOSTĘPNOŚĆ? (OPCJONALNIE)</label><textarea id="weekly-schedule" name="weeklySchedule" data-survey-detail maxlength="900" placeholder="Praca, nauka, pory dnia, dni z największą dostępnością."></textarea></div>
+        <div class="form-field"><label for="nutrition">JAK OCENIASZ SWOJE OBECNE NAWYKI ŻYWIENIOWE? (OPCJONALNIE)</label><textarea id="nutrition" name="nutrition" data-survey-detail maxlength="800"></textarea></div>
+        <div class="form-field"><label for="sleep">ILE ŚREDNIO ŚPISZ? (OPCJONALNIE)</label><input id="sleep" name="sleep" data-survey-detail maxlength="100" placeholder="Np. 7 godzin"></div>
+        <div class="form-field"><label for="daily-activity">JAK WYGLĄDA TWOJA AKTYWNOŚĆ POZA TRENINGIEM? (OPCJONALNIE)</label><textarea id="daily-activity" name="dailyActivity" data-survey-detail maxlength="700"></textarea></div>
+        <div class="form-field"><label for="barriers">JAKIE PRZESZKODY MOGĄ UTRUDNIAĆ REALIZACJĘ? (OPCJONALNIE)</label><textarea id="barriers" name="barriers" data-survey-detail maxlength="800"></textarea></div>`;
+    } else if (isPro) {
+      detailNames = ['weeklySchedule', 'nutrition', 'sleep', 'dailyActivity', 'barriers', 'supportNeeds'];
+      productFields = `
+        <h2 class="survey-heading full">TWOJA CODZIENNOŚĆ I WSPÓŁPRACA PRO</h2>
+        <div class="form-field full"><label for="weekly-schedule">JAK WYGLĄDA TWÓJ TYPOWY TYDZIEŃ? (OPCJONALNIE)</label><textarea id="weekly-schedule" name="weeklySchedule" data-survey-detail maxlength="900" placeholder="Praca, nauka, obowiązki i pory, w których możesz trenować."></textarea></div>
+        <div class="form-field"><label for="nutrition">JAK WYGLĄDA TWOJE ODŻYWIANIE? (OPCJONALNIE)</label><textarea id="nutrition" name="nutrition" data-survey-detail maxlength="900"></textarea></div>
+        <div class="form-field"><label for="sleep">ILE ŚREDNIO ŚPISZ? (OPCJONALNIE)</label><input id="sleep" name="sleep" data-survey-detail maxlength="100" placeholder="Np. 7 godzin"></div>
+        <div class="form-field"><label for="daily-activity">JAKA JEST TWOJA AKTYWNOŚĆ POZA TRENINGIEM? (OPCJONALNIE)</label><textarea id="daily-activity" name="dailyActivity" data-survey-detail maxlength="700"></textarea></div>
+        <div class="form-field"><label for="barriers">CO NAJCZĘŚCIEJ UTRUDNIA CI REGULARNOŚĆ? (OPCJONALNIE)</label><textarea id="barriers" name="barriers" data-survey-detail maxlength="900"></textarea></div>
+        <div class="form-field full"><label for="support-needs">W JAKICH OBSZARACH NAJBARDZIEJ POTRZEBUJESZ WSPARCIA? (OPCJONALNIE)</label><textarea id="support-needs" name="supportNeeds" data-survey-detail maxlength="900"></textarea></div>`;
+    } else if (isIndividual) {
+      detailNames = ['bodyWeight', 'height', 'trainingHistory', 'preferredExercises', 'progressFocus', 'reportDay', 'techniqueExercises'];
+      productFields = `
+        <h2 class="survey-heading full">DOPASOWANIE PLANU INDYWIDUALNEGO</h2>
+        <div class="form-field"><label for="body-weight">AKTUALNA MASA CIAŁA (OPCJONALNIE)</label><input id="body-weight" name="bodyWeight" data-survey-detail maxlength="40" placeholder="Np. 82 kg"></div>
+        <div class="form-field"><label for="height">WZROST (OPCJONALNIE)</label><input id="height" name="height" data-survey-detail maxlength="40" placeholder="Np. 180 cm"></div>
+        <div class="form-field full"><label for="training-history">JAK WYGLĄDAŁ TWÓJ DOTYCHCZASOWY TRENING? (OPCJONALNIE)</label><textarea id="training-history" name="trainingHistory" data-survey-detail maxlength="900"></textarea></div>
+        <div class="form-field full"><label for="preferred-exercises">CZY SĄ ĆWICZENIA, KTÓRE LUBISZ LUB CHCESZ UWZGLĘDNIĆ? (OPCJONALNIE)</label><textarea id="preferred-exercises" name="preferredExercises" data-survey-detail maxlength="800"></textarea></div>
+        ${individualMonitor ? `<div class="form-field full"><label for="progress-focus">NA JAKICH POSTĘPACH NAJBARDZIEJ CI ZALEŻY? (OPCJONALNIE)</label><textarea id="progress-focus" name="progressFocus" data-survey-detail maxlength="800"></textarea></div>
+        <div class="form-field"><label for="report-day">PREFEROWANY DZIEŃ RAPORTU (OPCJONALNIE)</label><select id="report-day" name="reportDay" data-survey-detail><option value="">Wybierz</option><option>Poniedziałek</option><option>Wtorek</option><option>Środa</option><option>Czwartek</option><option>Piątek</option><option>Sobota</option><option>Niedziela</option></select></div>` : ''}
+        ${individualFull ? `<div class="form-field full"><label for="technique-exercises">KTÓRE ĆWICZENIA CHCESZ OBJĄĆ KONTROLĄ TECHNIKI? (OPCJONALNIE)</label><textarea id="technique-exercises" name="techniqueExercises" data-survey-detail maxlength="800" placeholder="Wymień ćwiczenia, które możesz nagrywać do analizy."></textarea></div>` : ''}`;
+    }
+
     root.innerHTML = `
-      <div class="realization-success">Płatność za <strong>${escapeHtml(data.product_name)}</strong> została potwierdzona. Wypełnij ankietę startową, abyśmy mogli rozpocząć realizację zamówienia.</div>
-      <p class="realization-lead">Ankieta dotyczy informacji potrzebnych do przygotowania planu i prowadzenia współpracy. Nie podawaj pełnej diagnozy, listy leków ani dokumentacji medycznej. Moduł dotyczący ograniczeń zdrowotnych jest opcjonalny i ma odrębną zgodę.</p>
+      <div class="realization-success">Płatność za <strong>${escapeHtml(data.product_name)}</strong> została potwierdzona. Teraz wypełnij właściwą ankietę, abyśmy mogli rozpocząć realizację zamówienia.</div>
+      <h2 class="survey-heading">${surveyTitle}</h2>
+      <p class="realization-lead">${surveyIntro}</p>
+      <p class="realization-lead">Nie podawaj pełnych diagnoz, listy leków ani dokumentacji medycznej. Informacje o ograniczeniach zdrowotnych są opcjonalne i mają osobną zgodę.</p>
       <form id="client-intake" class="realization-form">
         <div class="form-field"><label for="intake-name">IMIĘ I NAZWISKO *</label><input id="intake-name" name="name" autocomplete="name" required maxlength="120"></div>
         <div class="form-field"><label for="intake-email">E-MAIL ZAMÓWIENIA *</label><input id="intake-email" name="email" type="email" autocomplete="email" value="${escapeAttr(data.email || '')}" required maxlength="254"></div>
         <div class="form-field"><label for="intake-age">WIEK *</label><input id="intake-age" name="age" type="number" min="18" max="100" required></div>
         <div class="form-field"><label for="intake-location">GDZIE TRENUJESZ? *</label><select id="intake-location" name="trainingLocation" required><option value="">Wybierz</option><option value="dom">W domu</option><option value="siłownia">Na siłowni</option><option value="oba">W obu miejscach</option></select></div>
         <div class="form-field full"><label for="intake-goal">JAKI JEST TWÓJ GŁÓWNY CEL? *</label><textarea id="intake-goal" name="goal" required maxlength="1500" placeholder="Opisz, nad czym chcesz pracować."></textarea></div>
-        <div class="form-field full"><label for="intake-measurable">CZY MASZ KONKRETNY CEL LICZBOWY? (OPCJONALNIE)</label><textarea id="intake-measurable" name="measurableGoal" maxlength="800" placeholder="Np. obwód, masa ciała, wynik siłowy lub test sprawnościowy."></textarea></div>
+        <div class="form-field full"><label for="intake-measurable">CZY MASZ DODATKOWY KONKRETNY CEL LICZBOWY? (OPCJONALNIE)</label><textarea id="intake-measurable" name="measurableGoal" maxlength="800" placeholder="Np. obwód, masa ciała, wynik siłowy lub test sprawnościowy."></textarea></div>
         <div class="form-field"><label for="intake-experience">DOŚWIADCZENIE TRENINGOWE *</label><select id="intake-experience" name="experience" required><option value="">Wybierz</option><option>początkujący</option><option>średniozaawansowany</option><option>zaawansowany</option><option>powrót po przerwie</option></select></div>
         <div class="form-field"><label for="intake-days">ILE DNI W TYGODNIU MOŻESZ TRENOWAĆ? *</label><select id="intake-days" name="daysPerWeek" required><option value="">Wybierz</option><option value="2">2 dni</option><option value="3">3 dni</option><option value="4">4 dni</option><option value="5">5 dni</option><option value="6">6 dni</option><option value="7">7 dni</option></select></div>
         <div class="form-field"><label for="intake-minutes">CZAS JEDNEGO TRENINGU *</label><select id="intake-minutes" name="sessionMinutes" required><option value="">Wybierz</option><option value="30">30 minut</option><option value="45">45 minut</option><option value="60">60 minut</option><option value="75">75 minut</option><option value="90">90 minut</option></select></div>
         <div class="form-field"><label for="intake-start">PREFEROWANY START (OPCJONALNIE)</label><input id="intake-start" name="startDate" type="date"></div>
-        <div class="form-field full"><label for="intake-equipment">JAKI SPRZĘT MASZ DO DYSPOZYCJI?</label><textarea id="intake-equipment" name="equipment" maxlength="800" placeholder="Wpisz sprzęt dostępny w domu lub na siłowni."></textarea></div>
-        <div class="form-field full"><label for="intake-current">JAK WYGLĄDA TWÓJ OBECNY PLAN? (OPCJONALNIE)</label><textarea id="intake-current" name="currentPlan" maxlength="1000"></textarea></div>
+        <div class="form-field full"><label for="intake-equipment">JAKI SPRZĘT MASZ DO DYSPOZYCJI? *</label><textarea id="intake-equipment" name="equipment" required maxlength="800" placeholder="Wpisz sprzęt dostępny w domu lub na siłowni."></textarea></div>
+        <div class="form-field full"><label for="intake-current">JAK WYGLĄDA TWÓJ OBECNY PLAN LUB AKTYWNOŚĆ? (OPCJONALNIE)</label><textarea id="intake-current" name="currentPlan" maxlength="1000"></textarea></div>
         <div class="form-field full"><label for="intake-difficulty">CO NAJTRUDNIEJ CI OSIĄGNĄĆ LUB UTRZYMAĆ? (OPCJONALNIE)</label><textarea id="intake-difficulty" name="difficulty" maxlength="1000"></textarea></div>
-        <fieldset class="health-module">
+        ${productFields}
+        <fieldset class="health-module full">
           <legend>OPCJONALNE INFORMACJE O OGRANICZENIACH ZDROWOTNYCH</legend>
-          <p>Możesz pominąć tę część. Informacje mają pomóc uwzględnić ograniczenia w planie treningowym i nie służą diagnozowaniu. Nie wpisuj diagnoz ani danych, które nie są potrzebne do określenia bezpiecznego zakresu treningu.</p>
+          <p>Możesz pominąć tę część. Przekazuj wyłącznie informacje potrzebne do określenia bezpiecznego zakresu treningu. Nie wpisuj pełnej diagnozy ani dokumentacji medycznej.</p>
           <label class="form-consent"><input id="health-consent" name="healthConsent" type="checkbox"><span>Wyrażam wyraźną zgodę na przetwarzanie przekazanych przeze mnie w tej sekcji informacji dotyczących zdrowia w celu uwzględnienia ograniczeń przy przygotowaniu i realizacji planu. Zgodę mogę wycofać.</span></label>
           <div class="health-fields" id="health-fields" hidden>
             <div class="form-field"><label for="health-pain">CZY WYSTĘPUJE BÓL LUB URAZ OGRANICZAJĄCY TRENING?</label><select id="health-pain" name="healthPain"><option value="">Nie podaję</option><option value="tak">Tak</option><option value="nie">Nie</option><option value="nie wiem">Nie wiem</option></select></div>
@@ -101,10 +166,11 @@
             <div class="form-field full"><label for="health-notes">KRÓTKI OPIS OGRANICZENIA (OPCJONALNIE)</label><textarea id="health-notes" name="healthNotes" maxlength="800"></textarea></div>
           </div>
         </fieldset>
-        <label class="form-consent"><input id="adult-confirmed" name="adultConfirmed" type="checkbox" required><span>Potwierdzam, że mam ukończone 18 lat. *</span></label>
-        <div class="realization-submit"><button class="button button-light" type="submit" id="intake-submit">WYŚLIJ ANKIETĘ <span>↗</span></button><p id="intake-status" class="realization-message" role="status" aria-live="polite"></p></div>
+        <label class="form-consent full"><input id="adult-confirmed" name="adultConfirmed" type="checkbox" required><span>Potwierdzam, że mam ukończone 18 lat. *</span></label>
+        <div class="realization-submit full"><button class="button button-light" type="submit" id="intake-submit">WYŚLIJ ANKIETĘ</button><p id="intake-status" class="realization-message" role="status" aria-live="polite"></p></div>
       </form>
     `;
+
     const form = document.querySelector('#client-intake');
     const healthCheckbox = document.querySelector('#health-consent');
     const healthFields = document.querySelector('#health-fields');
@@ -117,20 +183,22 @@
       submit.disabled = true;
       status.textContent = 'Zapisuję ankietę…';
       const value = name => form.elements[name]?.value ?? '';
+      const details = Object.fromEntries(detailNames.map(name => [name, value(name)]));
       const payload = {
         session_id: sessionId, name: value('name'), email: value('email'), age: value('age'),
         goal: value('goal'), measurableGoal: value('measurableGoal'), experience: value('experience'),
         trainingLocation: value('trainingLocation'), equipment: value('equipment'), daysPerWeek: value('daysPerWeek'),
         sessionMinutes: value('sessionMinutes'), currentPlan: value('currentPlan'), difficulty: value('difficulty'), startDate: value('startDate'),
+        details,
         adultConfirmed: document.querySelector('#adult-confirmed').checked,
         healthConsent: healthCheckbox.checked,
         healthPain: value('healthPain'), healthRestriction: value('healthRestriction'), healthNotes: value('healthNotes')
       };
       try {
         const response = await fetch('/api/submit-intake', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'Nie udało się zapisać ankiety.');
-        form.innerHTML = `<div class="realization-success"><strong>Ankieta została wysłana.</strong><br>${escapeHtml(data.message || 'Dziękujemy. Otrzymaliśmy Twoje odpowiedzi.')}</div><a class="button button-outline" href="/">WRÓĆ NA STRONĘ GŁÓWNĄ</a>`;
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(result.error || 'Nie udało się zapisać ankiety.');
+        form.innerHTML = `<div class="realization-success"><strong>Ankieta została wysłana.</strong><br>${escapeHtml(result.message || 'Dziękujemy. Otrzymaliśmy Twoje odpowiedzi.')}</div><a class="button button-outline" href="/">WRÓĆ NA STRONĘ GŁÓWNĄ</a>`;
       } catch (error) {
         status.textContent = error instanceof Error ? error.message : 'Nie udało się zapisać ankiety.';
         status.classList.add('realization-error');

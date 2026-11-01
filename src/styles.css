@@ -888,19 +888,21 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
   gap: 8px 11px;
   width: fit-content;
   margin: 17px 0 2px;
-  padding: 9px 12px;
-  border: 1px solid rgba(119, 161, 207, .55);
-  background: linear-gradient(100deg, rgba(25, 57, 91, .42), rgba(25, 57, 91, .12));
+  padding: 11px 15px;
+  border: 1px solid rgba(109, 165, 224, .72);
+  border-radius: 3px;
+  background: linear-gradient(100deg, #163b62 0%, #102a45 100%);
+  box-shadow: 0 8px 28px rgba(17, 51, 83, .2);
 }
 .elite-guarantee-inline span {
-  color: #9dbfe3;
-  font-size: 7px;
+  color: #b7d7f7;
+  font-size: 8px;
   font-weight: 900;
   letter-spacing: .16em;
 }
 .elite-guarantee-inline strong {
-  color: #e5eef8;
-  font-size: 8px;
+  color: #f0f6fd;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: .1em;
 }
@@ -925,3 +927,53 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
   .hero-proof-link { width: 100%; min-height: 48px; }
   .elite-guarantee-inline { margin-top: 14px; }
 }
+
+
+/* Czytelniejsze etykiety wszystkich przycisków — również na urządzeniach mobilnych. */
+.button { font-size: 12px; letter-spacing: .12em; }
+.header-cta { font-size: 11px; }
+.hero-proof-link { font-size: 11px; }
+@media (max-width: 760px) {
+  .button { font-size: 11px; }
+  .header-cta { font-size: 10px; }
+  .hero-proof-link { font-size: 10px; }
+}
+
+/* Linki prawne dokładane do stopki również na podstronach sprzedażowych i realizacji. */
+.footer-legal-links {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.footer-legal-links a {
+  color: #9e9e98;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  transition: color .2s ease;
+}
+.footer-legal-links a:hover { color: var(--accent); }
+@media (max-width: 760px) {
+  .footer-legal-links { justify-content: flex-start; gap: 10px 16px; }
+  .footer-legal-links a { font-size: 8px; }
+}
+
+/* Niebieski identyfikator gwarancji ELITE w sekcji Hero. */
+.elite-guarantee-badge {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 22px;
+  padding: 12px 15px;
+  border: 1px solid rgba(109, 165, 224, .72);
+  border-radius: 3px;
+  background: linear-gradient(100deg, #163b62 0%, #102a45 100%);
+  box-shadow: 0 8px 28px rgba(17, 51, 83, .2);
+}
+.elite-guarantee-kicker { color: #b7d7f7; font-size: 8px; font-weight: 900; letter-spacing: .16em; }
+.elite-guarantee-title { color: #f0f6fd; font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+@media (max-width: 760px) { .elite-guarantee-badge { margin-top: 17px; } .elite-guarantee-title { font-size: 9px; } }
