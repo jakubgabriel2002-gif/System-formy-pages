@@ -2,8 +2,14 @@ name = "system-formy-pages"
 compatibility_date = "2026-10-31"
 pages_build_output_dir = "."
 
-# Publiczna strona sprzedażowa SYSTEM FORMY.
-# Nie włączaj checkoutu przed wdrożeniem webhooka i realizacji zamówień.
+[[d1_databases]]
+binding = "DB"
+database_name = "system-formy-db"
+database_id = "4acf90b9-93af-4cf2-aeef-cbe0fd4406d1"
 
-# D1 binding DB and R2 binding PRODUCT_FILES are configured in Cloudflare Pages Settings > Bindings.
-# Do not commit Stripe secrets here. Add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET as encrypted Secrets.
+[[r2_buckets]]
+binding = "PRODUCT_FILES"
+bucket_name = "system-formy-products"
+
+# Stripe secrets stay in Cloudflare Pages > Settings > Variables and Secrets.
+# Do not put STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET in this file.
