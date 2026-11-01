@@ -1,88 +1,112 @@
-# SYSTEM FORMY — strona sprzedażowa pakietów START / PRO / ELITE
+# SYSTEM FORMY — aktualizacja sprzedaży i Stripe Checkout
 
-To niezależna, statyczna strona sprzedażowa marki SYSTEM FORMY, przygotowana pod Cloudflare Pages. Prezentuje wyłącznie trzy pakiety głównej oferty:
+Paczka bazuje na statycznej stronie Cloudflare Pages `system-formy-pages` (folder główny jest katalogiem publikacji). Zachowuje istniejący wygląd i dodaje sześć stron sprzedażowych, dynamiczny Stripe Checkout, webhook, weryfikację opłaconego zamówienia i stronę realizacji zakupu.
 
-- SYSTEM START — 99 zł
-- SYSTEM PRO — 699 zł (8 tygodni)
-- SYSTEM ELITE — 1499 zł (12 tygodni)
+## Przepływ zakupu
 
-Na stronie nie ma e-booków jako osobnej oferty, sklepu cyfrowego, Planu Indywidualnego za 199 zł, kont użytkowników, logowania ani panelu aplikacji. Wykorzystany plik logo pochodzi z logo przesłanego przez właściciela marki; przy przygotowaniu pliku do nagłówka przycięto wyłącznie pusty czarny margines — bez modyfikacji grafiki, kolorów i proporcji znaku.
+1. Klient wybiera pakiet na stronie głównej lub wariant planu indywidualnego.
+2. Trafia na dedykowaną stronę sprzedażową danego produktu.
+3. Kliknięcie zakupu wywołuje `/api/create-checkout`.
+4. Cloudflare Pages Function tworzy sesję Stripe Checkout przez API. Cena, nazwa i opis są definiowane po stronie serwera w `functions/_shared/catalog.js`. Nie trzeba ręcznie tworzyć sześciu produktów ani cen w panelu Stripe.
+5. Stripe po płatności przekierowuje klienta do `/realizacja.html?session_id=...`.
+6. Strona realizacji pyta `/api/checkout-status`, który pobiera sesję bezpośrednio ze Stripe i sprawdza `payment_status=paid`. Sam powrót przeglądarki nie odblokowuje materiałów.
+7. Webhook pod `/api/stripe/webhook` weryfikuje podpis `Stripe-Signature`, zapisuje zdarzenie i status zamówienia w D1.
+8. SYSTEM START: klient wybiera dom albo siłownię i pobiera zakupiony pakiet przez prywatny bucket R2. PRO, ELITE i plany indywidualne: klient wypełnia ankietę powiązaną z opłaconą sesją Stripe.
 
-## Struktura projektu
+## Ważne — przed wdrożeniem
 
-- `index.html` — pełna strona, treść oferty, porównanie, proces i FAQ.
-- `src/styles.css` — responsywny wygląd desktop / tablet / telefon.
-- `src/main.js` — menu mobilne, komunikaty zakupu, obsługa przycisków i statusu płatności.
-- `assets/system-formy-logo.png` — logo SYSTEM FORMY.
-- `functions/api/create-checkout.js` — bezpieczny endpoint Cloudflare Pages przygotowany do Stripe Checkout.
-- `wrangler.toml` — ustawienia Cloudflare Pages.
+Same sekrety Stripe nie wystarczą. Funkcje wymagają bindingów D1 i R2 oraz wykonania migracji SQL. Dopóki bindingi i prywatne pliki START nie będą gotowe, endpoint bezpiecznie blokuje odpowiedni zakup zamiast pobierać pieniądze bez możliwości realizacji.
 
-## Wgranie do istniejącego repozytorium
+### A. Sprawdź Secrets w Cloudflare Pages
 
-1. Zrób commit lub kopię aktualnego repozytorium.
-2. Rozpakuj paczkę i wgraj **zawartość** jej głównego katalogu do głównego katalogu repozytorium `System-formy-pages`.
-3. Zastąp pliki o tych samych ścieżkach: `index.html`, `README.md`, `src/main.js`, `src/styles.css`, `assets/system-formy-logo.png`, `functions/api/create-checkout.js` oraz `wrangler.toml`.
-4. Upewnij się, że struktura wygląda tak (bez dodatkowego folderu nadrzędnego):
+W projekcie **Cloudflare Pages `system-formy-pages`** (nie w osobnym Workerze aplikacji) → Settings → Variables and Secrets ustaw jako zaszyfrowane Secrets dla Production. Pages Functions odczytują sekrety przypięte do tego konkretnego projektu. Jeżeli wcześniej dodałeś je tylko do innego Workera, dodaj je również tutaj:
 
-   ```text
-   /
-   ├── index.html
-   ├── README.md
-   ├── wrangler.toml
-   ├── assets/
-   │   └── system-formy-logo.png
-   ├── functions/
-   │   └── api/
-   │       └── create-checkout.js
-   └── src/
-       ├── main.js
-       └── styles.css
-   ```
+- `STRIPE_SECRET_KEY` — klucz `sk_test_...` do testów, a przed uruchomieniem sprzedaży `sk_live_...`.
+- `STRIPE_WEBHOOK_SECRET` — Signing secret `whsec_...` endpointu Stripe wskazanego niżej.
 
-5. Zapisz zmiany jako commit na gałęzi `main`. Podłączony Cloudflare Pages powinien automatycznie utworzyć nowe wdrożenie.
+Kod nie używa `pk_live_...` — Checkout jest tworzony serwerowo.
 
-### Co usunąć z poprzedniej wersji
+### B. D1 — baza zamówień
 
-Z poprzedniej strony usuń, jeśli są w repozytorium, pliki `regulamin-placeholder.txt` oraz stare pliki/obrazy używane wyłącznie przez poprzednie sekcje ebooków, opinii lub planu indywidualnego. Jeżeli folder `public/` jest pusty i nie zawiera plików potrzebnych innym częściom projektu, można go usunąć. Nie usuwaj plików repozytorium, których przeznaczenia nie znasz. Nie usuwaj `.git/` ani ustawień GitHub.
+W projekcie **Pages `system-formy-pages`** → Settings → Bindings dodaj D1 database binding:
 
-W tym projekcie nie są potrzebne `package.json`, komenda build ani instalacja zależności. Cloudflare Pages ma publikować katalog główny (`.`) bez komendy budowania. Nie zmieniaj konfiguracji działającego projektu aplikacji — ta strona jest osobnym projektem Pages.
+- Variable name: `DB`
+- D1 database: istniejąca baza projektu, np. `system-formy-db` (wybierz właściwą bazę z listy; nie twórz drugiej, jeśli ta jest już używana przez stronę).
 
-## Cloudflare Pages
+Wykonaj plik `migrations/0001_stripe_orders.sql` na tej samej bazie D1 (Cloudflare Dashboard → D1 → baza → Console / SQL, wklej cały plik i wykonaj). Migracja tworzy tabele `sf_orders` i `sf_stripe_events`; nie usuwa istniejących tabel.
 
-Dla tego repozytorium:
+### C. R2 — prywatne pliki SYSTEM START
 
-- Framework preset: `None`
-- Build command: puste
-- Build output directory: `.`
-- Root directory: puste (katalog główny repozytorium)
+W projekcie **Pages `system-formy-pages`** → Settings → Bindings dodaj R2 bucket binding:
 
-Projekt jest statyczny; funkcja serwerowa w `functions/api/` zostanie obsłużona przez Cloudflare Pages Functions.
+- Variable name: `PRODUCT_FILES`
+- Bucket: istniejący prywatny bucket materiałów, np. `system-formy-products`.
 
-## Stripe — ważne zabezpieczenie
+Pobierz osobną paczkę `SYSTEM-FORMY-MATERIALY-DO-R2.zip`, rozpakuj ją lokalnie i wgraj oba pliki do R2 jako poniższe obiekty (foldery w R2 są częścią klucza obiektu):
 
-Przyciski pakietów są już podłączone do endpointu `/api/create-checkout`, ale **płatności są domyślnie zablokowane**. Endpoint zwraca komunikat o niedostępności dopóki zmienna `CHECKOUT_ENABLED` nie ma wartości tekstowej `true`.
+- `system-start/home.zip` — zawartość paczki `system-start-home.zip` z osobnej paczki `SYSTEM-FORMY-MATERIALY-DO-R2.zip`.
+- `system-start/gym.zip` — zawartość paczki `system-start-gym.zip` z osobnej paczki `SYSTEM-FORMY-MATERIALY-DO-R2.zip`.
 
-Nie ustawiaj `CHECKOUT_ENABLED=true` tylko po to, aby otworzyć płatności. Najpierw trzeba wdrożyć i przetestować:
+Bucket musi pozostać prywatny. Nie podłączaj publicznej domeny do tych plików. Funkcja `download-start` przekazuje plik dopiero po sprawdzeniu opłaconej sesji Stripe. Po dodaniu bindingów wykonaj nowy deployment Pages, aby Functions otrzymały nowe zasoby.
 
-1. poprawne produkty/ceny Stripe: `STRIPE_PRICE_START`, `STRIPE_PRICE_PRO`, `STRIPE_PRICE_ELITE` (endpoint sprawdza, czy kwoty to odpowiednio 99 zł, 699 zł i 1499 zł oraz czy walutą jest PLN);
-2. sekret serwerowy `STRIPE_SECRET_KEY` (jako Secret w Cloudflare, nigdy w kodzie ani w GitHubie);
-3. webhook Stripe weryfikujący podpis i potwierdzający płatność po stronie serwera;
-4. realizację START: automatyczne wydanie właściwych materiałów cyfrowych po potwierdzonej płatności;
-5. obsługę zamówień i procesu ankiety początkowej dla PRO / ELITE;
-6. testowe zakupy i obsługę płatności nieudanych/anulowanych.
+### D. Stripe webhook
 
-Dopiero po zakończeniu tych elementów i testach można ustawić `CHECKOUT_ENABLED=true`. Na obecnym etapie strona nie tworzy fikcyjnych linków płatniczych i nie pobiera pieniędzy.
+Po wdrożeniu strony ustaw w Stripe → Developers → Webhooks endpoint:
 
-## Rzeczy do ustalenia przed uruchomieniem sprzedaży
+`https://system-formy-pages.pages.dev/api/stripe/webhook`
 
-- dokładny termin przygotowania i przekazania planów PRO / ELITE;
-- treść i sposób przekazywania ankiety początkowej;
-- rzeczywisty proces dostawy pakietu START;
-- dane sprzedawcy, regulamin, polityka prywatności, zasady reklamacji i informacje wymagane przy sprzedaży treści/usług cyfrowych;
-- kanał i organizacja kontaktu przez czat oraz zasady dostępności.
+Jeżeli używasz własnej domeny, użyj tej domeny zamiast `system-formy-pages.pages.dev`.
 
-Te informacje nie zostały dostarczone w opisie oferty, dlatego strona ich nie wymyśla. FAQ wskazuje nieustalony termin planów indywidualnych wprost.
+Zaznacz zdarzenia:
 
-## Test lokalny
+- `checkout.session.completed`
+- `checkout.session.async_payment_succeeded`
+- `checkout.session.async_payment_failed`
+- `checkout.session.expired`
 
-Możesz otworzyć `index.html` bezpośrednio w przeglądarce i sprawdzić wygląd. Endpoint Stripe wymaga wdrożenia na Cloudflare Pages. Bez `CHECKOUT_ENABLED=true` przyciski wyświetlą jasny komunikat, że zakup online nie jest jeszcze uruchomiony.
+Otwórz endpoint → Reveal signing secret. Wartość `whsec_...` musi należeć dokładnie do tego endpointu i być zapisana w Cloudflare jako `STRIPE_WEBHOOK_SECRET`. Jeśli masz już utworzony endpoint pod tym adresem i ten secret jest z nim powiązany, nie twórz duplikatu.
+
+### E. Wdrożenie
+
+1. Zrób kopię aktualnego repozytorium.
+2. Rozpakuj paczkę i skopiuj całą zawartość katalogu projektu do głównego katalogu repozytorium `system-formy-pages`, zachowując ścieżki.
+3. Commit + push na gałąź podłączoną do Cloudflare Pages.
+4. Poczekaj na zakończenie deploymentu. Bindingi D1 i R2 muszą być podpięte również dla Production.
+
+## Produkty i ceny (konfigurowane po stronie serwera)
+
+| Klucz | Produkt | Cena |
+|---|---|---:|
+| `start` | SYSTEM START | 99,00 zł |
+| `pro` | SYSTEM PRO | 699,00 zł |
+| `elite` | SYSTEM ELITE | 1499,00 zł |
+| `individual-basic` | Plan indywidualny — sam plan | 99,99 zł |
+| `individual-monitor` | Plan indywidualny + monitoring i wsparcie | 149,99 zł |
+| `individual-full` | Plan indywidualny + monitoring + kontrola ćwiczeń | 199,99 zł |
+
+Kwoty są stałe po stronie Function. Frontend nie może przesłać własnej ceny. Aktualizacja ceny wymaga zmiany `functions/_shared/catalog.js` i wdrożenia nowego deploymentu.
+
+## Ważne o retencji danych
+
+D1 zapisuje datę graniczną `retention_due_at` oraz odpowiedzi ankiety. Ta paczka nie wdraża jeszcze automatycznego zadania cyklicznego usuwającego dane po upływie retencji. Przed uruchomieniem sprzedaży trzeba dodać i przetestować harmonogram czyszczenia D1 zgodny z zasadą przechowywania danych przez okres współpracy i 6 miesięcy po niej (z uwzględnieniem danych, które muszą być przechowywane dłużej na podstawie prawa).
+
+## Test przed uruchomieniem Live
+
+1. Użyj klucza `sk_test_...` i endpointu webhook w trybie testowym (sekret testowego endpointu).
+2. Zrób testowe zamówienie każdego z sześciu produktów.
+3. Sprawdź, czy webhook otrzymał `checkout.session.completed` i czy w D1 `sf_orders.payment_status` ma wartość `paid`.
+4. SYSTEM START: sprawdź, czy sesja bez opłacenia nie pobiera pliku, a opłacona pozwala pobrać odpowiednią wersję z R2.
+5. Pozostałe produkty: sprawdź, czy formularz realizacji nie pojawia się bez płatności i zapisuje ankietę po płatności.
+6. Dopiero po poprawnym przejściu testów podmień `STRIPE_SECRET_KEY` i `STRIPE_WEBHOOK_SECRET` na parę Live i skonfiguruj Live endpoint.
+
+## Pliki aktualizacji
+
+- `index.html`, `plan-indywidualny.html` — przekierowania do stron sprzedażowych.
+- `produkt-*.html` — sześć stron sprzedażowych.
+- `realizacja.html` — strona po płatności.
+- `functions/api/*` — Checkout, weryfikacja, webhook, ankieta i pobieranie.
+- `functions/_shared/*` — katalog produktów i wspólne funkcje Stripe.
+- `migrations/0001_stripe_orders.sql` — tabele D1.
+- `SYSTEM-FORMY-MATERIALY-DO-R2.zip` (osobny plik poza publiczną paczką strony) — prywatne materiały do wgrania do R2.
+
+Nie wgrywaj sekretów do repozytorium ani nie wysyłaj ich w wiadomościach.
