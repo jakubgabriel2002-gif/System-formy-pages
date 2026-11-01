@@ -15,6 +15,19 @@ export async function onRequestPost({ request, env }) {
   const productKey = String(body?.product || '');
   if (!isValidProductKey(productKey)) return json({ error: 'Wybrany produkt nie istnieje.' }, 400);
   const product = CATALOG[productKey];
+  const consentInput = body?.consents && typeof body.consents === 'object' ? body.consents : {};
+  const digitalContentProducts = ['start', 'individual-basic'];
+  const isDigitalOnly = digitalContentProducts.includes(productKey);
+  const needsEarlyServiceStart = ['pro', 'elite', 'individual-monitor', 'individual-full'].includes(productKey);
+  if (consentInput.termsAccepted !== true || consentInput.privacyAcknowledged !== true) {
+    return json({ error: 'Przed płatnością zaakceptuj regulamin i potwierdź zapoznanie się z polityką prywatności.' }, 400);
+  }
+  if (isDigitalOnly && consentInput.digitalContentConsent !== true) {
+    return json({ error: 'Przed zakupem treści cyfrowej zaznacz odrębną zgodę na rozpoczęcie jej dostarczania oraz potwierdź informację o prawie odstąpienia.' }, 400);
+  }
+  if (needsEarlyServiceStart && consentInput.serviceStartRequested !== true) {
+    return json({ error: 'Przed płatnością potwierdź żądanie rozpoczęcia usługi przed upływem 14 dni i zapoznaj się z zasadami rozliczenia wykonanej części usługi.' }, 400);
+  }
   if (product.fulfillment === 'download' && !env.PRODUCT_FILES) {
     return json({ error: 'Pobieranie materiałów SYSTEM START nie jest jeszcze skonfigurowane. Sprzedaż tego produktu pozostaje chwilowo wyłączona.' }, 503);
   }
@@ -24,12 +37,27 @@ export async function onRequestPost({ request, env }) {
   const retentionMonths = productKey === 'start' ? 6 : (productKey === 'elite' ? 9 : 8);
   const retentionDate = new Date();
   retentionDate.setUTCMonth(retentionDate.getUTCMonth() + retentionMonths);
+  const consentRecord = {
+    version: 'system-formy-checkout-consents-v2',
+    termsVersion: '2.0-2026-11-01',
+    privacyVersion: '1.1-2026-11-01',
+    acceptedAt: now,
+    termsAccepted: true,
+    privacyAcknowledged: true,
+    digitalContentConsent: isDigitalOnly,
+    digitalContentConsentAt: isDigitalOnly ? now : null,
+    serviceStartRequested: needsEarlyServiceStart,
+    serviceStartRequestedAt: needsEarlyServiceStart ? now : null
+  };
 
   try {
     await env.DB.prepare(`INSERT INTO sf_orders
       (order_ref, product_key, product_name, amount_minor, currency, payment_status, created_at, updated_at, retention_due_at)
       VALUES (?, ?, ?, ?, 'pln', 'creating_checkout', ?, ?, ?)`)
       .bind(orderRef, productKey, product.name, product.amount, now, now, retentionDate.toISOString()).run();
+
+    await env.DB.prepare(`UPDATE sf_orders SET intake_json = ?, updated_at = ? WHERE order_ref = ?`)
+      .bind(JSON.stringify({ checkoutConsents: consentRecord }), now, orderRef).run();
 
     const origin = new URL(request.url).origin;
     const form = new URLSearchParams({
@@ -47,6 +75,14 @@ export async function onRequestPost({ request, env }) {
       'metadata[order_ref]': orderRef,
       'metadata[product_key]': productKey,
       'metadata[site]': 'system-formy-pages',
+      'metadata[terms_version]': consentRecord.termsVersion,
+      'metadata[terms_accepted_at]': now,
+      'metadata[privacy_version]': consentRecord.privacyVersion,
+      'metadata[privacy_acknowledged]': 'true',
+      'metadata[digital_content_consent]': isDigitalOnly ? 'true' : 'false',
+      ...(isDigitalOnly ? { 'metadata[digital_content_consent_at]': now } : {}),
+      'metadata[service_start_requested]': needsEarlyServiceStart ? 'true' : 'false',
+      ...(needsEarlyServiceStart ? { 'metadata[service_start_requested_at]': now } : {}),
       'payment_intent_data[metadata][order_ref]': orderRef,
       'payment_intent_data[metadata][product_key]': productKey
     });

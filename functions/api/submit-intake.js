@@ -18,7 +18,7 @@ export async function onRequestPost({ request, env }) {
     const product = CATALOG[productKey];
     if (!product || product.fulfillment !== 'intake' || !orderRef) return json({ error: 'Ten produkt nie wymaga ankiety.' }, 400);
 
-    const order = await env.DB.prepare(`SELECT payment_status, customer_email FROM sf_orders WHERE order_ref = ? AND session_id = ?`)
+    const order = await env.DB.prepare(`SELECT payment_status, customer_email, intake_json FROM sf_orders WHERE order_ref = ? AND session_id = ?`)
       .bind(orderRef, session.id).first();
     if (!order || order.payment_status !== 'paid') return json({ error: 'Zamówienie nie jest jeszcze zapisane jako opłacone.' }, 403);
 
@@ -50,10 +50,31 @@ export async function onRequestPost({ request, env }) {
     if (![30, 45, 60, 75, 90].includes(sessionMinutes)) return json({ error: 'Wybierz czas trwania sesji.' }, 400);
     if ((healthPain || healthRestriction || healthNotes) && !healthConsent) return json({ error: 'Aby przekazać opcjonalne informacje zdrowotne, zaznacz odrębną zgodę. Możesz też pozostawić te pola puste.' }, 400);
 
+    const detailAllowlist = {
+      'individual-basic': ['bodyWeight', 'height', 'trainingHistory', 'preferredExercises'],
+      'individual-monitor': ['bodyWeight', 'height', 'trainingHistory', 'preferredExercises', 'progressFocus', 'reportDay'],
+      'individual-full': ['bodyWeight', 'height', 'trainingHistory', 'preferredExercises', 'progressFocus', 'reportDay', 'techniqueExercises'],
+      pro: ['weeklySchedule', 'nutrition', 'sleep', 'dailyActivity', 'barriers', 'supportNeeds'],
+      elite: ['goalMetric', 'baselineValue', 'targetValue', 'measurementMethod', 'reportDay', 'weeklySchedule', 'nutrition', 'sleep', 'dailyActivity', 'barriers']
+    };
+    const allowedDetails = detailAllowlist[productKey] || [];
+    const rawDetails = body.details && typeof body.details === 'object' && !Array.isArray(body.details) ? body.details : {};
+    const details = Object.fromEntries(allowedDetails.map(key => [key, text(rawDetails[key], key === 'measurementMethod' ? 500 : 900)]));
+    if (productKey === 'elite') {
+      if (!['masa', 'obwód', 'siła', 'kondycja', 'test', 'inny'].includes(details.goalMetric)) return json({ error: 'Wybierz mierzalny wskaźnik celu ELITE.' }, 400);
+      if (!details.baselineValue || !details.targetValue || !details.measurementMethod || !['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'].includes(details.reportDay)) {
+        return json({ error: 'Uzupełnij wartość początkową, docelową, metodę pomiaru i dzień raportu dla Karty Celu ELITE.' }, 400);
+      }
+    }
+
+    let previousIntake = {};
+    try { previousIntake = order.intake_json ? JSON.parse(order.intake_json) : {}; } catch { previousIntake = {}; }
+    const surveyType = productKey === 'pro' ? 'pro' : productKey === 'elite' ? 'elite' : 'individual';
     const intake = {
-      version: 'system-formy-intake-v1.0', product_key: productKey,
+      version: 'system-formy-intake-v2.0', survey_type: surveyType, product_key: productKey,
       name, email, age, goal, measurableGoal, experience, trainingLocation,
-      equipment, daysPerWeek, sessionMinutes, currentPlan, difficulty, startDate,
+      equipment, daysPerWeek, sessionMinutes, currentPlan, difficulty, startDate, details,
+      checkoutConsents: previousIntake.checkoutConsents || null,
       health: healthConsent ? { consent: true, pain: healthPain, restriction: healthRestriction, notes: healthNotes } : null,
       submitted_at: new Date().toISOString()
     };
