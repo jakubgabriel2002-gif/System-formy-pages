@@ -1,103 +1,82 @@
-// Cloudflare Pages Function: Stripe Checkout session creator.
-// IMPORTANT: keep CHECKOUT_ENABLED unset/false until payment webhooks and fulfilment
-// are implemented and tested. This protects customers from being charged before
-// START materials or PRO/ELITE onboarding can be reliably delivered.
-
-const PACKAGE_CONFIG = Object.freeze({
-  start: { priceEnv: "STRIPE_PRICE_START", amount: 9900 },
-  pro: { priceEnv: "STRIPE_PRICE_PRO", amount: 69900 },
-  elite: { priceEnv: "STRIPE_PRICE_ELITE", amount: 149900 }
-});
-
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store"
-    }
-  });
-}
+import { CATALOG, isValidProductKey } from '../_shared/catalog.js';
+import { json, stripeRequest } from '../_shared/stripe.js';
 
 export async function onRequestPost({ request, env }) {
-  if (request.headers.get("content-type")?.toLowerCase().includes("application/json") !== true) {
-    return json({ error: "Nieprawidłowy format żądania." }, 415);
+  if (!request.headers.get('content-type')?.toLowerCase().includes('application/json')) {
+    return json({ error: 'Nieprawidłowy format żądania.' }, 415);
   }
+  if (!env.DB) return json({ error: 'Płatności nie są jeszcze uruchomione: brakuje połączenia z bazą zamówień D1 (binding DB).' }, 503);
+  if (!env.STRIPE_SECRET_KEY) return json({ error: 'Brakuje konfiguracji Stripe. Spróbuj ponownie później.' }, 503);
 
   let body;
-  try {
-    body = await request.json();
-  } catch {
-    return json({ error: "Nie udało się odczytać żądania." }, 400);
+  try { body = await request.json(); }
+  catch { return json({ error: 'Nie udało się odczytać żądania.' }, 400); }
+
+  const productKey = String(body?.product || '');
+  if (!isValidProductKey(productKey)) return json({ error: 'Wybrany produkt nie istnieje.' }, 400);
+  const product = CATALOG[productKey];
+  if (product.fulfillment === 'download' && !env.PRODUCT_FILES) {
+    return json({ error: 'Pobieranie materiałów SYSTEM START nie jest jeszcze skonfigurowane. Sprzedaż tego produktu pozostaje chwilowo wyłączona.' }, 503);
   }
 
-  const packageKey = String(body?.package || "").toLowerCase();
-  if (!Object.hasOwn(PACKAGE_CONFIG, packageKey)) {
-    return json({ error: "Wybrany pakiet nie istnieje." }, 400);
-  }
-
-  // Do not accept payments until fulfilment and webhook processing are ready.
-  if (env.CHECKOUT_ENABLED !== "true") {
-    return json({ error: "Zakup online nie jest jeszcze uruchomiony. Płatności zostaną udostępnione po zakończeniu konfiguracji realizacji zamówień." }, 503);
-  }
-
-  if (!env.STRIPE_SECRET_KEY) {
-    return json({ error: "Brakuje konfiguracji płatności. Spróbuj ponownie później." }, 503);
-  }
-
-  const packageConfig = PACKAGE_CONFIG[packageKey];
-  const priceId = env[packageConfig.priceEnv];
-  if (!priceId || !/^price_[A-Za-z0-9]+$/.test(priceId)) {
-    return json({ error: "Cena wybranego pakietu nie jest jeszcze skonfigurowana." }, 503);
-  }
+  const orderRef = crypto.randomUUID();
+  const now = new Date().toISOString();
+  const retentionMonths = productKey === 'start' ? 6 : (productKey === 'elite' ? 9 : 8);
+  const retentionDate = new Date();
+  retentionDate.setUTCMonth(retentionDate.getUTCMonth() + retentionMonths);
 
   try {
-    // Verify the configured Stripe price matches the price shown on the website.
-    const stripeHeaders = { Authorization: `Bearer ${env.STRIPE_SECRET_KEY}` };
-    const priceResponse = await fetch(`https://api.stripe.com/v1/prices/${encodeURIComponent(priceId)}`, {
-      method: "GET",
-      headers: stripeHeaders
-    });
-    const price = await priceResponse.json().catch(() => ({}));
-    if (!priceResponse.ok || price.active !== true || price.unit_amount !== packageConfig.amount || price.currency !== "pln" || price.recurring) {
-      console.error("Stripe Price configuration mismatch", priceResponse.status, packageKey);
-      return json({ error: "Konfiguracja ceny tego pakietu wymaga sprawdzenia. Płatność nie została rozpoczęta." }, 503);
-    }
+    await env.DB.prepare(`INSERT INTO sf_orders
+      (order_ref, product_key, product_name, amount_minor, currency, payment_status, created_at, updated_at, retention_due_at)
+      VALUES (?, ?, ?, ?, 'pln', 'creating_checkout', ?, ?, ?)`)
+      .bind(orderRef, productKey, product.name, product.amount, now, now, retentionDate.toISOString()).run();
 
     const origin = new URL(request.url).origin;
     const form = new URLSearchParams({
-      mode: "payment",
-      "line_items[0][price]": priceId,
-      "line_items[0][quantity]": "1",
-      success_url: `${origin}/?payment=success#jak-to-dziala`,
-      cancel_url: `${origin}/?payment=cancelled#oferta`,
-      "metadata[package_key]": `system-formy-${packageKey}`,
-      "metadata[source]": "system-formy-public-site"
+      mode: 'payment',
+      locale: 'pl',
+      submit_type: 'pay',
+      customer_creation: 'always',
+      'line_items[0][price_data][currency]': 'pln',
+      'line_items[0][price_data][unit_amount]': String(product.amount),
+      'line_items[0][price_data][product_data][name]': product.name,
+      'line_items[0][price_data][product_data][description]': product.stripeDescription,
+      'line_items[0][quantity]': '1',
+      success_url: `${origin}/realizacja.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/${product.page}?payment=cancelled`,
+      'metadata[order_ref]': orderRef,
+      'metadata[product_key]': productKey,
+      'metadata[site]': 'system-formy-pages',
+      'payment_intent_data[metadata][order_ref]': orderRef,
+      'payment_intent_data[metadata][product_key]': productKey
     });
 
-    const stripeResponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-      method: "POST",
+    const session = await stripeRequest(env, '/v1/checkout/sessions', {
+      method: 'POST',
       headers: {
-        ...stripeHeaders,
-        "Content-Type": "application/x-www-form-urlencoded"
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Idempotency-Key': `system-formy-${orderRef}`
       },
       body: form
     });
 
-    const stripeResult = await stripeResponse.json().catch(() => ({}));
-    if (!stripeResponse.ok) {
-      // Keep internal Stripe details out of the public response.
-      console.error("Stripe Checkout session creation failed", stripeResponse.status, stripeResult?.error?.type || "unknown");
-      return json({ error: "Nie udało się teraz rozpocząć płatności. Spróbuj ponownie później." }, 502);
+    if (typeof session.url !== 'string' || !session.url.startsWith('https://checkout.stripe.com/')) {
+      throw new Error('STRIPE_INVALID_CHECKOUT_URL');
     }
 
-    if (typeof stripeResult.url !== "string" || !stripeResult.url.startsWith("https://checkout.stripe.com/")) {
-      return json({ error: "Stripe nie zwrócił prawidłowego adresu płatności." }, 502);
-    }
+    await env.DB.prepare(`UPDATE sf_orders SET session_id = ?, payment_status = 'pending', updated_at = ? WHERE order_ref = ?`)
+      .bind(session.id, new Date().toISOString(), orderRef).run();
 
-    return json({ url: stripeResult.url });
+    return json({ url: session.url });
   } catch (error) {
-    console.error("Checkout endpoint error", error instanceof Error ? error.message : "unknown");
-    return json({ error: "Nie udało się rozpocząć płatności. Spróbuj ponownie później." }, 500);
+    try {
+      await env.DB.prepare(`UPDATE sf_orders SET payment_status = 'checkout_error', updated_at = ? WHERE order_ref = ?`)
+        .bind(new Date().toISOString(), orderRef).run();
+    } catch (dbError) {
+      console.error('Could not mark checkout order error', dbError instanceof Error ? dbError.message : 'unknown');
+    }
+    console.error('Checkout creation failed', error instanceof Error ? error.message : 'unknown');
+    if (error instanceof Error && error.message === 'STRIPE_NOT_CONFIGURED') return json({ error: 'Brakuje poprawnego klucza Stripe w Cloudflare.' }, 503);
+    return json({ error: 'Nie udało się teraz rozpocząć płatności. Spróbuj ponownie później.' }, 502);
   }
 }
