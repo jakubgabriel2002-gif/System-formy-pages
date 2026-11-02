@@ -16,9 +16,18 @@ export async function onRequestGet({ request, env }) {
       .bind(verified.orderRef, sessionId).first();
     if (!order || order.payment_status !== 'paid') return json({ error: 'Zamówienie nie jest potwierdzone.' }, 403);
 
-    const objectKey = variant === 'home' ? 'system-start/home.zip' : 'system-start/gym.zip';
-    const object = await env.PRODUCT_FILES.get(objectKey);
-    if (!object) return json({ error: 'Materiały nie zostały jeszcze wgrane do prywatnego magazynu. Skontaktuj się z SYSTEM FORMY.' }, 503);
+    // W istniejącym buckecie pliki były wgrywane z nazwami system-start-home.zip
+    // i system-start-gym.zip do folderu system-start. Zachowujemy też zgodność
+    // z krótszymi kluczami opisanymi w starszej instrukcji wdrożenia.
+    const objectKeys = variant === 'home'
+      ? ['system-start/system-start-home.zip', 'system-start/home.zip', 'system-start-home.zip']
+      : ['system-start/system-start-gym.zip', 'system-start/gym.zip', 'system-start-gym.zip'];
+    let object = null;
+    for (const objectKey of objectKeys) {
+      object = await env.PRODUCT_FILES.get(objectKey);
+      if (object) break;
+    }
+    if (!object) return json({ error: 'Nie znaleziono pakietu SYSTEM START w prywatnym magazynie. Sprawdź pliki home/gym w bucketcie PRODUCT_FILES.' }, 503);
 
     await env.DB.prepare(`UPDATE sf_orders SET download_variant = ?, downloaded_at = ? WHERE order_ref = ?`)
       .bind(variant, new Date().toISOString(), verified.orderRef).run();

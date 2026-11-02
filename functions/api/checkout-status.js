@@ -23,10 +23,11 @@ export async function onRequestGet({ request, env }) {
 
     if (session.payment_status === 'paid') {
       const email = session.customer_details?.email || session.customer_email || null;
+      const name = session.customer_details?.name || null;
       const paymentIntent = typeof session.payment_intent === 'string' ? session.payment_intent : null;
       await env.DB.prepare(`UPDATE sf_orders SET payment_status = 'paid', customer_email = COALESCE(?, customer_email), payment_intent = COALESCE(?, payment_intent), paid_at = COALESCE(paid_at, ?), updated_at = ? WHERE order_ref = ? AND session_id = ?`)
         .bind(email, paymentIntent, new Date().toISOString(), new Date().toISOString(), orderRef, session.id).run();
-      return json({ status: 'paid', product_key: productKey, product_name: product.name, fulfillment: product.fulfillment, email });
+      return json({ status: 'paid', product_key: productKey, product_name: product.name, fulfillment: product.fulfillment, email, name });
     }
 
     return json({ status: 'pending' }, 202);
