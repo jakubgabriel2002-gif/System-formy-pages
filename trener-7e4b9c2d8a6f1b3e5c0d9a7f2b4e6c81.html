@@ -58,6 +58,12 @@
             <div><h2>Lista klientów</h2><span class="muted small" id="results-count">Ładowanie…</span></div>
             <span class="count-pill" id="loaded-count">0</span>
           </div>
+          <div class="product-tabs" role="tablist" aria-label="Widok ankiet według produktu">
+            <button class="product-tab active" type="button" data-product-filter="all">Wszystkie</button>
+            <button class="product-tab" type="button" data-product-filter="pro">SYSTEM PRO</button>
+            <button class="product-tab" type="button" data-product-filter="elite">SYSTEM ELITE</button>
+            <button class="product-tab" type="button" data-product-filter="individual">Plany indywidualne</button>
+          </div>
           <div class="filters">
             <label class="search-wrap"><span class="sr-only">Szukaj klienta</span><input id="search-input" type="search" placeholder="Szukaj: imię, e-mail, produkt…" autocomplete="off"></label>
             <select id="intake-filter" aria-label="Filtr ankiety">
@@ -67,11 +73,13 @@
             </select>
             <select id="status-filter" aria-label="Filtr statusu współpracy">
               <option value="">Wszystkie statusy</option>
-              <option value="new">Nowy</option>
-              <option value="in_progress">W trakcie</option>
-              <option value="waiting_client">Oczekuje na klienta</option>
-              <option value="ready">Gotowy</option>
-              <option value="completed">Zakończony</option>
+              <option value="new_survey">Nowa ankieta</option>
+              <option value="needs_more_data">Wymaga uzupełnienia danych</option>
+              <option value="to_analyze">Do analizy</option>
+              <option value="plan_in_progress">Plan w przygotowaniu</option>
+              <option value="elite_card_pending">Karta Celu ELITE do uzgodnienia</option>
+              <option value="awaiting_acceptance">Oczekuje na akceptację</option>
+              <option value="completed">Zrealizowane</option>
             </select>
           </div>
           <div class="client-list" id="client-list" aria-live="polite"><div class="empty-state">Pobieranie klientów…</div></div>
