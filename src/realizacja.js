@@ -124,10 +124,10 @@
         <div class="form-field"><label for="barriers">CO NAJCZĘŚCIEJ UTRUDNIA CI REGULARNOŚĆ? (OPCJONALNIE)</label><textarea id="barriers" name="barriers" data-survey-detail maxlength="900"></textarea></div>
         <div class="form-field full"><label for="support-needs">W JAKICH OBSZARACH NAJBARDZIEJ POTRZEBUJESZ WSPARCIA? (OPCJONALNIE)</label><textarea id="support-needs" name="supportNeeds" data-survey-detail maxlength="900"></textarea></div>`;
     } else if (isIndividual) {
-      detailNames = ['bodyWeight', 'height', 'trainingHistory', 'preferredExercises', 'progressFocus', 'reportDay', 'techniqueExercises'];
+      detailNames = ['height', 'trainingHistory', 'preferredExercises', 'progressFocus', 'reportDay', 'techniqueExercises'];
       productFields = `
         <h2 class="survey-heading full">DOPASOWANIE PLANU INDYWIDUALNEGO</h2>
-        <div class="form-field"><label for="body-weight">AKTUALNA MASA CIAŁA (OPCJONALNIE)</label><input id="body-weight" name="bodyWeight" data-survey-detail maxlength="40" placeholder="Np. 82 kg"></div>
+
         <div class="form-field"><label for="height">WZROST (OPCJONALNIE)</label><input id="height" name="height" data-survey-detail maxlength="40" placeholder="Np. 180 cm"></div>
         <div class="form-field full"><label for="training-history">JAK WYGLĄDAŁ TWÓJ DOTYCHCZASOWY TRENING? (OPCJONALNIE)</label><textarea id="training-history" name="trainingHistory" data-survey-detail maxlength="900"></textarea></div>
         <div class="form-field full"><label for="preferred-exercises">CZY SĄ ĆWICZENIA, KTÓRE LUBISZ LUB CHCESZ UWZGLĘDNIĆ? (OPCJONALNIE)</label><textarea id="preferred-exercises" name="preferredExercises" data-survey-detail maxlength="800"></textarea></div>
@@ -142,9 +142,11 @@
       <p class="realization-lead">${surveyIntro}</p>
       <p class="realization-lead">Nie podawaj pełnych diagnoz, listy leków ani dokumentacji medycznej. Informacje o ograniczeniach zdrowotnych są opcjonalne i mają osobną zgodę.</p>
       <form id="client-intake" class="realization-form">
-        <div class="form-field"><label for="intake-name">IMIĘ I NAZWISKO *</label><input id="intake-name" name="name" autocomplete="name" required maxlength="120"></div>
+        <div class="form-field"><label for="intake-name">IMIĘ I NAZWISKO *</label><input id="intake-name" name="name" autocomplete="name" value="${escapeAttr(data.name || '')}" required maxlength="120"></div>
         <div class="form-field"><label for="intake-email">E-MAIL ZAMÓWIENIA *</label><input id="intake-email" name="email" type="email" autocomplete="email" value="${escapeAttr(data.email || '')}" required maxlength="254"></div>
-        <div class="form-field"><label for="intake-age">WIEK *</label><input id="intake-age" name="age" type="number" min="18" max="100" required></div>
+        <div class="form-field"><label for="intake-age">WIEK *</label><input id="intake-age" name="age" type="number" min="18" max="100" step="1" required></div>
+        <div class="form-field"><label for="intake-gender">PŁEĆ *</label><select id="intake-gender" name="gender" required><option value="">Wybierz</option><option value="kobieta">Kobieta</option><option value="mężczyzna">Mężczyzna</option><option value="inna">Inna</option><option value="nie_podaję">Wolę nie podawać</option></select></div>
+        <div class="form-field"><label for="intake-weight">AKTUALNA MASA CIAŁA (KG) *</label><input id="intake-weight" name="bodyWeightKg" type="number" min="25" max="350" step="0.1" required placeholder="Np. 82.5"></div>
         <div class="form-field"><label for="intake-location">GDZIE TRENUJESZ? *</label><select id="intake-location" name="trainingLocation" required><option value="">Wybierz</option><option value="dom">W domu</option><option value="siłownia">Na siłowni</option><option value="oba">W obu miejscach</option></select></div>
         <div class="form-field full"><label for="intake-goal">JAKI JEST TWÓJ GŁÓWNY CEL? *</label><textarea id="intake-goal" name="goal" required maxlength="1500" placeholder="Opisz, nad czym chcesz pracować."></textarea></div>
         <div class="form-field full"><label for="intake-measurable">CZY MASZ DODATKOWY KONKRETNY CEL LICZBOWY? (OPCJONALNIE)</label><textarea id="intake-measurable" name="measurableGoal" maxlength="800" placeholder="Np. obwód, masa ciała, wynik siłowy lub test sprawnościowy."></textarea></div>
@@ -152,7 +154,51 @@
         <div class="form-field"><label for="intake-days">ILE DNI W TYGODNIU MOŻESZ TRENOWAĆ? *</label><select id="intake-days" name="daysPerWeek" required><option value="">Wybierz</option><option value="2">2 dni</option><option value="3">3 dni</option><option value="4">4 dni</option><option value="5">5 dni</option><option value="6">6 dni</option><option value="7">7 dni</option></select></div>
         <div class="form-field"><label for="intake-minutes">CZAS JEDNEGO TRENINGU *</label><select id="intake-minutes" name="sessionMinutes" required><option value="">Wybierz</option><option value="30">30 minut</option><option value="45">45 minut</option><option value="60">60 minut</option><option value="75">75 minut</option><option value="90">90 minut</option></select></div>
         <div class="form-field"><label for="intake-start">PREFEROWANY START (OPCJONALNIE)</label><input id="intake-start" name="startDate" type="date"></div>
-        <div class="form-field full"><label for="intake-equipment">JAKI SPRZĘT MASZ DO DYSPOZYCJI? *</label><textarea id="intake-equipment" name="equipment" required maxlength="800" placeholder="Wpisz sprzęt dostępny w domu lub na siłowni."></textarea></div>
+        <fieldset class="equipment-module full" id="equipment-module" hidden disabled>
+          <legend>SPRZĘT, KTÓRY MASZ W DOMU</legend>
+          <p>Zaznacz wszystkie dostępne rzeczy. Ta sekcja pojawi się przy treningu w domu lub w obu miejscach.</p>
+          <div class="equipment-grid" id="equipment-grid">
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="dumbbells"><span>Hantle</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="barbell"><span>Sztanga</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="bench"><span>Ławka</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="rack"><span>Stojaki / klatka</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="pullup_bar"><span>Drążek</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="bands"><span>Gumy oporowe</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="kettlebell"><span>Kettlebell</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="mat"><span>Mata</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="treadmill"><span>Bieżnia</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="stationary_bike"><span>Rower stacjonarny</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="elliptical"><span>Orbitrek</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="jump_rope"><span>Skakanka</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="trx"><span>TRX</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="cable_machine"><span>Wyciąg</span></label>
+            <label class="equipment-option equipment-option-wide"><input type="checkbox" name="equipmentItems" value="none"><span>Nie mam żadnego sprzętu</span></label>
+            <label class="equipment-option"><input type="checkbox" name="equipmentItems" value="other"><span>Inny sprzęt</span></label>
+          </div>
+          <div class="form-field equipment-other" id="equipment-other-wrap" hidden><label for="equipment-other">JAKI INNY SPRZĘT? *</label><input id="equipment-other" name="equipmentOther" maxlength="300" placeholder="Wpisz posiadany sprzęt"></div>
+        </fieldset>
+        <fieldset class="training-test-fieldset full" id="home-tests" hidden disabled>
+          <legend>TEST SPRAWNOŚCIOWY — TRENING W DOMU</legend>
+          <p>Wpisz maksymalną liczbę poprawnych powtórzeń, które wykonujesz bez przerwy w jednej serii.</p>
+          <div class="test-grid">
+            <div class="form-field"><label for="home-pushups">POMPKI — MAKS. POWTÓRZEŃ *</label><input id="home-pushups" name="homePushUps" type="number" min="0" max="1000" step="1" required></div>
+            <div class="form-field"><label for="home-squats">PRZYSIADY — MAKS. POWTÓRZEŃ *</label><input id="home-squats" name="homeSquats" type="number" min="0" max="1000" step="1" required></div>
+            <div class="form-field"><label for="home-situps">BRZUSZKI — MAKS. POWTÓRZEŃ *</label><input id="home-situps" name="homeSitUps" type="number" min="0" max="1000" step="1" required></div>
+            <div class="form-field"><label for="home-jumping-jacks">PAJACYKI — MAKS. POWTÓRZEŃ *</label><input id="home-jumping-jacks" name="homeJumpingJacks" type="number" min="0" max="1000" step="1" required></div>
+          </div>
+        </fieldset>
+        <fieldset class="training-test-fieldset full" id="gym-tests" hidden disabled>
+          <legend>WYNIKI TRENINGOWE — SIŁOWNIA</legend>
+          <p>Nie wykonuj testu 1RM ani prób maksymalnego ciężaru. Przy wyciskaniu i przysiadzie wpisz używany ciężar oraz liczbę poprawnych powtórzeń w bezpiecznej serii. Jeżeli jeszcze nie wykonujesz ćwiczenia, wpisz 0.</p>
+          <div class="test-grid">
+            <div class="form-field"><label for="gym-bench-kg">WYCISKANIE LEŻĄC — CIĘŻAR (KG) *</label><input id="gym-bench-kg" name="gymBenchPressKg" type="number" min="0" max="500" step="0.5" required></div>
+            <div class="form-field"><label for="gym-bench-reps">WYCISKANIE LEŻĄC — POWTÓRZENIA *</label><input id="gym-bench-reps" name="gymBenchPressReps" type="number" min="0" max="1000" step="1" required></div>
+            <div class="form-field"><label for="gym-squat-kg">PRZYSIAD ZE SZTANGĄ — CIĘŻAR (KG) *</label><input id="gym-squat-kg" name="gymSquatKg" type="number" min="0" max="500" step="0.5" required></div>
+            <div class="form-field"><label for="gym-squat-reps">PRZYSIAD ZE SZTANGĄ — POWTÓRZENIA *</label><input id="gym-squat-reps" name="gymSquatReps" type="number" min="0" max="1000" step="1" required></div>
+            <div class="form-field"><label for="gym-situps">BRZUSZKI — MAKS. POWTÓRZEŃ *</label><input id="gym-situps" name="gymSitUps" type="number" min="0" max="1000" step="1" required></div>
+            <div class="form-field"><label for="gym-pullups">PODCIĄGANIE — MAKS. POWTÓRZEŃ *</label><input id="gym-pullups" name="gymPullUps" type="number" min="0" max="1000" step="1" required></div>
+          </div>
+        </fieldset>
         <div class="form-field full"><label for="intake-current">JAK WYGLĄDA TWÓJ OBECNY PLAN LUB AKTYWNOŚĆ? (OPCJONALNIE)</label><textarea id="intake-current" name="currentPlan" maxlength="1000"></textarea></div>
         <div class="form-field full"><label for="intake-difficulty">CO NAJTRUDNIEJ CI OSIĄGNĄĆ LUB UTRZYMAĆ? (OPCJONALNIE)</label><textarea id="intake-difficulty" name="difficulty" maxlength="1000"></textarea></div>
         ${productFields}
@@ -174,9 +220,66 @@
     const form = document.querySelector('#client-intake');
     const healthCheckbox = document.querySelector('#health-consent');
     const healthFields = document.querySelector('#health-fields');
+    const locationSelect = document.querySelector('#intake-location');
+    const equipmentModule = document.querySelector('#equipment-module');
+    const homeTests = document.querySelector('#home-tests');
+    const gymTests = document.querySelector('#gym-tests');
+    const equipmentInputs = Array.from(form.querySelectorAll('input[name="equipmentItems"]'));
+    const equipmentOther = document.querySelector('#equipment-other');
+    const equipmentOtherWrap = document.querySelector('#equipment-other-wrap');
+    const equipmentNone = equipmentInputs.find(input => input.value === 'none');
+    const equipmentOtherChoice = equipmentInputs.find(input => input.value === 'other');
     healthCheckbox?.addEventListener('change', () => { healthFields.hidden = !healthCheckbox.checked; });
+
+    function updateEquipmentState() {
+      const show = ['dom', 'oba'].includes(locationSelect.value);
+      equipmentModule.hidden = !show;
+      equipmentModule.disabled = !show;
+      if (!show) {
+        equipmentInputs.forEach(input => { input.checked = false; input.setCustomValidity(''); });
+        equipmentOther.value = '';
+      }
+      const noneSelected = Boolean(equipmentNone?.checked);
+      equipmentInputs.forEach(input => {
+        if (input === equipmentNone) return;
+        input.disabled = !show || noneSelected;
+      });
+      if (equipmentNone) equipmentNone.disabled = !show;
+      const otherSelected = Boolean(equipmentOtherChoice?.checked && show);
+      equipmentOtherWrap.hidden = !otherSelected;
+      equipmentOther.disabled = !otherSelected;
+      equipmentOther.required = otherSelected;
+      equipmentOther.setCustomValidity(otherSelected && !equipmentOther.value.trim() ? 'Wpisz, jaki inny sprzęt posiadasz.' : '');
+      const firstActive = equipmentInputs.find(input => input !== equipmentNone && input !== equipmentOtherChoice) || equipmentInputs[0];
+      if (firstActive) firstActive.setCustomValidity(show && !equipmentInputs.some(input => input.checked) ? 'Zaznacz przynajmniej jedną opcję sprzętu.' : '');
+    }
+
+    function updateConditionalFields() {
+      const location = locationSelect.value;
+      const showHome = ['dom', 'oba'].includes(location);
+      const showGym = ['siłownia', 'oba'].includes(location);
+      homeTests.hidden = !showHome;
+      homeTests.disabled = !showHome;
+      gymTests.hidden = !showGym;
+      gymTests.disabled = !showGym;
+      updateEquipmentState();
+    }
+
+    locationSelect?.addEventListener('change', updateConditionalFields);
+    equipmentInputs.forEach(input => input.addEventListener('change', () => {
+      if (input === equipmentNone && input.checked) {
+        equipmentInputs.filter(item => item !== equipmentNone).forEach(item => { item.checked = false; });
+      } else if (input.checked && equipmentNone) {
+        equipmentNone.checked = false;
+      }
+      updateEquipmentState();
+    }));
+    equipmentOther?.addEventListener('input', updateEquipmentState);
+    updateConditionalFields();
+
     form?.addEventListener('submit', async event => {
       event.preventDefault();
+      updateConditionalFields();
       if (!form.reportValidity()) return;
       const submit = document.querySelector('#intake-submit');
       const status = document.querySelector('#intake-status');
@@ -184,12 +287,35 @@
       status.textContent = 'Zapisuję ankietę…';
       const value = name => form.elements[name]?.value ?? '';
       const details = Object.fromEntries(detailNames.map(name => [name, value(name)]));
+      const location = value('trainingLocation');
+      const equipmentItems = equipmentInputs.filter(input => input.checked).map(input => input.value);
+      const equipmentOtherValue = value('equipmentOther').trim();
+      const equipmentLabels = {
+        dumbbells: 'hantle', barbell: 'sztanga', bench: 'ławka', rack: 'stojaki / klatka',
+        pullup_bar: 'drążek', bands: 'gumy oporowe', kettlebell: 'kettlebell', mat: 'mata',
+        treadmill: 'bieżnia', stationary_bike: 'rower stacjonarny', elliptical: 'orbitrek',
+        jump_rope: 'skakanka', trx: 'TRX', cable_machine: 'wyciąg', none: 'brak sprzętu', other: equipmentOtherValue
+      };
+      const maxTests = {
+        home: ['dom', 'oba'].includes(location) ? {
+          pushUps: value('homePushUps'), squats: value('homeSquats'), sitUps: value('homeSitUps'), jumpingJacks: value('homeJumpingJacks')
+        } : null,
+        gym: ['siłownia', 'oba'].includes(location) ? {
+          benchPress: { weightKg: value('gymBenchPressKg'), reps: value('gymBenchPressReps') },
+          squat: { weightKg: value('gymSquatKg'), reps: value('gymSquatReps') },
+          sitUps: value('gymSitUps'), pullUps: value('gymPullUps')
+        } : null
+      };
       const payload = {
         session_id: sessionId, name: value('name'), email: value('email'), age: value('age'),
+        gender: value('gender'), bodyWeightKg: value('bodyWeightKg'),
         goal: value('goal'), measurableGoal: value('measurableGoal'), experience: value('experience'),
-        trainingLocation: value('trainingLocation'), equipment: value('equipment'), daysPerWeek: value('daysPerWeek'),
-        sessionMinutes: value('sessionMinutes'), currentPlan: value('currentPlan'), difficulty: value('difficulty'), startDate: value('startDate'),
-        details,
+        trainingLocation: location,
+        equipmentItems, equipmentOther: equipmentOtherValue,
+        equipment: equipmentItems.map(item => equipmentLabels[item]).filter(Boolean).join(', '),
+        daysPerWeek: value('daysPerWeek'), sessionMinutes: value('sessionMinutes'),
+        currentPlan: value('currentPlan'), difficulty: value('difficulty'), startDate: value('startDate'),
+        maxTests, details,
         adultConfirmed: document.querySelector('#adult-confirmed').checked,
         healthConsent: healthCheckbox.checked,
         healthPain: value('healthPain'), healthRestriction: value('healthRestriction'), healthNotes: value('healthNotes')

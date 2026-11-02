@@ -977,3 +977,43 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
 .elite-guarantee-kicker { color: #b7d7f7; font-size: 8px; font-weight: 900; letter-spacing: .16em; }
 .elite-guarantee-title { color: #f0f6fd; font-size: 10px; font-weight: 900; letter-spacing: .1em; }
 @media (max-width: 760px) { .elite-guarantee-badge { margin-top: 17px; } .elite-guarantee-title { font-size: 9px; } }
+
+
+/* Gwarancja widoczna również bezpośrednio przy ofercie SYSTEM ELITE. */
+.hero-plan-guarantee {
+  margin: 9px 0 0;
+  color: var(--accent);
+  font-size: 7px;
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: .1em;
+}
+.guarantee-card-trigger {
+  align-self: flex-start;
+  margin: 9px 0 15px;
+  padding: 8px 10px;
+  border: 1px solid rgba(231,200,75,.55);
+  background: transparent;
+  color: var(--accent);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.guarantee-card-trigger:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.guarantee-available {
+  display: inline-block;
+  margin-right: 9px;
+  color: var(--accent);
+  font-weight: 900;
+}
+.comparison-table .guarantee-trigger { margin-left: 2px; }
+@media (max-width: 760px) {
+  .hero-plan-guarantee { font-size: 6.5px; }
+  .guarantee-card-trigger { font-size: 8px; }
+}

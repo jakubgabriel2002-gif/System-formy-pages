@@ -31,6 +31,31 @@
   const year = document.querySelector('#current-year');
   if (year) year.textContent = String(new Date().getFullYear());
 
+  // Warunki gwarancji otwierają osobny dialog poza tabelą porównawczą.
+  const guaranteeDialog = document.querySelector('#elite-guarantee-dialog');
+  let lastGuaranteeTrigger = null;
+  document.querySelectorAll('[data-open-guarantee]').forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      if (!guaranteeDialog) return;
+      lastGuaranteeTrigger = trigger;
+      if (typeof guaranteeDialog.showModal === 'function') guaranteeDialog.showModal();
+      else guaranteeDialog.setAttribute('open', '');
+    });
+  });
+  guaranteeDialog?.querySelectorAll('[data-close-guarantee]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (typeof guaranteeDialog.close === 'function') guaranteeDialog.close();
+      else guaranteeDialog.removeAttribute('open');
+      lastGuaranteeTrigger?.focus();
+    });
+  });
+  guaranteeDialog?.addEventListener('click', (event) => {
+    if (event.target !== guaranteeDialog) return;
+    if (typeof guaranteeDialog.close === 'function') guaranteeDialog.close();
+    else guaranteeDialog.removeAttribute('open');
+    lastGuaranteeTrigger?.focus();
+  });
+
   // Zapewnia dostęp do dokumentów prawnych również w stopce planu indywidualnego.
   document.querySelectorAll('.site-footer').forEach((footer) => {
     if (footer.querySelector('a[href="/regulamin.html"]') || footer.querySelector('.footer-legal-links')) return;

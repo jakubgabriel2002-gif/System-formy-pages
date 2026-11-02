@@ -3,7 +3,7 @@
 .product-page-content { max-width: 1050px; margin-top: 26px; }
 .product-back { display: inline-flex; gap: 9px; color: #aaa; font-size: 10px; font-weight: 800; letter-spacing: .12em; margin-bottom: 28px; }
 .product-sales h1 { max-width: 980px; margin: 0 0 20px; font-size: clamp(54px, 8vw, 104px); line-height: .88; }
-.product-sales h1 span { color: #a6a6a2; }
+.product-sales h1 span, .checkout-box h2 span { color: var(--accent, #e7c84b); }
 .product-subtitle { max-width: 720px; color: #c0c0bb; font-size: 14px; line-height: 1.9; }
 .product-details-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, .62fr); gap: 48px; align-items: start; margin-top: 44px; }
 .product-includes { border-top: 1px solid #343432; }
@@ -139,3 +139,60 @@
 /* Nagłówki i notatki ankiet zajmują pełną szerokość siatki formularza. */
 .realization-form .survey-heading.full,
 .realization-form .survey-note { grid-column: 1 / -1; }
+
+
+/* Ankieta: profil, sprzęt oraz testy zależne od miejsca treningu. */
+.equipment-module,
+.training-test-fieldset {
+  min-width: 0;
+  margin: 8px 0 0;
+  padding: 20px;
+  border: 1px solid #363633;
+  background: #101010;
+}
+.equipment-module[hidden],
+.training-test-fieldset[hidden] { display: none; }
+.equipment-module legend,
+.training-test-fieldset legend {
+  padding: 0 8px;
+  color: #e7c84b;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+.equipment-module > p,
+.training-test-fieldset > p {
+  margin: 5px 0 15px;
+  color: #9d9d97;
+  font-size: 10px;
+  line-height: 1.75;
+}
+.equipment-grid,
+.test-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.equipment-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #353532;
+  background: #090909;
+  color: #c8c8c2 !important;
+  font-size: 10px !important;
+  letter-spacing: .02em !important;
+  cursor: pointer;
+}
+.equipment-option input { flex: 0 0 auto; accent-color: #e7c84b; }
+.equipment-option-wide { grid-column: 1 / -1; }
+.equipment-other { margin-top: 15px; }
+.equipment-other[hidden] { display: none; }
+@media (max-width: 600px) {
+  .equipment-grid,
+  .test-grid { grid-template-columns: 1fr; }
+  .equipment-module,
+  .training-test-fieldset { padding: 15px; }
+}
