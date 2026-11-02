@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="referrer" content="same-origin">
+  <meta name="theme-color" content="#111111">
+  <title>Panel trenera | SYSTEM FORMY</title>
+  <link rel="stylesheet" href="/src/trainer-panel.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="login-view" id="login-view" hidden>
+      <div class="login-card">
+        <div class="brand-mark">SYSTEM <span>FORMY</span></div>
+        <p class="eyebrow">STREFA PRYWATNA</p>
+        <h1>Panel trenera</h1>
+        <p class="muted">Zaloguj się, aby zarządzać klientami i ankietami.</p>
+        <form id="login-form" autocomplete="on">
+          <label for="trainer-password">Hasło dostępu</label>
+          <input id="trainer-password" name="password" type="password" autocomplete="current-password" required maxlength="500" placeholder="Wpisz hasło">
+          <button class="button button-primary button-wide" type="submit">Zaloguj się</button>
+          <p class="form-error" id="login-error" role="alert"></p>
+        </form>
+        <p class="login-foot">Dostęp monitorowany. Połączenie szyfrowane.</p>
+      </div>
+    </section>
+
+    <section class="dashboard-view" id="dashboard-view" hidden>
+      <header class="topbar">
+        <a class="brand-mark" href="#dashboard" aria-label="Panel SYSTEM FORMY">SYSTEM <span>FORMY</span></a>
+        <div class="topbar-right">
+          <span class="secure-label"><i></i> Prywatny panel</span>
+          <button class="button button-quiet" id="logout-button" type="button">Wyloguj</button>
+        </div>
+      </header>
+
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">CENTRUM ZARZĄDZANIA</p>
+          <h1>Klienci i współprace</h1>
+          <p class="muted">Ankiety, dane startowe i postęp realizacji zamówień.</p>
+        </div>
+        <button class="button button-outline" id="refresh-button" type="button">Odśwież dane</button>
+      </div>
+
+      <section class="stats-grid" aria-label="Podsumowanie klientów">
+        <article class="stat-card"><span>Opłacone współprace</span><strong id="stat-total">—</strong></article>
+        <article class="stat-card"><span>Nowe</span><strong id="stat-new">—</strong></article>
+        <article class="stat-card"><span>W trakcie</span><strong id="stat-progress">—</strong></article>
+        <article class="stat-card"><span>Brak ankiety</span><strong id="stat-missing">—</strong></article>
+      </section>
+
+      <section class="workspace">
+        <div class="client-list-panel">
+          <div class="list-heading">
+            <div><h2>Lista klientów</h2><span class="muted small" id="results-count">Ładowanie…</span></div>
+            <span class="count-pill" id="loaded-count">0</span>
+          </div>
+          <div class="filters">
+            <label class="search-wrap"><span class="sr-only">Szukaj klienta</span><input id="search-input" type="search" placeholder="Szukaj: imię, e-mail, produkt…" autocomplete="off"></label>
+            <select id="intake-filter" aria-label="Filtr ankiety">
+              <option value="">Wszystkie ankiety</option>
+              <option value="submitted">Ankieta wypełniona</option>
+              <option value="missing">Brak ankiety</option>
+            </select>
+            <select id="status-filter" aria-label="Filtr statusu współpracy">
+              <option value="">Wszystkie statusy</option>
+              <option value="new">Nowy</option>
+              <option value="in_progress">W trakcie</option>
+              <option value="waiting_client">Oczekuje na klienta</option>
+              <option value="ready">Gotowy</option>
+              <option value="completed">Zakończony</option>
+            </select>
+          </div>
+          <div class="client-list" id="client-list" aria-live="polite"><div class="empty-state">Pobieranie klientów…</div></div>
+          <p class="list-limit-note">Wyświetlane jest maksymalnie 250 najnowszych opłaconych zamówień wymagających ankiety.</p>
+        </div>
+
+        <section class="detail-panel" id="detail-panel" aria-live="polite">
+          <div class="detail-placeholder">
+            <div class="placeholder-icon">SF</div>
+            <h2>Wybierz klienta</h2>
+            <p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę, przejrzeć ankietę i zaktualizować status współpracy.</p>
+          </div>
+        </section>
+      </section>
+      <footer class="dashboard-footer">SYSTEM FORMY · Dane klientów są dostępne wyłącznie po zalogowaniu.</footer>
+    </section>
+
+    <section class="fatal-view" id="fatal-view" hidden>
+      <div class="login-card"><div class="brand-mark">SYSTEM <span>FORMY</span></div><h1>Panel chwilowo niedostępny</h1><p class="muted" id="fatal-message">Sprawdź konfigurację panelu w Cloudflare.</p></div>
+    </section>
+  </main>
+  <script src="/src/trainer-panel.js" defer></script>
+</body>
+</html>
