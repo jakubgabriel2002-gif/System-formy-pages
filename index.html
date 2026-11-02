@@ -45,7 +45,7 @@
         <p class="hero-lead">Trening bez przypadku. Jasny plan, konkretne działanie i system, który pomoże Ci konsekwentnie realizować swoje cele.</p>
         <div class="hero-actions" aria-label="Przejdź do wyboru współpracy lub zobacz metamorfozy">
           <a class="button button-light" href="#wybierz-plan">DOKONAJ METAMORFOZY </a>
-          <a class="hero-proof-link" href="#metamorfozy">ZOBACZ METAMORFOZY INNYCH <span aria-hidden="true">↘</span></a>
+          <a class="hero-proof-link" href="#metamorfozy">ZOBACZ METAMORFOZY INNYCH</a>
         </div>
         <div class="elite-guarantee-badge" aria-label="Gwarancja osiągnięcia zaakceptowanego celu dostępna w pakiecie System Elite">
           <span class="elite-guarantee-kicker">SYSTEM ELITE</span>
@@ -77,10 +77,11 @@
             <div class="hero-plan-bottom"><strong>699 <small>zł</small></strong><span>POZNAJ PAKIET</span></div>
           </a>
 
-          <a class="hero-plan-option" href="/produkt-elite.html" aria-label="Poznaj i kup pakiet SYSTEM ELITE za 1499 zł">
+          <a class="hero-plan-option hero-plan-option-elite" href="/produkt-elite.html" aria-label="Poznaj i kup pakiet SYSTEM ELITE za 1499 zł">
             <div class="hero-plan-top"><span>PAKIET 03</span><span>12 TYGODNI WSPÓŁPRACY</span></div>
             <h3>SYSTEM ELITE</h3>
             <p>Kompleksowe wsparcie, cotygodniowa analiza i korekty.</p>
+            <p class="hero-plan-guarantee">GWARANCJA OSIĄGNIĘCIA ZAAKCEPTOWANEGO CELU</p>
             <div class="hero-plan-bottom"><strong>1499 <small>zł</small></strong><span>POZNAJ PAKIET</span></div>
           </a>
         </div>
@@ -118,7 +119,7 @@
             <li>Arkusz monitorowania postępów</li>
           </ul>
           <div class="card-bottom">
-            <a class="button button-outline buy-button" href="/produkt-start.html">POZNAJ SYSTEM START <span>↗</span></a>
+            <a class="button button-outline buy-button" href="/produkt-start.html">POZNAJ SYSTEM START</a>
             <p class="card-note">Produkt cyfrowy. Materiały otrzymujesz automatycznie po zakupie. Realizujesz plan samodzielnie, bez indywidualnego prowadzenia.</p>
           </div>
         </article>
@@ -146,7 +147,7 @@
             <li>Podsumowanie współpracy</li>
           </ul>
           <div class="card-bottom">
-            <a class="button button-light buy-button" href="/produkt-pro.html">POZNAJ SYSTEM PRO <span>↗</span></a>
+            <a class="button button-light buy-button" href="/produkt-pro.html">POZNAJ SYSTEM PRO</a>
             <p class="card-note">Czas współpracy: 8 tygodni.</p>
           </div>
         </article>
@@ -174,8 +175,10 @@
             <li>Podsumowanie 12 tygodni</li>
             <li>Rekomendacje dotyczące dalszego działania</li>
           </ul>
+          <div class="elite-guarantee-inline"><span>GWARANCJA SYSTEM ELITE</span><strong>OSIĄGNIĘCIE ZAAKCEPTOWANEGO CELU</strong></div>
+          <button class="guarantee-card-trigger" type="button" data-open-guarantee aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">POZNAJ WARUNKI GWARANCJI</button>
           <div class="card-bottom">
-            <a class="button button-outline buy-button" href="/produkt-elite.html">POZNAJ SYSTEM ELITE <span>↗</span></a>
+            <a class="button button-outline buy-button" href="/produkt-elite.html">POZNAJ SYSTEM ELITE</a>
             <p class="card-note">Czas współpracy: 12 tygodni.</p>
           </div>
         </article>
@@ -208,16 +211,7 @@
               <td class="pro-column">—</td>
               <td>
                 <span class="guarantee-available">TAK</span>
-                <details class="guarantee-info">
-                  <summary aria-label="Wyjaśnij gwarancję osiągnięcia celu" title="Wyjaśnij gwarancję">?</summary>
-                  <div class="guarantee-panel">
-                    <strong>Jak działa gwarancja SYSTEM ELITE?</strong>
-                    <p>W ankiecie początkowej określasz, jaki efekt chcesz osiągnąć. Analizuję Twoją sylwetkę, doświadczenie i możliwości. Jeśli cel jest mierzalny i realny, wspólnie go zatwierdzamy.</p>
-                    <p>Jeśli pierwotny cel nie jest możliwy do osiągnięcia w 12 tygodni, przedstawiam Ci realistyczną, mierzalną propozycję. Współpracę rozpoczynamy po zaakceptowaniu celu.</p>
-                    <p>Jeżeli po 12 tygodniach nie osiągniesz zaakceptowanego celu, kontynuuję z Tobą współpracę bez dodatkowych opłat, w kolejnych miesięcznych okresach, aż do jego osiągnięcia.</p>
-                    <p class="guarantee-conditions">Gwarancja obowiązuje przy realizowaniu uzgodnionego planu, stosowaniu się do ustaleń i regularnym przekazywaniu wymaganych raportów. Szczegółowe zasady zostaną określone w regulaminie współpracy.</p>
-                  </div>
-                </details>
+                <button class="guarantee-trigger" type="button" data-open-guarantee aria-label="Otwórz warunki gwarancji SYSTEM ELITE" aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">?</button>
               </td>
             </tr>
             <tr><th scope="row">Czas</th><td>Samodzielna realizacja</td><td class="pro-column">8 tygodni</td><td>12 tygodni</td></tr>
@@ -325,6 +319,18 @@
       <div class="final-cta-mark" aria-hidden="true">SF<span> / SYSTEM FORMY</span></div>
     </section>
   </main>
+
+  <dialog class="guarantee-dialog" id="elite-guarantee-dialog" aria-labelledby="elite-guarantee-title" aria-describedby="elite-guarantee-description">
+    <div class="guarantee-dialog-inner">
+      <button class="guarantee-dialog-close" type="button" data-close-guarantee aria-label="Zamknij okno gwarancji">×</button>
+      <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM ELITE / WARUNKI</p>
+      <h2 id="elite-guarantee-title">GWARANCJA<br><span>OSIĄGNIĘCIA CELU.</span></h2>
+      <p id="elite-guarantee-description">W ankiecie początkowej określasz, jaki efekt chcesz osiągnąć. Analizuję Twoją sylwetkę, doświadczenie i możliwości. Jeżeli cel jest mierzalny, realny i bezpieczny, wspólnie zatwierdzamy go w Karcie Celu ELITE.</p>
+      <p>Jeśli pierwotny cel nie jest możliwy do osiągnięcia w 12 tygodni, przedstawiam realistyczną, mierzalną propozycję. Współpracę rozpoczynamy po zaakceptowaniu celu.</p>
+      <p>Jeżeli po 12 tygodniach nie osiągniesz zaakceptowanego celu, kontynuuję z Tobą współpracę bez dodatkowych opłat, w kolejnych miesięcznych okresach, aż do jego osiągnięcia.</p>
+      <p class="guarantee-dialog-conditions">Gwarancja obowiązuje pod warunkiem realizowania uzgodnionego planu, stosowania się do ustaleń i regularnego przekazywania wymaganych raportów. Szczegółowe warunki oraz obowiązki uczestnika są określane w Karcie Celu ELITE i regulaminie współpracy.</p>
+    </div>
+  </dialog>
 
   <footer class="site-footer">
     <a class="footer-brand" href="#start" aria-label="SYSTEM FORMY — wróć na początek"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="190" height="141"></a>
