@@ -6,3 +6,5 @@
 
 .response-export-actions{display:flex;gap:9px;flex-wrap:wrap}.response-export-actions .button{font-size:10px}.response-export-actions+.save-state{margin:9px 0 0}
 @media(max-width:420px){.response-export-actions{display:grid}.response-export-actions .button{width:100%}}
+
+.danger-zone{border:1px solid rgba(241,139,131,.35);background:rgba(90,35,32,.12);border-radius:12px;padding:16px}.danger-zone h3{color:var(--red)}.button-danger{background:#7d302d;border-color:#a64b45;color:#fff}.button-danger:hover{background:#963b36}.button-danger:disabled{opacity:.55;cursor:wait;transform:none}

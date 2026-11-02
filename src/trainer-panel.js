@@ -147,7 +147,8 @@
         ${cardFields}
         <div class="detail-form-footer"><span class="save-state" id="save-state" role="status"></span><button class="button button-primary" type="submit">Zapisz zmiany</button></div>
       </form>
-      <section class="detail-section ai-brief-section"><div class="ai-brief-heading"><div><h3>Brief dla agenta AI</h3><p class="muted small">Treść zostanie zbudowana wyłącznie z danych i świadczeń przypisanych do tego zamówienia.</p></div><button class="button button-primary" type="button" id="generate-brief">GENERUJ BRIEF DLA AGENTA AI</button></div><textarea id="ai-brief" rows="18" readonly placeholder="Kliknij „Generuj brief dla agenta AI”."></textarea><div class="brief-copy-row"><span class="save-state" id="brief-copy-state" role="status"></span><button class="button button-outline" type="button" id="copy-brief" disabled>KOPIUJ CAŁY BRIEF</button></div></section>`;
+      <section class="detail-section ai-brief-section"><div class="ai-brief-heading"><div><h3>Brief dla agenta AI</h3><p class="muted small">Treść zostanie zbudowana wyłącznie z danych i świadczeń przypisanych do tego zamówienia.</p></div><button class="button button-primary" type="button" id="generate-brief">GENERUJ BRIEF DLA AGENTA AI</button></div><textarea id="ai-brief" rows="18" readonly placeholder="Kliknij „Generuj brief dla agenta AI”."></textarea><div class="brief-copy-row"><span class="save-state" id="brief-copy-state" role="status"></span><button class="button button-outline" type="button" id="copy-brief" disabled>KOPIUJ CAŁY BRIEF</button></div></section>
+      <section class="detail-section danger-zone"><h3>Usuwanie danych treningowych</h3><p class="muted small">Usunie ankietę, dane treningowe, notatki, statusy, Kartę Celu ELITE i załączniki. Zamówienie, adres e-mail użyty przy zakupie oraz historia płatności Stripe pozostaną w systemie. Tej operacji nie można cofnąć.</p><button class="button button-danger" type="button" id="delete-client-data">USUŃ DANE TRENINGOWE KLIENTA</button><p class="save-state" id="delete-client-state" role="status"></p></section>`;
     $('#work-status').value=meta.work_status||'new_survey';
     $('#trainer-notes').value=meta.trainer_notes||'';
     if(isElite) $('#card-status').value=goalCard.card_status||'to_agreement';
@@ -177,6 +178,21 @@
       if(!text) return;
       try { await navigator.clipboard.writeText(text); $('#brief-copy-state').textContent='Skopiowano do schowka.'; }
       catch { $('#ai-brief').focus(); $('#ai-brief').select(); $('#brief-copy-state').textContent='Zaznaczony tekst możesz skopiować ręcznie.'; }
+    });
+    $('#delete-client-data').addEventListener('click',async()=>{
+      const status=$('#delete-client-state');
+      const confirmed=window.confirm('Czy na pewno usunąć dane treningowe tego klienta? Zamówienie i historia płatności pozostaną. Tej operacji nie można cofnąć.');
+      if(!confirmed) return;
+      const phrase=window.prompt('Aby potwierdzić, wpisz dokładnie: USUŃ DANE');
+      if(phrase!=='USUŃ DANE') { status.textContent='Usuwanie anulowane — wpisano nieprawidłowe potwierdzenie.'; status.className='save-state error'; return; }
+      const button=$('#delete-client-data'); button.disabled=true; status.textContent='Usuwanie danych i plików…'; status.className='save-state';
+      try {
+        await api('/api/trainer/delete-client-data',{method:'DELETE',body:JSON.stringify({order_ref:order.order_ref,confirmation:phrase})});
+        status.textContent='Dane treningowe zostały usunięte. Zamówienie i płatność zachowano.'; status.className='save-state success';
+        state.selectedOrderRef=null;
+        await loadOrders();
+        detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Dane treningowe usunięte</h2><p class="muted">Zamówienie i historia płatności pozostały w systemie.</p></div>';
+      } catch(error) { status.textContent=error.message; status.className='save-state error'; button.disabled=false; }
     });
   }
 
