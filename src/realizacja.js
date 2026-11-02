@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  const $ = (selector, scope = document) => scope.querySelector(selector);
   const root = document.querySelector('#realization-state');
   const title = document.querySelector('#realization-title');
   const sessionId = new URLSearchParams(window.location.search).get('session_id');
