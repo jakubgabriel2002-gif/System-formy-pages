@@ -397,3 +397,35 @@
 .sf-reviews-count{grid-column:1/-1;margin:0;color:#88887f;font-size:9px;font-weight:900;letter-spacing:.15em;text-align:center}
 .sf-review-card{min-height:250px}
 @media(max-width:760px){.sf-reviews-carousel{grid-template-columns:34px minmax(0,1fr) 34px;gap:7px}.sf-reviews-arrow{width:34px;height:38px;font-size:19px}.sf-review-card{min-height:260px}}
+
+
+/* Final launch polish: horizontally navigable offer cards. */
+.sf-pricing-carousel { display:grid; grid-template-columns:46px minmax(0,1fr) 46px; gap:14px; align-items:center; }
+.sf-pricing-viewport { min-width:0; overflow-x:auto; overscroll-behavior-inline:contain; scroll-snap-type:x mandatory; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.sf-pricing-viewport::-webkit-scrollbar { display:none; }
+.sf-pricing-carousel .pricing-grid { display:flex; gap:18px; align-items:stretch; }
+.sf-pricing-carousel .price-card { flex:0 0 calc((100% - 18px) / 2); min-width:0; scroll-snap-align:start; }
+.sf-pricing-arrow { display:grid; width:42px; height:48px; place-items:center; border:1px solid #55554c; background:#111; color:#f1f1ed; font-size:24px; cursor:pointer; transition:border-color .2s ease,color .2s ease,opacity .2s ease; }
+.sf-pricing-arrow:hover:not(:disabled) { border-color:var(--sf-gold); color:var(--sf-gold); }
+.sf-pricing-arrow:disabled { opacity:.28; cursor:default; }
+.sf-review-invite-copy .sf-review-mark { width:30px; height:25px; font-size:38px; line-height:.7; }
+@media(max-width:760px) {
+  .sf-pricing-carousel { grid-template-columns:34px minmax(0,1fr) 34px; gap:7px; }
+  .sf-pricing-arrow { width:34px; height:40px; font-size:20px; }
+  .sf-pricing-carousel .pricing-grid { gap:12px; }
+  .sf-pricing-carousel .price-card { flex-basis:100%; padding:27px 20px 22px; }
+}
+@media(prefers-reduced-motion:reduce) { .sf-pricing-viewport { scroll-behavior:auto; } }
+
+
+/* Review carousel polish: smaller quote mark and restrained slide entrance. */
+.sf-review-invite-copy .sf-review-mark { width: 24px; height: 20px; font-size: 32px; line-height: .7; }
+.sf-review-card .sf-review-mark { height: 28px; font-size: 48px; line-height: .7; }
+.sf-review-card:not([hidden]) { animation: sf-review-enter .32s ease both; }
+@keyframes sf-review-enter {
+  from { opacity: 0; transform: translateX(14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-review-card:not([hidden]) { animation: none !important; }
+}

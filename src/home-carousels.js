@@ -45,8 +45,32 @@
     setActive(active);
   }
 
+
+  function initPricingCarousel(carousel) {
+    const viewport = carousel.querySelector('.sf-pricing-viewport');
+    const prev = carousel.querySelector('[data-pricing-prev]');
+    const next = carousel.querySelector('[data-pricing-next]');
+    if (!viewport || !prev || !next) return;
+    const update = () => {
+      const max = Math.max(0, viewport.scrollWidth - viewport.clientWidth);
+      prev.disabled = viewport.scrollLeft <= 2;
+      next.disabled = viewport.scrollLeft >= max - 2;
+    };
+    const move = (direction) => viewport.scrollBy({ left: direction * Math.max(viewport.clientWidth * 0.82, 220), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    prev.addEventListener('click', () => move(-1));
+    next.addEventListener('click', () => move(1));
+    viewport.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    viewport.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); move(1); }
+    });
+    update();
+  }
+
   function init() {
     document.querySelectorAll('[data-carousel]').forEach(initCarousel);
+    document.querySelectorAll('[data-pricing-carousel]').forEach(initPricingCarousel);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
   else init();

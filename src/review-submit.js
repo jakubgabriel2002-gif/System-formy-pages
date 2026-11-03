@@ -38,7 +38,7 @@
     let active = 0;
     const show = (index) => {
       active = (index + slides.length) % slides.length;
-      slides.forEach((slide, i) => { slide.hidden = i !== active; });
+      slides.forEach((slide, i) => { const selected = i === active; slide.hidden = !selected; slide.classList.toggle('is-active', selected); slide.setAttribute('aria-hidden', String(!selected)); if ('inert' in slide) slide.inert = !selected; });
       count.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
       prev.disabled = slides.length < 2;
       next.disabled = slides.length < 2;
