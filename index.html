@@ -32,6 +32,8 @@
       <a href="#start">START</a>
       <a href="#oferta">OFERTA</a>
       <a href="#jak-to-dziala">JAK TO DZIAŁA</a>
+      <a href="#metamorfozy">METAMORFOZY</a>
+      <a href="#opinie">OPINIE</a>
       <a href="#porownanie">PORÓWNANIE</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -53,13 +55,6 @@
           <span>PLAN DZIAŁANIA</span>
           <span>KONSEKWENTNY PROGRES</span>
         </div>
-      </div>
-
-      <div class="sf-hero-brand-stage" aria-label="Logo SYSTEM FORMY">
-        <span class="sf-hero-stage-top">SYSTEM FORMY <b> / </b> 01</span>
-        <span class="sf-hero-stage-orbit" aria-hidden="true"></span>
-        <img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="520" height="385">
-        <span class="sf-hero-stage-bottom">TRENING <b>·</b> PLAN <b>·</b> PROGRES</span>
       </div>
 
       <a class="sf-hero-scroll" href="#wybierz-plan" aria-label="Przewiń do wyboru planu">
@@ -294,26 +289,32 @@
           </div>
         </div>
 
-        <div class="sf-story-photos">
-          <figure class="sf-story-photo">
-            <div class="sf-story-photo-frame">
-              <img src="/assets/metamorfoza-tomek-przed.jpeg" alt="Tomek przed rozpoczęciem sześciomiesięcznej współpracy treningowej" loading="lazy" width="1536" height="809">
-              <span class="sf-photo-label">PRZED</span>
-            </div>
-            <figcaption><span>01</span> PUNKT WYJŚCIA</figcaption>
-          </figure>
-          <div class="sf-story-transition" aria-hidden="true">
-            <span>6</span>
-            <small>MIESIĘCY</small>
-            <b>→</b>
+        <div class="sf-story-carousel" data-carousel="tomek" aria-label="Karuzela zdjęć metamorfozy Tomka">
+          <div class="sf-story-carousel-stage">
+            <figure class="sf-story-slide is-active" data-slide="0" aria-hidden="false">
+              <div class="sf-story-photo-frame">
+                <img src="/assets/metamorfoza-tomek-przed.jpeg" alt="Tomek przed rozpoczęciem sześciomiesięcznej współpracy treningowej" loading="lazy" width="1536" height="809">
+                <span class="sf-photo-label">PRZED</span>
+              </div>
+              <figcaption><span>01 / 02</span> PUNKT WYJŚCIA</figcaption>
+            </figure>
+            <figure class="sf-story-slide" data-slide="1" aria-hidden="true" inert>
+              <div class="sf-story-photo-frame">
+                <img src="/assets/metamorfoza-tomek-po.jpeg" alt="Tomek po sześciu miesiącach współpracy treningowej" loading="lazy" width="2304" height="2460">
+                <span class="sf-photo-label">PO</span>
+              </div>
+              <figcaption><span>02 / 02</span> EFEKT WSPÓLNEJ PRACY</figcaption>
+            </figure>
           </div>
-          <figure class="sf-story-photo">
-            <div class="sf-story-photo-frame">
-              <img src="/assets/metamorfoza-tomek-po.jpeg" alt="Tomek po sześciu miesiącach współpracy treningowej" loading="lazy" width="2304" height="2460">
-              <span class="sf-photo-label">PO</span>
+          <div class="sf-carousel-controls">
+            <button class="sf-carousel-arrow" type="button" data-carousel-prev aria-label="Poprzednie zdjęcie">←</button>
+            <div class="sf-carousel-dots" role="group" aria-label="Wybierz zdjęcie">
+              <button type="button" class="is-active" data-carousel-to="0" aria-label="Pokaż zdjęcie przed" aria-pressed="true"></button>
+              <button type="button" data-carousel-to="1" aria-label="Pokaż zdjęcie po" aria-pressed="false"></button>
             </div>
-            <figcaption><span>02</span> EFEKT WSPÓLNEJ PRACY</figcaption>
-          </figure>
+            <span class="sf-carousel-count" aria-live="polite">01 / 02</span>
+            <button class="sf-carousel-arrow" type="button" data-carousel-next aria-label="Następne zdjęcie">→</button>
+          </div>
         </div>
 
         <div class="sf-story-footer">
@@ -322,6 +323,35 @@
         </div>
       </article>
       <p class="sf-results-disclaimer">Rezultaty Tomka są indywidualnym efektem jego współpracy i zaangażowania. Nie stanowią gwarancji uzyskania takiego samego wyniku przez inne osoby.</p>
+    </section>
+
+    <section class="sf-reviews section-shell" id="opinie" aria-labelledby="reviews-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> GŁOS OSÓB, KTÓRYM POMOGŁEM</p>
+          <h2 id="reviews-title">OPINIE,<br><span>KTÓRE MAJĄ ZNACZENIE.</span></h2>
+        </div>
+        <p class="section-intro">W tej sekcji będziemy publikować autentyczne wiadomości i opinie osób, którym SYSTEM FORMY pomógł w treningu lub uporządkowaniu działania.</p>
+      </div>
+      <div class="sf-review-carousel" data-carousel="reviews" aria-label="Karuzela opinii klientów">
+        <article class="sf-review-card sf-review-placeholder is-active" data-slide="0" aria-hidden="false">
+          <span class="sf-review-mark" aria-hidden="true">“</span>
+          <p class="sf-review-placeholder-label">MIEJSCE NA PRAWDZIWĄ OPINIĘ</p>
+          <p class="sf-review-placeholder-copy">Tutaj pojawi się autentyczna wiadomość od osoby, której pomogłeś — bez dopisywania fikcyjnych recenzji.</p>
+          <div class="sf-review-author"><span>OPINIA 01</span><b>IMIĘ / INICJAŁY ZA ZGODĄ AUTORA</b></div>
+        </article>
+        <div class="sf-carousel-controls">
+          <button class="sf-carousel-arrow" type="button" data-carousel-prev aria-label="Poprzednia opinia">←</button>
+          <div class="sf-carousel-dots" role="group" aria-label="Wybierz opinię">
+            <button type="button" class="is-active" data-carousel-to="0" aria-label="Pokaż pierwszą opinię" aria-pressed="true"></button>
+            <button type="button" data-carousel-to="1" aria-label="Pokaż drugą opinię — miejsce na kolejną" aria-pressed="false" disabled></button>
+            <button type="button" data-carousel-to="2" aria-label="Pokaż trzecią opinię — miejsce na kolejną" aria-pressed="false" disabled></button>
+          </div>
+          <span class="sf-carousel-count" aria-live="polite">01 / 01</span>
+          <button class="sf-carousel-arrow" type="button" data-carousel-next aria-label="Następna opinia" disabled>→</button>
+        </div>
+      </div>
+      <p class="sf-review-note">Opinie opublikujemy po otrzymaniu ich treści i potwierdzeniu zgody autorów na publikację.</p>
     </section>
 
     <section class="faq section-shell" id="faq" aria-labelledby="faq-title">
@@ -393,6 +423,8 @@
       <a href="#oferta">OFERTA</a>
       <a href="#porownanie">PORÓWNANIE</a>
       <a href="#jak-to-dziala">JAK TO DZIAŁA</a>
+      <a href="#metamorfozy">METAMORFOZY</a>
+      <a href="#opinie">OPINIE</a>
       <a href="#faq">FAQ</a>
       <a href="/regulamin.html">REGULAMIN</a>
       <a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a>
@@ -405,5 +437,6 @@
   <div class="toast" id="site-toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <script src="/src/main.js" defer></script>
   <script src="/src/home-animations.js" defer></script>
+  <script src="/src/home-carousels.js" defer></script>
 </body>
 </html>
