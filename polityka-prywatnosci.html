@@ -3,7 +3,7 @@
 <h2>1. Administrator</h2>
 <p>Administratorem danych jest <strong>Jakub Gabriel</strong>, osoba fizyczna wykonująca działalność nierejestrowaną, adres: <strong>ul. Kazimierza Wielkiego 4/28, 14-260 Lubawa, Polska</strong>. Kontakt: <strong>pomoc@systemformy.com.pl</strong>; ogólny kontakt: <strong>kontakt@systemformy.com.pl</strong>.</p>
 <h2>2. Zakres danych</h2>
-<p>W zależności od korzystania ze strony mogą być przetwarzane: imię i nazwisko lub imię, adres e-mail, inne dane kontaktowe przekazane dobrowolnie przez klienta, profil społecznościowy wskazany do kontaktu, dane zamówienia, identyfikator płatności Stripe, historia korespondencji, odpowiedzi na ankiety, informacje o treningu i postępach, pomiary, zdjęcia i nagrania oraz dane techniczne związane z korzystaniem ze strony.</p>
+<p>W zależności od korzystania ze strony mogą być przetwarzane: imię i nazwisko lub imię, adres e-mail, inne dane kontaktowe przekazane dobrowolnie przez klienta, profil społecznościowy wskazany do kontaktu, dane zamówienia, identyfikator płatności Stripe, historia korespondencji, odpowiedzi na ankiety, informacje o treningu i postępach, pomiary, zdjęcia i nagrania, a także podpis i treść opinii przesłanej do publicznej sekcji opinii oraz techniczny skrót adresu IP wykorzystywany czasowo do ograniczania spamu.</p>
 <p>Dane dotyczące zdrowia, np. informacje o urazach, dolegliwościach, przeciwwskazaniach lub chorobach, są szczególną kategorią danych. Administrator stara się ograniczać ich zakres do minimum i przetwarza je tylko w zakresie niezbędnym do bezpiecznej realizacji usługi oraz po uzyskaniu właściwej podstawy prawnej, w szczególności wyraźnej zgody, jeżeli to ona jest stosowana.</p>
 <h2>3. Cele i podstawy prawne</h2>
 <table>
@@ -47,6 +47,10 @@
   <td>zgoda użytkownika przed uruchomieniem technologii, zgodnie z Prawem komunikacji elektronicznej i RODO</td>
 </tr>
 <tr>
+  <td>Przyjęcie, wyświetlenie i moderacja opinii przesłanej do publicznej sekcji opinii</td>
+  <td>zgoda osoby na publikację podpisu i treści opinii; obsługa techniczna i ochrona formularza przed spamem — prawnie uzasadniony interes Administratora</td>
+</tr>
+<tr>
   <td>Publikacja wizerunku klienta</td>
   <td>odrębna, dobrowolna zgoda na konkretny sposób i kanały publikacji oraz właściwa podstawa przetwarzania danych</td>
 </tr>
@@ -55,14 +59,16 @@
 <h2>4. Formularze i ankiety</h2>
 <p>Formularz zgłoszeniowy służy obsłudze zapytania i nie zapisuje automatycznie do marketingu. Po zakupie ankieta startowa i raporty są wykorzystywane do przygotowania i realizacji wybranej usługi. Administrator nie zbiera szczegółowej dokumentacji medycznej, jeśli nie jest konieczna.</p>
 <p>Przy składaniu zamówienia zapisywane są również oświadczenia klienta dotyczące akceptacji regulaminu, potwierdzenia zapoznania się z polityką prywatności, zgody na rozpoczęcie dostarczania treści cyfrowej (jeżeli dotyczy) oraz żądania wcześniejszego rozpoczęcia usługi (jeżeli dotyczy). Zapis obejmuje treść/wersję oświadczenia, produkt, datę i godzinę oraz identyfikator zamówienia. Dane te służą dokumentowaniu zawarcia i wykonania umowy oraz wykazaniu prawidłowego uzyskania wymaganych oświadczeń.</p>
-<h2>5. Zdjęcia, nagrania i wizerunek</h2>
+<h2>5. Opinie przesyłane przez użytkowników</h2>
+<p>Formularz opinii zapisuje w bazie danych podpis i treść opinii po zaznaczeniu zgody na ich publiczne wyświetlenie. Nowa opinia pojawia się na stronie z wyraźnym oznaczeniem „OPINIA NIEZWERYFIKOWANA”. Po sprawdzeniu przez Administratora oznaczenie może zostać usunięte; opinia może też zostać odrzucona lub usunięta. Zgoda na publikację może zostać wycofana przez kontakt na pomoc@systemformy.com.pl. Skrót adresu IP jest używany wyłącznie do ograniczania spamu i jest usuwany z rekordu po 30 dniach.</p>
+<h2>6. Zdjęcia, nagrania i wizerunek</h2>
 <ol>
 <li>Zdjęcia i nagrania przesłane do monitoringu, oceny postępów lub kontroli techniki są materiałem obsługowym klienta i nie są automatycznie publikowane.</li>
 <li>Materiały do realizacji usługi są przechowywane w prywatnym obszarze infrastruktury Cloudflare R2, a ich identyfikatory i powiązania z klientem mogą być przechowywane w Cloudflare D1. Dostęp administracyjny ma wyłącznie Administrator.</li>
 <li>Publikacja zdjęć/nagrań klienta w social mediach wymaga osobnej, dobrowolnej zgody wskazującej konkretne platformy i cel. Zgoda nie jest warunkiem zakupu ani współpracy.</li>
 <li>Wycofanie zgody powoduje zaprzestanie dalszego wykorzystywania i usunięcie materiału z kanałów kontrolowanych przez Administratora w rozsądnym terminie, z uwzględnieniem ograniczeń technicznych platform i kopii, na które Administrator nie ma wpływu.</li>
 </ol>
-<h2>6. Odbiorcy danych</h2>
+<h2>7. Odbiorcy danych</h2>
 <p>Dane mogą być przekazywane wyłącznie w zakresie niezbędnym do obsługi strony, płatności i usług, w szczególności:</p>
 <ul>
 <li><strong>Cloudflare</strong> — infrastruktura strony, bazy D1 i przechowywanie plików R2;</li>
@@ -73,28 +79,29 @@
 <li>platformy społecznościowe, na których Administrator prowadzi profile i publikuje materiały za zgodą osoby, której wizerunek jest używany.</li>
 </ul>
 <p>Przed publikacją tej polityki Administrator musi sprawdzić dokładną listę dostawców, ich aktualne nazwy prawne, role, umowy powierzenia, podwykonawców i ewentualne transfery poza EOG. Nie należy pozostawiać narzędzia analitycznego ani piksela aktywnego przed wdrożeniem mechanizmu zgody.</p>
-<h2>7. Transfer poza EOG</h2>
+<h2>8. Transfer poza EOG</h2>
 <p>Niektórzy dostawcy infrastruktury, płatności, analityki lub reklam mogą korzystać z podwykonawców spoza Europejskiego Obszaru Gospodarczego. Jeżeli dochodzi do transferu, Administrator zapewnia wymagany prawem mechanizm transferowy, np. decyzję stwierdzającą odpowiedni stopień ochrony albo standardowe klauzule umowne, oraz stosuje wymagane zabezpieczenia. Dokładny mechanizm dla każdego dostawcy zostanie wskazany po audycie jego dokumentacji.</p>
-<h2>8. Okresy przechowywania</h2>
+<h2>9. Okresy przechowywania</h2>
 <ul>
 <li><strong>Zgłoszenia bez zakupu:</strong> usuwane na bieżąco po zakończeniu obsługi. Jeśli usunięcie nie jest technicznie możliwe od razu, najpóźniej w ciągu 30 dni od zamknięcia zgłoszenia; dłużej tylko, jeśli wynika to z prawa lub jest niezbędne do obrony roszczeń.</li>
 <li><strong>Ankieta startowa, raporty, pomiary i materiały do kontroli techniki:</strong> przez okres współpracy oraz 6 miesięcy po jej zakończeniu, a następnie usunięcie lub trwała anonimizacja, chyba że konkretny materiał trzeba zachować z przyczyn prawnych lub dla obrony roszczeń.</li>
 <li><strong>Oświadczenia checkout, potwierdzenia akceptacji regulaminu i wymagane zgody/żądania dotyczące rozpoczęcia świadczeń:</strong> przez okres niezbędny do wykazania zawarcia i wykonania umowy, spełnienia obowiązków prawnych oraz obrony lub dochodzenia roszczeń; nie są automatycznie usuwane po 6 miesiącach, jeżeli obowiązek lub uzasadniona potrzeba ich zachowania trwa dłużej.</li>
+<li><strong>Opinie publiczne:</strong> do wycofania zgody lub żądania usunięcia; po usunięciu lub wycofaniu zgody Administrator usuwa opinię z publicznej sekcji. Skrót IP do ochrony przed spamem jest usuwany z rekordu po 30 dniach.</li>
 <li><strong>Zdjęcia do monitoringu:</strong> jak wyżej — okres współpracy plus 6 miesięcy.</li>
 <li><strong>Zdjęcia/wizerunek opublikowane na podstawie zgody:</strong> do wycofania zgody lub zakończenia uzgodnionego celu; Administrator zaprzestanie dalszej publikacji i usunie materiały z kanałów, nad którymi ma kontrolę, z uwzględnieniem ograniczeń platform i kopii osób trzecich.</li>
 <li><strong>Dane transakcyjne i dokumenty podatkowe:</strong> przez okres wymagany przepisami podatkowymi i rachunkowymi, co do zasady 5 lat liczonych według właściwych zasad od końca roku, w którym upłynął termin płatności podatku.</li>
 <li><strong>Reklamacje i roszczenia:</strong> przez okres niezbędny do rozpatrzenia sprawy i przedawnienia roszczeń.</li>
 <li><strong>Cookies/analityka/reklama:</strong> zgodnie z okresem życia danego pliku i konfiguracją dostawcy; konkretne nazwy i okresy będą wymienione w tabeli cookies po audycie strony.</li>
 </ul>
-<h2>9. Prawa osoby</h2>
+<h2>10. Prawa osoby</h2>
 <p>Osobie przysługuje prawo dostępu do danych, sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych — jeśli ma zastosowanie — sprzeciwu wobec przetwarzania opartego na prawnie uzasadnionym interesie, wycofania zgody w dowolnym momencie oraz wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych. Wnioski należy kierować na pomoc@systemformy.com.pl.</p>
 <p>Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania sprzed wycofania. Usunięcie danych może być ograniczone, jeżeli Administrator ma obowiązek prawny ich zachowania lub potrzebuje ich do obrony roszczeń.</p>
-<h2>10. Dobrowolność danych</h2>
+<h2>11. Dobrowolność danych</h2>
 <p>Podanie danych identyfikacyjnych i kontaktowych jest dobrowolne, ale może być niezbędne do obsługi zgłoszenia lub umowy. Podanie informacji o zdrowiu i przesłanie zdjęć/nagrań jest dobrowolne, lecz odmowa może uniemożliwić bezpieczne przygotowanie lub wykonanie konkretnego elementu usługi.</p>
-<h2>11. Zautomatyzowane decyzje</h2>
+<h2>12. Zautomatyzowane decyzje</h2>
 <p>Administrator nie podejmuje wobec klientów decyzji wywołujących skutki prawne lub podobnie istotne skutki wyłącznie w sposób zautomatyzowany. Narzędzia analityczne/reklamowe mogą tworzyć statystyki lub segmenty odbiorców po wyrażeniu zgody — konfiguracja i zakres wymagają audytu.</p>
-<h2>12. Bezpieczeństwo</h2>
+<h2>13. Bezpieczeństwo</h2>
 <p>Administrator stosuje środki bezpieczeństwa adekwatne do ryzyka, m.in. ograniczenie dostępu, silne uwierzytelnianie, oddzielenie danych operacyjnych, kontrolę dostępu do D1/R2, aktualizacje, kopie zapasowe i procedurę reagowania na incydenty. Dostęp do danych klientów jest ograniczony do Administratora.</p>
-<h2>13. Zmiany polityki</h2>
+<h2>14. Zmiany polityki</h2>
 <p>Polityka może być aktualizowana w razie zmiany narzędzi, procesów lub prawa. Aktualna wersja jest publikowana na stronie.</p>
 </main><footer class="sf-footer">SYSTEM FORMY · Kontakt: kontakt@systemformy.com.pl · Obsługa: pomoc@systemformy.com.pl · <a href="#" data-open-cookie-settings>Ustawienia cookies</a></footer></div></body></html>

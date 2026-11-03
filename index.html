@@ -334,11 +334,14 @@
         </div>
         <p class="section-intro">W tej sekcji będziemy publikować autentyczne wiadomości i opinie osób, którym SYSTEM FORMY pomógł w treningu lub uporządkowaniu działania.</p>
       </div>
+      <div class="sf-reviews-list" id="sf-reviews-list" aria-live="polite">
+        <p class="sf-review-empty">Ładowanie opinii…</p>
+      </div>
       <div class="sf-reviews-invite">
         <div class="sf-review-invite-copy">
           <span class="sf-review-mark" aria-hidden="true">“</span>
           <h3>MASZ OPINIĘ O WSPÓŁPRACY?</h3>
-          <p>Twoja wiadomość może pomóc innym osobom podjąć decyzję. Prześlij swoją opinię — przed publikacją skontaktujemy się z Tobą w sprawie potwierdzenia treści i zgody.</p>
+          <p>Twoja wiadomość może pomóc innym osobom podjąć decyzję. Dodaj opinię — pojawi się na stronie z oznaczeniem „OPINIA NIEZWERYFIKOWANA”, a po sprawdzeniu oznaczenie zostanie usunięte.</p>
         </div>
         <button class="button button-light sf-add-review-button" type="button" aria-expanded="false" aria-controls="sf-review-form">DODAJ OPINIĘ <span aria-hidden="true">＋</span></button>
       </div>
@@ -351,11 +354,12 @@
             <textarea name="review" rows="5" maxlength="2000" placeholder="Napisz kilka słów o swoim doświadczeniu…" required></textarea>
           </label>
         </div>
-        <label class="sf-review-consent"><input type="checkbox" name="consent" required> Zgadzam się na przesłanie opinii do SYSTEM FORMY w celu jej weryfikacji. Rozumiem, że wysłanie opinii nie oznacza automatycznej publikacji — osobna zgoda na publikację zostanie potwierdzona przed jej zamieszczeniem.</label>
-        <button class="button button-light" type="submit">PRZEŚLIJ OPINIĘ</button>
-        <p class="sf-review-form-note">Po kliknięciu otworzy się aplikacja pocztowa z przygotowaną wiadomością do SYSTEM FORMY.</p>
+        <label class="sf-review-consent"><input type="checkbox" name="consent" required> Wyrażam zgodę na opublikowanie podanego podpisu i treści opinii na stronie SYSTEM FORMY. Przyjmuję do wiadomości, że do czasu weryfikacji opinia będzie oznaczona jako „OPINIA NIEZWERYFIKOWANA”.</label>
+        <label class="sf-review-honeypot" aria-hidden="true">Nie wypełniaj tego pola<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <button class="button button-light" type="submit">DODAJ OPINIĘ</button>
+        <p class="sf-review-form-note" id="sf-review-submit-status" role="status" aria-live="polite">Opinia zostanie zapisana w bazie i pojawi się na stronie jako niezweryfikowana.</p>
       </form>
-      <p class="sf-review-note">Nie publikujemy opinii bez weryfikacji i zgody autora.</p>
+      <p class="sf-review-note">Opinie są publikowane za zgodą autora. Oznaczenie niezweryfikowanej opinii znika po jej sprawdzeniu.</p>
     </section>
 
     <section class="faq section-shell" id="faq" aria-labelledby="faq-title">

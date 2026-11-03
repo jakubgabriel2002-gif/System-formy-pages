@@ -45,7 +45,12 @@
         <button class="button button-outline" id="refresh-button" type="button">Odśwież dane</button>
       </div>
 
-      <section class="stats-grid" aria-label="Podsumowanie klientów">
+      <nav class="dashboard-tabs" aria-label="Sekcje panelu">
+        <button class="dashboard-tab active" type="button" data-dashboard-tab="clients">KLIENCI</button>
+        <button class="dashboard-tab" type="button" data-dashboard-tab="reviews">OPINIE</button>
+      </nav>
+
+      <section class="stats-grid" aria-label="Podsumowanie klientów" id="client-stats">
         <article class="stat-card"><span>Opłacone współprace</span><strong id="stat-total">—</strong></article>
         <article class="stat-card"><span>Nowe</span><strong id="stat-new">—</strong></article>
         <article class="stat-card"><span>W trakcie</span><strong id="stat-progress">—</strong></article>
@@ -93,6 +98,21 @@
             <p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę, przejrzeć ankietę i zaktualizować status współpracy.</p>
           </div>
         </section>
+      </section>
+      <section class="reviews-admin-view" id="reviews-admin-view" hidden>
+        <div class="reviews-admin-toolbar">
+          <div><h2>Opinie klientów</h2><p class="muted small">Nowe opinie są widoczne publicznie jako niezweryfikowane. Po sprawdzeniu możesz je zweryfikować albo odrzucić.</p></div>
+          <div class="admin-review-actions">
+            <select id="reviews-status-filter" aria-label="Filtr opinii">
+              <option value="all">Wszystkie opinie</option>
+              <option value="pending">Niezweryfikowane</option>
+              <option value="verified">Zweryfikowane</option>
+              <option value="rejected">Odrzucone</option>
+            </select>
+            <button class="button button-outline" id="refresh-reviews" type="button">ODŚWIEŻ OPINIE</button>
+          </div>
+        </div>
+        <div class="reviews-admin-list" id="reviews-admin-list" aria-live="polite"><div class="empty-state">Pobieranie opinii…</div></div>
       </section>
       <footer class="dashboard-footer">SYSTEM FORMY · Dane klientów są dostępne wyłącznie po zalogowaniu.</footer>
     </section>
