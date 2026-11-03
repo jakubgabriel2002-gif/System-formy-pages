@@ -10,7 +10,7 @@ export async function onRequestGet({ request, env }) {
     const orderRef = session.metadata?.order_ref;
     const product = CATALOG[productKey];
     if (!product || !orderRef) return json({ error: 'Nie znaleziono zamówienia.' }, 404);
-    const order = await env.DB.prepare(`SELECT order_ref, session_id, product_key, payment_status FROM sf_orders WHERE order_ref = ? AND session_id = ?`)
+    const order = await env.DB.prepare(`SELECT order_ref, session_id, product_key, payment_status, download_variant, downloaded_at FROM sf_orders WHERE order_ref = ? AND session_id = ?`)
       .bind(orderRef, session.id).first();
     if (!order || order.product_key !== productKey) return json({ error: 'Nie znaleziono zamówienia.' }, 404);
 
@@ -27,7 +27,7 @@ export async function onRequestGet({ request, env }) {
       const paymentIntent = typeof session.payment_intent === 'string' ? session.payment_intent : null;
       await env.DB.prepare(`UPDATE sf_orders SET payment_status = 'paid', customer_email = COALESCE(?, customer_email), payment_intent = COALESCE(?, payment_intent), paid_at = COALESCE(paid_at, ?), updated_at = ? WHERE order_ref = ? AND session_id = ?`)
         .bind(email, paymentIntent, new Date().toISOString(), new Date().toISOString(), orderRef, session.id).run();
-      return json({ status: 'paid', product_key: productKey, product_name: product.name, fulfillment: product.fulfillment, email, name });
+      return json({ status: 'paid', product_key: productKey, product_name: product.name, fulfillment: product.fulfillment, email, name, download_variant: order.download_variant || null, downloaded_at: order.downloaded_at || null });
     }
 
     return json({ status: 'pending' }, 202);
