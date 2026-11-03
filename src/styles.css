@@ -1017,3 +1017,81 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
   .hero-plan-guarantee { font-size: 6.5px; }
   .guarantee-card-trigger { font-size: 8px; }
 }
+
+
+/* PLAN INDYWIDUALNY — czytelne warianty, zakres 4 tygodni i FAQ. */
+.individual-page .individual-hero { padding-bottom: 54px; }
+.individual-page .individual-hero .duration-note { margin-top: 20px; }
+.individual-page .individual-offer-section { padding-top: 16px; }
+.individual-page .individual-value-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+  margin: 26px 0 8px;
+}
+.individual-page .individual-value-strip > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-height: 88px;
+  justify-content: center;
+  padding: 17px 19px;
+  border: 1px solid rgba(231,200,75,.2);
+  background: rgba(231,200,75,.035);
+}
+.individual-page .individual-value-strip strong { color: var(--accent); font: 800 19px/1 var(--display); letter-spacing: .035em; }
+.individual-page .individual-value-strip span { color: #a7a79f; font-size: 9px; line-height: 1.55; }
+.individual-page .individual-pricing { padding-top: 16px; }
+.individual-page .individual-card { position: relative; padding: 29px 23px 23px; }
+.individual-page .individual-card h2 { min-height: 62px; margin: 29px 0 12px; font-size: clamp(33px,3.5vw,47px); }
+.individual-page .individual-card .card-for { min-height: 74px; }
+.individual-page .individual-card ul { gap: 10px; }
+.individual-page .individual-card li { font-size: 9px; line-height: 1.65; }
+.individual-page .individual-card .price-line strong { font-size: 54px; }
+.individual-page .individual-card .price-caption { margin-top: 8px; }
+.individual-page .individual-popular-label {
+  position: absolute;
+  top: 0;
+  right: 14px;
+  max-width: calc(100% - 28px);
+  padding: 8px 10px;
+  background: var(--accent);
+  color: #090909;
+  font-size: 7px;
+  line-height: 1.3;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-align: center;
+}
+.individual-page .individual-card.is-featured .card-meta { min-height: 44px; padding-top: 16px; }
+.individual-page .individual-offer-note { max-width: 940px; margin: 19px 0 0; color: #85857d; font-size: 9px; line-height: 1.75; }
+.individual-page .duration-section { padding-top: 66px; padding-bottom: 45px; }
+.individual-page .individual-duration-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+.individual-page .individual-duration-grid > div { padding: 20px; border: 1px solid #33332e; background: #0e0e0c; }
+.individual-page .individual-duration-grid span { display: block; margin-bottom: 14px; color: var(--accent); font: 800 23px/1 var(--display); }
+.individual-page .individual-duration-grid strong { color: #efefe9; font-size: 10px; letter-spacing: .12em; }
+.individual-page .individual-duration-grid p { margin: 9px 0 0; color: #9d9d95; font-size: 9px; line-height: 1.7; }
+.individual-page .individual-faq { padding-top: 48px; padding-bottom: 40px; }
+.individual-page .individual-faq .section-heading { margin-bottom: 26px; }
+.individual-page .individual-faq .faq-list { max-width: 900px; margin-left: auto; }
+.individual-page .individual-faq .faq-list summary { padding-block: 18px; font-size: 11px; }
+.individual-page .individual-faq .faq-list details p { margin-bottom: 17px; font-size: 9px; }
+.individual-page .order-section { padding-top: 30px; }
+@media (max-width: 980px) {
+  .individual-page .individual-pricing { grid-template-columns: 1fr; max-width: 760px; margin-inline: auto; }
+  .individual-page .individual-card .card-for { min-height: 0; }
+  .individual-page .individual-value-strip { max-width: 760px; margin-inline: auto; margin-top: 24px; }
+}
+@media (max-width: 650px) {
+  .individual-page .individual-value-strip,
+  .individual-page .individual-duration-grid { grid-template-columns: 1fr; }
+  .individual-page .individual-value-strip > div { min-height: 0; }
+  .individual-page .individual-card { padding: 26px 20px 21px; }
+  .individual-page .individual-card h2 { min-height: 0; margin-top: 27px; }
+  .individual-page .individual-faq { padding-top: 34px; }
+}

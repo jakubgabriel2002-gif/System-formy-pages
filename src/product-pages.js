@@ -13,7 +13,7 @@
       eyebrow: '02 / WSPÓŁPRACA INDYWIDUALNA', title: 'SYSTEM <span>PRO.</span>',
       subtitle: 'Osiem tygodni indywidualnej współpracy. Otrzymujesz plan dopasowany do celu i możliwości, regularną kontrolę postępów oraz kontakt z trenerem.',
       price: '699,00', duration: '8 TYGODNI WSPÓŁPRACY',
-      bullets: ['Analiza celu, doświadczenia i możliwości', 'Indywidualny plan treningowy', 'Dobór ćwiczeń do dostępnego sprzętu', 'Wskazówki dotyczące żywienia i regeneracji', 'Materiały edukacyjne i arkusz postępów', 'Kontrola postępów co 2 tygodnie', 'Jedna zaplanowana aktualizacja planu', 'Kontakt z trenerem przez czat'],
+      bullets: ['Analiza celu, doświadczenia i możliwości', 'Indywidualny plan treningowy', 'Dobór ćwiczeń do dostępnego sprzętu', 'Wskazówki dotyczące żywienia i regeneracji', 'Materiały edukacyjne i arkusz postępów', 'Kontrola postępów co 2 tygodnie', 'Jedna zaplanowana korekta planu', 'Kontakt z trenerem przez czat'],
       process: ['Opłacasz zamówienie.', 'Wypełniasz ankietę startową.', 'Na podstawie ankiety przygotowywany jest indywidualny plan i rozpoczyna się współpraca.'],
       note: 'Pakiet obejmuje 8 tygodni współpracy. Kontakt odbywa się w standardowej kolejności obsługi.'
     },
@@ -37,15 +37,15 @@
       eyebrow: '05 / PLAN + MONITORING', title: 'MONITORING <span>I WSPARCIE.</span>',
       subtitle: 'Indywidualny plan na cztery tygodnie rozszerzony o monitorowanie postępów i wsparcie trenera podczas realizacji.',
       price: '149,99', duration: '4 TYGODNIE / JEDNORAZOWO',
-      bullets: ['Indywidualny plan treningowy na 4 tygodnie', 'Dobór ćwiczeń do celu, poziomu i dostępnego sprzętu', 'Monitorowanie postępów podczas realizacji planu', 'Analiza przekazywanych raportów', 'Wsparcie i kontakt z trenerem'],
+      bullets: ['Indywidualny plan treningowy na 4 tygodnie', 'Dopasowanie do celu, doświadczenia, możliwości i dostępnego sprzętu', 'Monitorowanie postępów przez 4 tygodnie', 'Kontakt i wsparcie w realizacji planu', 'Możliwość zgłoszenia ćwiczenia do wymiany, jeśli nie pasuje do Twoich możliwości — po wspólnym ustaleniu w ramach planu'],
       process: ['Opłacasz zamówienie.', 'Wypełniasz ankietę startową.', 'Otrzymujesz plan i korzystasz z monitorowania oraz wsparcia przez 4 tygodnie.'],
-      note: 'Wariant obejmuje cztery tygodnie planu, monitorowania postępów i kontaktu z trenerem.'
+      note: 'Wariant obejmuje 4 tygodnie planu, monitorowania, kontaktu i wsparcia. Ewentualna podmiana ćwiczenia jest ustalana na podstawie zgłoszonej trudności i uzgodnionego zakresu planu.'
     },
     'individual-full': {
       eyebrow: '06 / PLAN + PEŁNIEJSZA KONTROLA', title: 'INDYWIDUALNY <span>FULL.</span>',
-      subtitle: 'Indywidualny plan na cztery tygodnie, monitoring i wsparcie, rozszerzone o kontrolę techniki ćwiczeń na podstawie przesłanych nagrań.',
+      subtitle: 'Indywidualny plan na cztery tygodnie, monitoring i wsparcie, rozszerzone o kontrolę techniki na podstawie uzgodnionych nagrań wskazanych ćwiczeń.',
       price: '199,99', duration: '4 TYGODNIE / JEDNORAZOWO',
-      bullets: ['Indywidualny plan treningowy na 4 tygodnie', 'Dobór ćwiczeń do celu, poziomu i dostępnego sprzętu', 'Monitorowanie postępów podczas realizacji planu', 'Wsparcie i kontakt z trenerem', 'Analiza przesłanych nagrań wybranych ćwiczeń', 'Wskazówki dotyczące poprawy techniki wykonywania ćwiczeń'],
+      bullets: ['Indywidualny plan treningowy na 4 tygodnie', 'Dopasowanie do celu, doświadczenia, możliwości i dostępnego sprzętu', 'Monitorowanie postępów przez 4 tygodnie', 'Kontakt i wsparcie w realizacji planu', 'Kontrola techniki na podstawie uzgodnionych nagrań wskazanych ćwiczeń', 'Wskazówki dotyczące poprawy techniki wykonywania ćwiczeń'],
       process: ['Opłacasz zamówienie.', 'Wypełniasz ankietę startową.', 'Otrzymujesz plan, monitoring, wsparcie i analizę przesłanych nagrań w czasie 4 tygodni.'],
       note: 'Zakres kontroli dotyczy nagrań wybranych ćwiczeń przekazanych w ramach współpracy.'
     }
