@@ -7,7 +7,11 @@
   const fatalView = $('#fatal-view');
   const clientList = $('#client-list');
   const detailPanel = $('#detail-panel');
-  const state = { orders: [], selectedOrderRef: null, debounce: null, productFilter: 'all' };
+  const workspace = $('.workspace');
+  const statsGrid = $('#client-stats');
+  const reviewsView = $('#reviews-admin-view');
+  const reviewsList = $('#reviews-admin-list');
+  const state = { orders: [], selectedOrderRef: null, debounce: null, productFilter: 'all', reviews: [], dashboardTab: 'clients' };
 
   const labels = {
     name:'Imię i nazwisko',email:'E-mail',age:'Wiek',gender:'Płeć',heightCm:'Wzrost (cm)',bodyWeightKg:'Masa ciała (kg)',
@@ -272,6 +276,47 @@
     finally{button.disabled=false;}
   }
   async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';await loadOrders();}
+  async function loadReviews() {
+    if (!reviewsList) return;
+    reviewsList.innerHTML = '<div class="empty-state">Pobieranie opinii…</div>';
+    try {
+      const data = await api('/api/trainer/reviews');
+      state.reviews = Array.isArray(data.reviews) ? data.reviews : [];
+      renderAdminReviews();
+    } catch (error) {
+      reviewsList.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+    }
+  }
+  function renderAdminReviews() {
+    const filter = $('#reviews-status-filter')?.value || 'all';
+    const rows = state.reviews.filter(review => filter === 'all' || review.status === filter);
+    const labels = { pending: 'NIEZWERYFIKOWANA', verified: 'ZWERYFIKOWANA', rejected: 'ODRZUCONA' };
+    if (!rows.length) {
+      reviewsList.innerHTML = '<div class="empty-state">Brak opinii w wybranym widoku.</div>';
+      return;
+    }
+    reviewsList.innerHTML = rows.map(review => `
+      <article class="admin-review-card">
+        <div class="admin-review-meta"><strong>${escapeHtml(review.author)}</strong><span>${escapeHtml(formatDate(review.created_at))}</span></div>
+        <p>${escapeHtml(review.review)}</p>
+        <div class="admin-review-meta"><span class="admin-review-status ${escapeHtml(review.status)}">${labels[review.status] || escapeHtml(review.status)}</span><span>Zgoda na publikację: ${review.consent_publication ? 'TAK' : 'NIE'}</span></div>
+        <div class="admin-review-actions">
+          ${review.status !== 'verified' ? `<button class="button button-primary" type="button" data-review-action="verified" data-review-id="${escapeHtml(review.review_id)}">ZWERYFIKUJ I PUBLIKUJ</button>` : ''}
+          ${review.status !== 'rejected' ? `<button class="button button-outline" type="button" data-review-action="rejected" data-review-id="${escapeHtml(review.review_id)}">ODRZUĆ</button>` : ''}
+          <button class="button button-danger" type="button" data-review-delete="${escapeHtml(review.review_id)}">USUŃ</button>
+        </div>
+      </article>`).join('');
+  }
+  function showDashboardTab(tab) {
+    state.dashboardTab = tab;
+    $$('[data-dashboard-tab]').forEach(button => button.classList.toggle('active', button.dataset.dashboardTab === tab));
+    if (workspace) workspace.hidden = tab !== 'clients';
+    if (statsGrid) statsGrid.hidden = tab !== 'clients';
+    if (reviewsView) reviewsView.hidden = tab !== 'reviews';
+    if (tab === 'reviews') loadReviews();
+    else loadOrders();
+  }
+
   async function boot(){
     try {const response=await fetch('/api/trainer/session',{credentials:'same-origin',cache:'no-store'});if(response.status===503){$('#fatal-message').textContent='Brakuje konfiguracji panelu lub wymaganej migracji bazy. Ustaw sekrety i wykonaj migrację D1.';showOnly(fatalView);return;}const data=await response.json();if(data.authenticated)await startDashboard();else showOnly(loginView);}
     catch{$('#fatal-message').textContent='Nie udało się połączyć z API panelu. Sprawdź deployment Cloudflare Pages.';showOnly(fatalView);}
@@ -283,5 +328,26 @@
   $('#search-input').addEventListener('input',()=>{clearTimeout(state.debounce);state.debounce=setTimeout(loadOrders,250);});
   $('#intake-filter').addEventListener('change',loadOrders);$('#status-filter').addEventListener('change',loadOrders);
   $$('.product-tab').forEach(button=>button.addEventListener('click',()=>{state.productFilter=button.dataset.productFilter;$$('.product-tab').forEach(tab=>tab.classList.toggle('active',tab===button));loadOrders();}));
+  $$('[data-dashboard-tab]').forEach(button => button.addEventListener('click', () => showDashboardTab(button.dataset.dashboardTab)));
+  $('#refresh-reviews')?.addEventListener('click', loadReviews);
+  $('#reviews-status-filter')?.addEventListener('change', renderAdminReviews);
+  reviewsList?.addEventListener('click', async event => {
+    const action = event.target.closest('[data-review-action]');
+    const remove = event.target.closest('[data-review-delete]');
+    if (action) {
+      action.disabled = true;
+      try {
+        await api('/api/trainer/reviews', { method: 'PATCH', body: JSON.stringify({ review_id: action.dataset.reviewId, status: action.dataset.reviewAction }) });
+        await loadReviews();
+      } catch (error) { window.alert(error.message); action.disabled = false; }
+    } else if (remove) {
+      if (!window.confirm('Usunąć tę opinię z bazy danych? Tej operacji nie można cofnąć.')) return;
+      remove.disabled = true;
+      try {
+        await api(`/api/trainer/reviews?review_id=${encodeURIComponent(remove.dataset.reviewDelete)}`, { method: 'DELETE' });
+        await loadReviews();
+      } catch (error) { window.alert(error.message); remove.disabled = false; }
+    }
+  });
   boot();
 })();

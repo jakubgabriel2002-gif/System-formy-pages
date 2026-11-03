@@ -8,3 +8,21 @@
 @media(max-width:420px){.response-export-actions{display:grid}.response-export-actions .button{width:100%}}
 
 .danger-zone{border:1px solid rgba(241,139,131,.35);background:rgba(90,35,32,.12);border-radius:12px;padding:16px}.danger-zone h3{color:var(--red)}.button-danger{background:#7d302d;border-color:#a64b45;color:#fff}.button-danger:hover{background:#963b36}.button-danger:disabled{opacity:.55;cursor:wait;transform:none}
+
+
+/* Reviews moderation */
+.dashboard-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:-8px 0 18px}
+.dashboard-tab{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:10px;padding:11px 16px;font-size:11px;font-weight:850;letter-spacing:.06em}
+.dashboard-tab.active{background:var(--yellow);border-color:var(--yellow);color:#151515}
+.reviews-admin-view{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.reviews-admin-toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.reviews-admin-list{display:grid;gap:12px}
+.admin-review-card{padding:18px;border:1px solid var(--line);border-radius:12px;background:#101213}
+.admin-review-card p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}
+.admin-review-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:11px}
+.admin-review-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.admin-review-status{display:inline-flex;padding:6px 9px;border:1px solid var(--line);font-size:9px;font-weight:900;letter-spacing:.1em}
+.admin-review-status.pending{color:#f0c75c;border-color:#8a6c2d}
+.admin-review-status.verified{color:var(--green);border-color:#386b51}
+.admin-review-status.rejected{color:var(--red);border-color:#78433e}
+@media(max-width:760px){.reviews-admin-view{padding:13px}.admin-review-card{padding:14px}}

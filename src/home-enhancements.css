@@ -375,3 +375,25 @@
   .sf-reviews-invite { align-items: stretch; flex-direction: column; }
   .sf-add-review-button { align-self: flex-start; }
 }
+
+
+/* Reviews stored in D1 and moderated in the trainer panel. */
+.sf-reviews-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; max-width:1120px; margin:0 auto 28px; }
+.sf-review-card { min-height:0; }
+.sf-review-text { color:#e8e8e2; font-size:13px; line-height:1.85; white-space:pre-wrap; overflow-wrap:anywhere; }
+.sf-review-unverified { display:inline-flex; margin:0 0 12px; padding:8px 10px; border:1px solid #d7a83d; color:#f0c75c; font-size:9px; font-weight:950; letter-spacing:.12em; }
+.sf-review-empty { grid-column:1/-1; padding:28px; border:1px solid #373733; color:#aaa9a1; text-align:center; font-size:12px; }
+.sf-review-honeypot { position:absolute!important; left:-10000px!important; width:1px!important; height:1px!important; overflow:hidden!important; }
+@media(max-width:760px){.sf-reviews-list{grid-template-columns:1fr}}
+
+
+.sf-reviews-list{max-width:1120px;margin:0 auto 28px}
+.sf-reviews-carousel{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;gap:16px;align-items:center}
+.sf-reviews-stage{min-width:0}
+.sf-reviews-stage [hidden]{display:none!important}
+.sf-reviews-arrow{width:46px;height:46px;border:1px solid #55554c;background:#111;color:#f1f1ed;font-size:24px;cursor:pointer}
+.sf-reviews-arrow:hover:not(:disabled){border-color:var(--sf-gold);color:var(--sf-gold)}
+.sf-reviews-arrow:disabled{opacity:.3;cursor:default}
+.sf-reviews-count{grid-column:1/-1;margin:0;color:#88887f;font-size:9px;font-weight:900;letter-spacing:.15em;text-align:center}
+.sf-review-card{min-height:250px}
+@media(max-width:760px){.sf-reviews-carousel{grid-template-columns:34px minmax(0,1fr) 34px;gap:7px}.sf-reviews-arrow{width:34px;height:38px;font-size:19px}.sf-review-card{min-height:260px}}
