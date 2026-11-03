@@ -517,3 +517,69 @@
   .sf-process-list li { flex-direction: row; gap: 16px; padding: 18px; }
   .sf-process-list .step-number { min-width: 34px; }
 }
+
+
+/* SYSTEM FORMY — stacked expandable package cards */
+.sf-offer-stack { display:grid; gap:13px; max-width:1000px; margin:0 auto; }
+.sf-offer-accordion { position:relative; overflow:hidden; border:1px solid #353532; background:linear-gradient(110deg,#101010 0%,#0b0b0b 72%); transition:border-color .2s ease,background .2s ease,box-shadow .2s ease; }
+.sf-offer-accordion:hover { border-color:#77766f; }
+.sf-offer-accordion[open] { border-color:#77766f; background:#10100f; }
+.sf-offer-summary { display:grid; grid-template-columns:58px minmax(0,1fr) auto; align-items:center; gap:20px; min-height:112px; padding:22px 27px; cursor:pointer; list-style:none; }
+.sf-offer-summary::-webkit-details-marker { display:none; }
+.sf-offer-summary::marker { content:""; }
+.sf-offer-number { display:grid; place-items:center; width:46px; height:46px; border:1px solid #45443e; color:#92918a; font-size:12px; font-weight:800; letter-spacing:.12em; }
+.sf-offer-summary-copy { display:flex; min-width:0; flex-direction:column; gap:5px; }
+.sf-offer-eyebrow { color:#99978f; font-size:8px; font-weight:900; letter-spacing:.16em; line-height:1.5; }
+.sf-offer-name { color:#f3f1e9; font-size:clamp(29px,3.5vw,43px); font-weight:900; line-height:.98; letter-spacing:-.035em; }
+.sf-offer-teaser { max-width:650px; color:#aaa9a2; font-size:11px; line-height:1.6; }
+.sf-offer-expand { display:flex; align-items:center; gap:15px; color:#d4d1c8; white-space:nowrap; }
+.sf-offer-expand-label { font-size:8px; font-weight:900; letter-spacing:.13em; }
+.sf-offer-plus { display:grid; place-items:center; width:34px; height:34px; border:1px solid #55544d; color:#f1efe6; font-size:22px; font-weight:300; line-height:1; transition:transform .2s ease,background .2s ease,color .2s ease; }
+.sf-offer-accordion[open] .sf-offer-plus { transform:rotate(45deg); background:#e7c84b; border-color:#e7c84b; color:#080808; }
+.sf-offer-details { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:28px 42px; padding:0 34px 30px 105px; animation:sf-offer-reveal .24s ease both; }
+@keyframes sf-offer-reveal { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+.sf-offer-detail-intro { max-width:410px; }
+.sf-offer-detail-kicker { margin:0 0 10px; color:#d7c16b; font-size:8px; font-weight:900; letter-spacing:.14em; line-height:1.6; }
+.sf-offer-detail-intro p:last-child { margin:0; color:#c2c0b8; font-size:11px; line-height:1.85; }
+.sf-offer-benefits-wrap h4 { margin:0 0 8px; color:#e4e1d8; font-size:8px; font-weight:900; letter-spacing:.14em; }
+.sf-offer-benefits { display:grid; grid-template-columns:1fr 1fr; gap:0 20px; margin:0; padding:0; list-style:none; }
+.sf-offer-benefits li { position:relative; padding:9px 0 9px 16px; border-bottom:1px solid rgba(255,255,255,.08); color:#c2c0b8; font-size:10px; line-height:1.6; }
+.sf-offer-benefits li::before { position:absolute; top:15px; left:1px; width:5px; height:5px; background:#d7c16b; content:""; transform:rotate(45deg); }
+.sf-offer-detail-footer { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,.1); }
+.sf-offer-duration { display:flex; flex-direction:column; gap:5px; }
+.sf-offer-duration span { color:#8f8d85; font-size:8px; font-weight:900; letter-spacing:.14em; }
+.sf-offer-duration strong { color:#f0eee5; font-size:14px; letter-spacing:.06em; }
+.sf-offer-detail-footer > .button,.sf-offer-cta-group > .button { min-width:230px; min-height:49px; }
+.sf-offer-cta-group { display:flex; align-items:center; justify-content:flex-end; gap:16px; flex-wrap:wrap; }
+.sf-offer-cta-group .guarantee-card-trigger { margin:0; }
+.sf-offer-elite { border-color:rgba(215,193,107,.55); background:linear-gradient(110deg,rgba(215,193,107,.09),#0c0c0b 58%); }
+.sf-offer-elite:hover,.sf-offer-elite[open] { border-color:#d7c16b; }
+.sf-offer-elite .sf-offer-number { border-color:#9a8849; color:#e1cb78; }
+.sf-offer-elite .sf-offer-eyebrow { color:#d7c16b; }
+.sf-offer-elite .sf-offer-name { color:#e7d58f; }
+.sf-offer-elite .sf-offer-plus { border-color:#9a8849; color:#e7d58f; }
+.sf-offer-pro { border-color:#d7d5cd; background:linear-gradient(110deg,rgba(255,255,255,.075),#0d0d0d 64%); box-shadow:0 8px 28px rgba(0,0,0,.16); }
+.sf-offer-pro:hover,.sf-offer-pro[open] { border-color:#f2f0e8; }
+.sf-offer-pro .sf-offer-number { background:#e7c84b; border-color:#e7c84b; color:#0a0a0a; }
+.sf-offer-pro .sf-offer-eyebrow { color:#e7c84b; }
+.sf-offer-pro .sf-offer-plus { border-color:#e7c84b; color:#e7c84b; }
+.sf-offer-pro[open] .sf-offer-plus { color:#080808; }
+.sf-plan-selector .offer-footnote { max-width:1000px; margin:20px auto 0; }
+@media(max-width:760px) {
+  .sf-offer-stack { gap:10px; }
+  .sf-offer-summary { grid-template-columns:38px minmax(0,1fr) 34px; gap:12px; min-height:100px; padding:17px 14px; }
+  .sf-offer-number { width:34px; height:34px; font-size:10px; }
+  .sf-offer-eyebrow { font-size:7px; letter-spacing:.11em; }
+  .sf-offer-name { font-size:29px; }
+  .sf-offer-teaser { font-size:10px; line-height:1.5; }
+  .sf-offer-expand { justify-content:center; }
+  .sf-offer-expand-label { display:none; }
+  .sf-offer-plus { width:30px; height:30px; font-size:20px; }
+  .sf-offer-details { grid-template-columns:1fr; gap:20px; padding:0 17px 21px 64px; }
+  .sf-offer-benefits { grid-template-columns:1fr; }
+  .sf-offer-detail-footer { align-items:stretch; flex-direction:column; gap:16px; }
+  .sf-offer-detail-footer > .button,.sf-offer-cta-group > .button { width:100%; min-width:0; }
+  .sf-offer-cta-group { align-items:stretch; flex-direction:column; gap:10px; }
+  .sf-offer-cta-group .guarantee-card-trigger { align-self:flex-start; }
+}
+@media(prefers-reduced-motion:reduce) { .sf-offer-details { animation:none; } .sf-offer-plus { transition:none; } }
