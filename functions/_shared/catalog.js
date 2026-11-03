@@ -15,14 +15,14 @@ export const CATALOG = Object.freeze({
   pro: {
     key: 'pro', name: 'SYSTEM PRO', amount: 69900, displayPrice: '699,00 zł',
     duration: '8 tygodni współpracy', fulfillment: 'intake', page: 'produkt-pro.html',
-    stripeDescription: '8 tygodni współpracy: analiza celu, indywidualny plan, wskazówki żywieniowe i regeneracyjne, kontrola co 2 tygodnie, jedna aktualizacja i kontakt przez czat.',
+    stripeDescription: '8 tygodni współpracy: analiza celu, indywidualny plan, wskazówki żywieniowe i regeneracyjne, kontrola co 2 tygodnie, jedna zaplanowana korekta planu i kontakt przez czat.',
     bullets: [
       'Analiza celu, doświadczenia i możliwości',
       'Indywidualny plan treningowy dopasowany do dostępnego sprzętu',
       'Wskazówki dotyczące żywienia i regeneracji',
       'Materiały edukacyjne i arkusz monitorowania postępów',
       'Kontrola postępów co 2 tygodnie',
-      'Jedna zaplanowana aktualizacja planu',
+      'Jedna zaplanowana korekta planu',
       'Kontakt z trenerem przez czat'
     ]
   },
@@ -35,7 +35,7 @@ export const CATALOG = Object.freeze({
       'Indywidualny plan treningowy oraz wskazówki żywieniowe i regeneracyjne',
       'Materiały edukacyjne i arkusz monitorowania postępów',
       'Cotygodniowa analiza postępów i raporty',
-      'Regularne aktualizacje planu treningowego',
+      'Regularne korekty planu treningowego',
       'Priorytetowy kontakt z trenerem przez czat',
       'Analiza trudności, podsumowanie 12 tygodni i dalsze rekomendacje',
       'Gwarancja kontynuacji na warunkach określonych w ofercie i karcie celu ELITE'
@@ -55,13 +55,13 @@ export const CATALOG = Object.freeze({
   'individual-monitor': {
     key: 'individual-monitor', name: 'PLAN INDYWIDUALNY + MONITORING I WSPARCIE', amount: 14999, displayPrice: '149,99 zł',
     duration: '4 tygodnie', fulfillment: 'intake', page: 'produkt-plan-monitoring.html',
-    stripeDescription: 'Indywidualny plan treningowy na 4 tygodnie, monitorowanie postępów i wsparcie trenera przez cały okres realizacji.',
+    stripeDescription: 'Indywidualny plan treningowy na 4 tygodnie, monitorowanie postępów, kontakt i wsparcie trenera oraz możliwość zgłoszenia ćwiczenia do omówienia i ustalenia ewentualnego zamiennika w ramach uzgodnionego zakresu.',
     bullets: [
       'Indywidualny plan treningowy na 4 tygodnie',
       'Dobór ćwiczeń do celu, poziomu i dostępnego sprzętu',
       'Monitorowanie postępów podczas realizacji planu',
-      'Analiza przekazywanych raportów',
-      'Wsparcie i kontakt z trenerem'
+      'Kontakt i wsparcie w realizacji planu przez 4 tygodnie',
+      'Możliwość zgłoszenia ćwiczenia do omówienia i ustalenia ewentualnego zamiennika w ramach uzgodnionego zakresu'
     ]
   },
   'individual-full': {
@@ -73,7 +73,7 @@ export const CATALOG = Object.freeze({
       'Dobór ćwiczeń do celu, poziomu i dostępnego sprzętu',
       'Monitorowanie postępów podczas realizacji planu',
       'Wsparcie i kontakt z trenerem',
-      'Analiza przesłanych nagrań wybranych ćwiczeń',
+      'Kontrola techniki na podstawie uzgodnionych nagrań wskazanych ćwiczeń',
       'Wskazówki dotyczące poprawy techniki wykonywania ćwiczeń'
     ]
   }
