@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/styles.css">
+  <link rel="stylesheet" href="/src/home-enhancements.css">
   <title>SYSTEM FORMY — Zbuduj swoją formę. Działaj według systemu.</title>
 </head>
 <body>
@@ -38,22 +39,36 @@
   </header>
 
   <main id="main">
-    <section class="hero section-shell" id="start" aria-labelledby="hero-title">
-      <div class="hero-copy">
+    <section class="hero section-shell sf-hero" id="start" aria-labelledby="hero-title">
+      <div class="hero-copy sf-hero-copy">
         <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / WSPÓŁPRACA TRENINGOWA</p>
         <h1 id="hero-title">ZBUDUJ SWOJĄ FORMĘ.<br><span>DZIAŁAJ WEDŁUG SYSTEMU.</span></h1>
         <p class="hero-lead">Trening bez przypadku. Jasny plan, konkretne działanie i system, który pomoże Ci konsekwentnie realizować swoje cele.</p>
         <div class="hero-actions" aria-label="Przejdź do wyboru współpracy lub zobacz metamorfozy">
-          <a class="button button-light" href="#wybierz-plan">DOKONAJ METAMORFOZY </a>
-          <a class="hero-proof-link" href="#metamorfozy">ZOBACZ METAMORFOZY INNYCH</a>
+          <a class="button button-light" href="#wybierz-plan">WYBIERZ SWÓJ PLAN</a>
+          <a class="hero-proof-link" href="#metamorfozy">ZOBACZ PRAWDZIWE EFEKTY <span aria-hidden="true">↗</span></a>
         </div>
-        <div class="elite-guarantee-badge" aria-label="Gwarancja osiągnięcia zaakceptowanego celu dostępna w pakiecie System Elite">
-          <span class="elite-guarantee-kicker">SYSTEM ELITE</span>
-          <span class="elite-guarantee-title">GWARANCJA OSIĄGNIĘCIA CELU</span>
+        <div class="sf-hero-points" aria-label="Filary SYSTEMU FORMY">
+          <span>INDYWIDUALNE PODEJŚCIE</span>
+          <span>PLAN DZIAŁANIA</span>
+          <span>KONSEKWENTNY PROGRES</span>
         </div>
       </div>
 
-      <div class="hero-plan-select" id="wybierz-plan" aria-labelledby="hero-plan-title">
+      <div class="sf-hero-brand-stage" aria-label="Logo SYSTEM FORMY">
+        <span class="sf-hero-stage-top">SYSTEM FORMY <b> / </b> 01</span>
+        <span class="sf-hero-stage-orbit" aria-hidden="true"></span>
+        <img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="520" height="385">
+        <span class="sf-hero-stage-bottom">TRENING <b>·</b> PLAN <b>·</b> PROGRES</span>
+      </div>
+
+      <a class="sf-hero-scroll" href="#wybierz-plan" aria-label="Przewiń do wyboru planu">
+        <span>PRZEJDŹ DO WYBORU PLANU</span>
+        <span class="sf-hero-scroll-arrow" aria-hidden="true">↓</span>
+      </a>
+    </section>
+
+    <section class="hero-plan-select section-shell sf-plan-selector" id="wybierz-plan" aria-labelledby="hero-plan-title">
         <div class="hero-plan-heading">
           <div>
             <p class="eyebrow"><span class="eyebrow-line"></span> WYBÓR WSPÓŁPRACY</p>
@@ -85,8 +100,7 @@
             <div class="hero-plan-bottom"><strong>1499 <small>zł</small></strong><span>POZNAJ PAKIET</span></div>
           </a>
         </div>
-      </div>
-    </section>
+      </section>
 
     <div class="ticker" aria-hidden="true"><div>TRENING BEZ PRZYPADKU <b> / </b> JASNY PLAN <b> / </b> KONSEKWENTNE DZIAŁANIE <b> / </b> TWÓJ PROGRES <b> / </b></div></div>
 
@@ -251,22 +265,63 @@
       </div>
     </section>
 
-    <section class="metamorphoses section-shell" id="metamorfozy" aria-labelledby="metamorphoses-title">
+    <section class="metamorphoses section-shell sf-metamorphoses" id="metamorfozy" aria-labelledby="metamorphoses-title">
       <div class="section-heading">
         <div>
           <p class="eyebrow"><span class="eyebrow-line"></span> PRAWDZIWA PRACA / PRAWDZIWE EFEKTY</p>
           <h2 id="metamorphoses-title">METAMORFOZY,<br><span>KTÓRE MOTYWUJĄ.</span></h2>
         </div>
-        <p class="section-intro">Każda zmiana zaczyna się od decyzji i konsekwentnego działania. W tym miejscu znajdziesz historie osób, które zgodzą się pokazać swoją drogę.</p>
+        <p class="section-intro">Nie obiecujemy identycznych rezultatów każdej osobie. Pokazujemy prawdziwe historie i drogę, którą uczestnicy przeszli podczas współpracy.</p>
       </div>
-      <div class="metamorphosis-board">
-        <div class="metamorphosis-mark" aria-hidden="true">SF<span>/ PROGRES</span></div>
-        <div class="metamorphosis-copy">
-          <p class="metamorphosis-kicker">GALERIA METAMORFOZ</p>
-          <h3>WKRÓTCE<br><span>PRAWDZIWE HISTORIE.</span></h3>
-          <p>Galeria zostanie uzupełniona zdjęciami „przed i po” oraz opisami zmian osób, które wyraziły zgodę na publikację. Nie pokazujemy fikcyjnych efektów ani zdjęć bez zgody ich właścicieli.</p>
+
+      <article class="sf-client-story" aria-labelledby="tomek-story-title">
+        <div class="sf-story-topline">
+          <span>HISTORIA 01 <b>/</b> SYSTEM FORMY</span>
+          <span>6 MIESIĘCY WSPÓŁPRACY</span>
         </div>
-      </div>
+
+        <div class="sf-story-intro">
+          <div>
+            <p class="metamorphosis-kicker">KONSEKWENCJA ZAMIAST PRZYPADKU</p>
+            <h3 id="tomek-story-title">TOMEK <span>/ 6 MIESIĘCY PRACY</span></h3>
+            <p class="sf-story-description">Przez sześć miesięcy wspólnie pracowaliśmy nad redukcją masy ciała, poprawą sylwetki, kondycji i siły. Efekt to nie pojedynczy trening, ale konsekwentna realizacja planu i stopniowe budowanie lepszej sprawności.</p>
+          </div>
+          <div class="sf-story-outcomes" aria-label="Obszary, nad którymi pracowaliśmy">
+            <span><b>01</b> Redukcja masy ciała</span>
+            <span><b>02</b> Poprawa wyglądu sylwetki</span>
+            <span><b>03</b> Lepsza kondycja</span>
+            <span><b>04</b> Większa siła</span>
+          </div>
+        </div>
+
+        <div class="sf-story-photos">
+          <figure class="sf-story-photo">
+            <div class="sf-story-photo-frame">
+              <img src="/assets/metamorfoza-tomek-przed.jpeg" alt="Tomek przed rozpoczęciem sześciomiesięcznej współpracy treningowej" loading="lazy" width="1536" height="809">
+              <span class="sf-photo-label">PRZED</span>
+            </div>
+            <figcaption><span>01</span> PUNKT WYJŚCIA</figcaption>
+          </figure>
+          <div class="sf-story-transition" aria-hidden="true">
+            <span>6</span>
+            <small>MIESIĘCY</small>
+            <b>→</b>
+          </div>
+          <figure class="sf-story-photo">
+            <div class="sf-story-photo-frame">
+              <img src="/assets/metamorfoza-tomek-po.jpeg" alt="Tomek po sześciu miesiącach współpracy treningowej" loading="lazy" width="2304" height="2460">
+              <span class="sf-photo-label">PO</span>
+            </div>
+            <figcaption><span>02</span> EFEKT WSPÓLNEJ PRACY</figcaption>
+          </figure>
+        </div>
+
+        <div class="sf-story-footer">
+          <p>Największą zmianą była nie tylko sylwetka, ale również poprawa kondycji i siły. Każda współpraca zaczyna się od innego punktu — plan i tempo działania dobieramy do konkretnej osoby.</p>
+          <span>REALNA HISTORIA <b>·</b> ZA ZGODĄ TOMKA</span>
+        </div>
+      </article>
+      <p class="sf-results-disclaimer">Rezultaty Tomka są indywidualnym efektem jego współpracy i zaangażowania. Nie stanowią gwarancji uzyskania takiego samego wyniku przez inne osoby.</p>
     </section>
 
     <section class="faq section-shell" id="faq" aria-labelledby="faq-title">
@@ -349,5 +404,6 @@
 
   <div class="toast" id="site-toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <script src="/src/main.js" defer></script>
+  <script src="/src/home-animations.js" defer></script>
 </body>
 </html>
