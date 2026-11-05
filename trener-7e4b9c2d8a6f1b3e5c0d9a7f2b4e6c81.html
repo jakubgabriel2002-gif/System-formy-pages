@@ -48,6 +48,7 @@
       <nav class="dashboard-tabs" aria-label="Sekcje panelu">
         <button class="dashboard-tab active" type="button" data-dashboard-tab="clients">KLIENCI</button>
         <button class="dashboard-tab" type="button" data-dashboard-tab="reviews">OPINIE</button>
+        <button class="dashboard-tab" type="button" data-dashboard-tab="elite">ZGŁOSZENIA ELITE <span class="tab-count" id="elite-new-count" hidden>0</span></button>
       </nav>
 
       <section class="stats-grid" aria-label="Podsumowanie klientów" id="client-stats">
@@ -113,6 +114,26 @@
           </div>
         </div>
         <div class="reviews-admin-list" id="reviews-admin-list" aria-live="polite"><div class="empty-state">Pobieranie opinii…</div></div>
+      </section>
+      <section class="elite-admin-view" id="elite-admin-view" hidden>
+        <div class="reviews-admin-toolbar">
+          <div><h2>Zgłoszenia ELITE</h2><p class="muted small">Bezpłatne analizy celu z formularza „Aplikuj do ELITE”. Najnowsze na górze. <span id="elite-summary"></span></p></div>
+          <div class="admin-review-actions">
+            <select id="elite-status-filter" aria-label="Filtr statusu zgłoszeń">
+              <option value="all">Wszystkie statusy</option>
+              <option value="new">Nowe</option>
+              <option value="in_review">W analizie</option>
+              <option value="proposal_sent">Wysłano propozycję</option>
+              <option value="client">Klient</option>
+              <option value="rejected">Odrzucone</option>
+            </select>
+            <button class="button button-outline" id="refresh-elite" type="button">ODŚWIEŻ ZGŁOSZENIA</button>
+          </div>
+        </div>
+        <div class="elite-admin-layout">
+          <div class="reviews-admin-list elite-admin-list" id="elite-admin-list" aria-live="polite"><div class="empty-state">Pobieranie zgłoszeń…</div></div>
+          <section class="elite-admin-detail" id="elite-admin-detail" aria-live="polite"><div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div></section>
+        </div>
       </section>
       <footer class="dashboard-footer">SYSTEM FORMY · Dane klientów są dostępne wyłącznie po zalogowaniu.</footer>
     </section>
