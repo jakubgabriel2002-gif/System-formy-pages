@@ -48,3 +48,6 @@
 .elite-status-rejected{color:var(--red);border-color:#7d403c}
 @media(max-width:1050px){.elite-admin-layout{grid-template-columns:1fr}.elite-admin-list{max-height:none}}
 @media(max-width:760px){.elite-admin-view{padding:13px}.elite-admin-detail{padding:14px}}
+.elite-reply-box{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;padding:12px;border:1px solid var(--yellow);border-radius:10px;background:rgba(255,212,0,.05)}
+.elite-reply-link{text-decoration:none}
+@media(max-width:760px){.elite-reply-link{width:100%;text-align:center}}

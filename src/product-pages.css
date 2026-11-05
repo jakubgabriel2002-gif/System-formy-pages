@@ -210,6 +210,9 @@
 .survey-review-section .survey-review-row span{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;color:#fff}
 
 /* ELITE — zgłoszenie i bezpłatna analiza celu */
+.elite-price-caption { margin-top: 4px; }
+.elite-price-note { margin: 0 0 22px; padding: 14px 16px; border-left: 2px solid var(--accent, #e7c84b); background: rgba(231,200,75,.06); color: #d6d6cf; font-size: 12px; line-height: 1.75; }
+.elite-contact-hint { margin: 2px 0 16px; color: #a2a29d; font-size: 11px; line-height: 1.75; }
 .elite-apply-cta, .elite-analysis-link { width: 100%; text-align: center; text-decoration: none; }
 .elite-analysis-link { margin-top: 10px; }
 .elite-apply { padding-top: clamp(56px, 7vw, 96px); border-top: 1px solid var(--line, #30302e); scroll-margin-top: 90px; }
@@ -239,7 +242,6 @@
 .elite-form-status { min-height: 18px; margin: 14px 0 0; color: #a2a29d; font-size: 11px; line-height: 1.7; }
 .elite-form-status.is-error { color: #f1c3b8; }
 .elite-apply-success { text-align: center; outline: none; }
-.elite-apply-success span { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 auto 18px; border: 1px solid var(--accent, #e7c84b); color: var(--accent, #e7c84b); font-size: 24px; }
 .elite-apply-success h3 { max-width: 620px; margin: 0 auto 12px; color: #f1f1ed; font: 800 clamp(24px, 3.6vw, 34px)/1.1 var(--display); }
 .elite-apply-success p { margin: 0; color: #a2a29d; font-size: 11px; line-height: 1.8; }
 @media (max-width: 1000px) { .elite-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

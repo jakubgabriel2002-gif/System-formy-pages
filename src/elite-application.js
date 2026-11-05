@@ -22,12 +22,24 @@
     healthConsent.closest('.elite-consent')?.classList.toggle('is-required', needed);
   };
   health.addEventListener('input', syncHealthConsent);
+
+  // Kontakt: e-mail zawsze wymagany, link do profilu Instagram/TikTok opcjonalny.
+  const social = form.elements.social;
+  const PROFILE_RE = /^(https?:\/\/)?((www|m)\.)?(instagram\.com\/(?!(p|reel|reels|stories|explore|accounts)\/)[a-z0-9._]{1,30}|instagr\.am\/[a-z0-9._]{1,30}|tiktok\.com\/@[a-z0-9._]{2,24})\/?([?#].*)?$/i;
+  const profilePlatform = value => /tiktok\.com/i.test(value) ? 'TikToku' : 'Instagramie';
+  const syncContact = () => {
+    const link = social.value.trim();
+    social.setCustomValidity(link && !PROFILE_RE.test(link) ? 'invalid' : '');
+  };
+  social.addEventListener('input', syncContact);
+  syncContact();
   form.addEventListener('change', () => { if (status.classList.contains('is-error')) { status.textContent = ''; status.classList.remove('is-error'); } });
   syncHealthConsent();
 
   const messages = {
     name: 'Podaj imię (min. 2 znaki).',
-    email: 'Podaj poprawny adres e-mail.',
+    social: 'Wklej pełny link do profilu Instagram lub TikTok, np. https://www.instagram.com/twoj_profil',
+    email: 'Podaj poprawny adres e-mail — bez niego nie mogę przyjąć zgłoszenia.',
     age: 'Podaj wiek (16–90 lat).',
     gender: 'Wybierz płeć.',
     height_cm: 'Podaj wzrost w centymetrach (120–230).',
@@ -38,7 +50,7 @@
     location: 'Wybierz miejsce treningu.',
     days_per_week: 'Wybierz liczbę dni treningowych.',
     readiness: 'Wybierz, kiedy chcesz zacząć.',
-    budget: 'Zaznacz odpowiedź dotyczącą budżetu.',
+    budget: 'Zaznacz, czy jesteś w stanie zainwestować w zmianę sylwetki.',
     consent_health: 'Zaznacz zgodę na dane o zdrowiu albo wyczyść pole o kontuzjach.',
     consent_privacy: 'Zaznacz zgodę na przetwarzanie danych zgłoszenia.'
   };
@@ -52,9 +64,16 @@
     return null;
   }
 
+  function channelText(payload) {
+    return payload.social
+      ? `Odpowiedź wyślę w wiadomości prywatnej na ${profilePlatform(payload.social)}. Jeśli jej nie widzisz, sprawdź „Prośby o wiadomość”.`
+      : 'Odpowiedź przyjdzie na podany adres e-mail. Sprawdź też folder spam.';
+  }
+
   form.addEventListener('submit', async event => {
     event.preventDefault();
     syncHealthConsent();
+    syncContact();
     status.classList.remove('is-error');
     const invalid = firstInvalid();
     if (invalid) {
@@ -87,7 +106,10 @@
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie.');
+      const channel = channelText(payload);
       form.reset();
+      syncContact();
+      document.querySelector('#elite-success-channel').textContent = channel;
       form.hidden = true;
       success.hidden = false;
       success.focus();

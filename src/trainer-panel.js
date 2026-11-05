@@ -331,9 +331,15 @@
     experience:{ poczatkujacy:'Zaczyna / < 3 miesiące', do1roku:'Do 1 roku', '1do3lat':'1–3 lata', powyzej3lat:'Ponad 3 lata', powrot:'Powrót po przerwie' },
     location:{ dom:'Dom', silownia:'Siłownia', oba:'Dom i siłownia' },
     readiness:{ teraz:'Teraz', miesiac:'W ciągu miesiąca', pozniej:'Później' },
-    budget:{ tak:'Tak, 1499 zł w zasięgu', zastanowie:'Musi się zastanowić', nie:'Nie' }
+    budget:{ tak:'Tak', nie:'Nie', zastanowie:'Musi się zastanowić (starsze zgłoszenie)' }
   };
   const eliteLabel = (field, value) => eliteEnumLabels[field]?.[value] || value || '—';
+  const safeProfileUrl = value => /^https:\/\/(www\.instagram\.com|www\.tiktok\.com)\//.test(String(value || '')) ? String(value) : '';
+  const eliteChannel = item => {
+    const url = safeProfileUrl(item.social);
+    if (url) return { kind: url.includes('tiktok.com') ? 'TikTok' : 'Instagram', url };
+    return { kind: 'E-mail', url: item.email ? `mailto:${item.email}` : '' };
+  };
   function updateEliteCounter() {
     const badge = $('#elite-new-count');
     const fresh = state.elite.filter(item => item.status === 'new').length;
@@ -362,7 +368,7 @@
       <button class="admin-review-card elite-row${item.application_id === state.selectedEliteId ? ' selected' : ''}" type="button" data-elite-id="${escapeHtml(item.application_id)}">
         <div class="admin-review-meta"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(formatDate(item.created_at))}</span></div>
         <p class="elite-row-goal">${escapeHtml(eliteLabel('goal', item.goal))} · ${escapeHtml(eliteLabel('readiness', item.readiness))} · budżet: ${escapeHtml(eliteLabel('budget', item.budget))}</p>
-        <div class="admin-review-meta"><span class="admin-review-status elite-status-${escapeHtml(item.status)}">${eliteStatusLabels[item.status] || escapeHtml(item.status)}</span><span>${escapeHtml(item.email)}</span></div>
+        <div class="admin-review-meta"><span class="admin-review-status elite-status-${escapeHtml(item.status)}">${eliteStatusLabels[item.status] || escapeHtml(item.status)}</span><span>Odpowiedź: ${escapeHtml(eliteChannel(item).kind)}</span></div>
       </button>`).join('');
   }
   function renderEliteDetail() {
@@ -375,12 +381,12 @@
         <div><p class="eyebrow">ZGŁOSZENIE ELITE</p><h2>${escapeHtml(item.name)}</h2><p class="muted small">${escapeHtml(formatDate(item.created_at))} · ${escapeHtml(eliteLabel('source', item.source))}</p></div>
         <span class="admin-review-status elite-status-${escapeHtml(item.status)}">${eliteStatusLabels[item.status] || escapeHtml(item.status)}</span>
       </div>
-      ${section('Kontakt', `<div class="data-grid">${row('E-mail', item.email)}${row('Instagram / TikTok', item.social)}</div>`)}
+      ${section('Kontakt', `<div class="elite-reply-box"><span class="data-label">ODPOWIEDZ PRZEZ: ${escapeHtml(eliteChannel(item).kind.toUpperCase())}</span>${eliteChannel(item).url ? `<a class="button button-primary elite-reply-link" href="${escapeHtml(eliteChannel(item).url)}" target="_blank" rel="noopener noreferrer">${eliteChannel(item).kind === 'E-mail' ? 'NAPISZ E-MAIL' : `OTWÓRZ PROFIL ${escapeHtml(eliteChannel(item).kind.toUpperCase())}`}</a>` : ''}</div><div class="data-grid">${row('Link do profilu', item.social)}${row('E-mail', item.email)}</div>`)}
       ${section('Dane podstawowe', `<div class="data-grid">${row('Wiek', item.age)}${row('Płeć', eliteLabel('gender', item.gender))}${row('Wzrost (cm)', item.height_cm)}${row('Waga (kg)', item.weight_kg)}</div>`)}
       ${section('Cel', `<div class="data-grid">${row('Główny cel', eliteLabel('goal', item.goal))}${row('Doświadczenie', eliteLabel('experience', item.experience))}${row('Cel w liczbach i czas', item.goal_details, true)}</div>`)}
       ${section('Możliwości', `<div class="data-grid">${row('Miejsce treningu', eliteLabel('location', item.location))}${row('Dni w tygodniu', item.days_per_week)}${row('Sprzęt', item.equipment, true)}${row('Co nie działało', item.what_failed, true)}</div>`)}
       ${section('Zdrowie', `<div class="data-grid">${row('Kontuzje / ograniczenia', item.health_limitations, true)}${row('Zgoda na dane o zdrowiu', item.consent_health ? 'TAK' : 'NIE')}</div>`)}
-      ${section('Start i budżet', `<div class="data-grid">${row('Gotowość do startu', eliteLabel('readiness', item.readiness))}${row('Budżet 1499 zł', eliteLabel('budget', item.budget))}</div>`)}
+      ${section('Start i budżet', `<div class="data-grid">${row('Gotowość do startu', eliteLabel('readiness', item.readiness))}${row('Gotów zainwestować', eliteLabel('budget', item.budget))}</div>`)}
       <form class="detail-form" id="elite-edit-form">
         <label for="elite-status">Status zgłoszenia</label>
         <select id="elite-status" name="status">${statusOptions}</select>

@@ -68,7 +68,7 @@
   const eliteApplyMode = productKey === 'elite' && pageParams.get('zakup') !== '1';
   const applyUrl = productKey === 'pro' ? '/produkt-elite.html?z=pro#aplikuj' : '#aplikuj';
   const processItems = eliteApplyMode
-    ? ['Wypełniasz krótkie zgłoszenie z celem, doświadczeniem i możliwościami.', 'Analizuję zgłoszenie i odsyłam propozycję współpracy na e-mail.', 'Po akceptacji opłacasz pakiet, wypełniasz ankietę startową i zaczynasz 12 tygodni współpracy.']
+    ? ['Wypełniasz krótkie zgłoszenie z celem, doświadczeniem i możliwościami.', 'Analizuję zgłoszenie i odsyłam propozycję współpracy z ceną — na Twój profil albo e-mail.', 'Po akceptacji opłacasz pakiet, wypełniasz ankietę startową i zaczynasz 12 tygodni współpracy.']
     : product.process;
   const stepLabels = eliteApplyMode ? ['APLIKUJESZ', 'ANALIZA', 'ROZPOCZYNASZ'] : ['WYBIERASZ', 'UZUPEŁNIASZ', 'ROZPOCZYNASZ'];
   const bullets = product.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join('');
@@ -102,11 +102,13 @@
       <aside class="checkout-box" aria-label="Zakup produktu">
         <p class="eyebrow"><span class="eyebrow-line"></span> WYBRANA OFERTA</p>
         <h2>${product.title}</h2>
+        ${eliteApplyMode ? `
+        <p class="price-caption elite-price-caption">${escapeHtml(product.duration)}</p>
+        <p class="elite-price-note">Szczegóły współpracy i cenę otrzymasz w odpowiedzi na zgłoszenie — po analizie Twojego celu.</p>
+        <a class="button button-light elite-apply-cta" href="#aplikuj">APLIKUJ DO ELITE – BEZPŁATNA ANALIZA CELU</a>
+        <p class="checkout-microcopy">Zgłoszenie jest bezpłatne i do niczego nie zobowiązuje. Odpowiem na Instagramie lub TikToku, jeśli podasz link do profilu, albo na e-mail.</p>` : `
         <div class="price-line"><strong>${product.price}</strong><span>zł</span></div>
         <p class="price-caption">${escapeHtml(product.duration)}</p>
-        ${eliteApplyMode ? `
-        <a class="button button-light elite-apply-cta" href="#aplikuj">APLIKUJ DO ELITE – BEZPŁATNA ANALIZA CELU</a>
-        <p class="checkout-microcopy">Zgłoszenie jest bezpłatne i do niczego nie zobowiązuje. Po analizie celu otrzymasz propozycję współpracy na e-mail.</p>` : `
         ${consentMarkup}
         <button class="button button-light" type="button" id="product-buy" data-product="${escapeHtml(productKey)}" disabled>KUPUJĘ I PRZECHODZĘ DO PŁATNOŚCI</button>
         ${productKey === 'pro' ? `<a class="button button-outline elite-analysis-link" href="${applyUrl}">NIE WIESZ, CZY TO DLA CIEBIE? BEZPŁATNA ANALIZA</a>` : ''}

@@ -583,3 +583,18 @@
   .sf-offer-cta-group .guarantee-card-trigger { align-self:flex-start; }
 }
 @media(prefers-reduced-motion:reduce) { .sf-offer-details { animation:none; } .sf-offer-plus { transition:none; } }
+
+/* Grupy pakietów: prowadzenie ze wsparciem (PRO, ELITE) vs samodzielna realizacja (START) */
+.sf-offer-group-label { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 12px; margin:8px 0 2px; color:#8b8b84; font-size:9px; font-weight:800; letter-spacing:.14em; }
+.sf-offer-group-label span { color:#e7c84b; font-size:10px; font-weight:900; }
+.sf-offer-group-label::before { content:""; align-self:center; width:26px; height:1px; background:#e7c84b; }
+.sf-offer-group-self { margin-top:26px; }
+.comparison-table .comparison-group-row th, .comparison-table .comparison-group-row td { padding-block:12px; background:#0e0e0c; border-bottom:1px solid #30302e; font-size:8px; letter-spacing:.16em; }
+.comparison-table .comparison-group-row .group-support { color:#e7c84b; text-align:center; }
+.comparison-table .comparison-group-row .group-self { color:#c9c9c1; text-align:center; }
+.comparison-table .self-column { border-left:2px solid #e7c84b; }
+@media (max-width: 760px) {
+  .sf-offer-group-label { font-size:8px; }
+  .sf-offer-group-label span { font-size:9px; }
+  .sf-offer-group-self { margin-top:18px; }
+}
