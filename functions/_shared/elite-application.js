@@ -10,8 +10,31 @@ export const ELITE_ENUMS = {
   experience: ['poczatkujacy', 'do1roku', '1do3lat', 'powyzej3lat', 'powrot'],
   location: ['dom', 'silownia', 'oba'],
   readiness: ['teraz', 'miesiac', 'pozniej'],
-  budget: ['tak', 'zastanowie', 'nie']
+  budget: ['tak', 'nie']
 };
+
+// Link do profilu: tylko Instagram lub TikTok, zapisywany w jednolitej postaci https://...
+// Zwraca { url, platform } albo null, gdy link jest niepoprawny.
+export function normalizeProfileUrl(value) {
+  let raw = String(value ?? '').trim();
+  if (!raw) return { url: '', platform: '' };
+  if (!/^https?:\/\//i.test(raw)) raw = `https://${raw}`;
+  let parsed;
+  try { parsed = new URL(raw); } catch { return null; }
+  const host = parsed.hostname.toLowerCase().replace(/^(www\.|m\.)/, '');
+  const parts = parsed.pathname.split('/').filter(Boolean);
+  if (host === 'instagram.com' || host === 'instagr.am') {
+    const handle = parts[0] || '';
+    if (!/^[a-z0-9._]{1,30}$/i.test(handle) || ['p', 'reel', 'reels', 'stories', 'explore', 'accounts'].includes(handle.toLowerCase())) return null;
+    return { url: `https://www.instagram.com/${handle}/`, platform: 'instagram' };
+  }
+  if (host === 'tiktok.com') {
+    const handle = (parts[0] || '').replace(/^@/, '');
+    if (!parts[0]?.startsWith('@') || !/^[a-z0-9._]{2,24}$/i.test(handle)) return null;
+    return { url: `https://www.tiktok.com/@${handle}`, platform: 'tiktok' };
+  }
+  return null;
+}
 
 const clean = (value, max) => String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);
 const EMAIL_RE = /^[^\s@<>()"',;:]{1,64}@[^\s@<>()"',;:]{1,190}\.[a-z]{2,24}$/i;
@@ -32,7 +55,7 @@ export function validateEliteApplication(body) {
     source: clean(body?.source, 10),
     name: clean(body?.name, 80),
     email: clean(body?.email, 254).toLowerCase(),
-    social: clean(body?.social, 100),
+    social: clean(body?.social, 200),
     age: intInRange(body?.age, 16, 90),
     gender: clean(body?.gender, 20),
     height_cm: intInRange(body?.height_cm, 120, 230),
@@ -53,6 +76,9 @@ export function validateEliteApplication(body) {
 
   if (!ELITE_ENUMS.source.includes(data.source)) data.source = 'elite';
   if (data.name.length < 2) return { ok: false, error: 'Podaj imię (min. 2 znaki).' };
+  const profile = normalizeProfileUrl(data.social);
+  if (!profile) return { ok: false, error: 'Wklej pełny link do profilu Instagram lub TikTok, np. https://www.instagram.com/twoj_profil' };
+  data.social = profile.url;
   if (!EMAIL_RE.test(data.email)) return { ok: false, error: 'Podaj poprawny adres e-mail.' };
   if (data.age === null) return { ok: false, error: 'Podaj wiek (16–90 lat).' };
   if (!ELITE_ENUMS.gender.includes(data.gender)) return { ok: false, error: 'Wybierz płeć.' };
@@ -64,7 +90,7 @@ export function validateEliteApplication(body) {
   if (!ELITE_ENUMS.location.includes(data.location)) return { ok: false, error: 'Wybierz miejsce treningu.' };
   if (data.days_per_week === null) return { ok: false, error: 'Podaj, ile dni w tygodniu możesz trenować (1–7).' };
   if (!ELITE_ENUMS.readiness.includes(data.readiness)) return { ok: false, error: 'Wybierz, kiedy chcesz zacząć.' };
-  if (!ELITE_ENUMS.budget.includes(data.budget)) return { ok: false, error: 'Zaznacz odpowiedź dotyczącą budżetu.' };
+  if (!ELITE_ENUMS.budget.includes(data.budget)) return { ok: false, error: 'Zaznacz, czy jesteś w stanie zainwestować w zmianę sylwetki.' };
   if (!data.consent_privacy) return { ok: false, error: 'Zaznacz zgodę na przetwarzanie danych zgłoszenia.' };
   // Dane o zdrowiu zapisujemy wyłącznie przy osobnej, wyraźnej zgodzie (art. 9 RODO).
   if (data.health_limitations && !data.consent_health) {
