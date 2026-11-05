@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080808">
-  <meta name="description" content="Rozszerzona współpraca treningowa: cotygodniowa analiza, raporty, korekty planu i priorytetowy kontakt. Cena 1499 zł.">
+  <meta name="description" content="Rozszerzona współpraca treningowa: cotygodniowa analiza, raporty, korekty planu i priorytetowy kontakt.">
   <link rel="icon" type="image/png" href="/assets/system-formy-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,10 +36,11 @@
       <form class="elite-apply-form" id="elite-apply-form" novalidate>
         <fieldset>
           <legend>01 / KONTAKT</legend>
+          <p class="elite-contact-hint">E-mail jest wymagany. Jeśli podasz też link do profilu, odpowiem w wiadomości prywatnej na Instagramie lub TikToku (sprawdź „Prośby o wiadomość”). Bez linku odpowiem na e-mail.</p>
           <div class="elite-grid">
-            <label>IMIĘ *<input type="text" name="name" required minlength="2" maxlength="80" autocomplete="given-name"></label>
-            <label>E-MAIL *<input type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email"></label>
-            <label class="elite-wide">INSTAGRAM / TIKTOK <small>(opcjonalnie)</small><input type="text" name="social" maxlength="100" placeholder="@twoj_profil"></label>
+            <label class="elite-wide">IMIĘ *<input type="text" name="name" required minlength="2" maxlength="80" autocomplete="given-name"></label>
+            <label class="elite-wide">E-MAIL *<input type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email"></label>
+            <label class="elite-wide">LINK DO PROFILU INSTAGRAM LUB TIKTOK <small>(opcjonalnie)</small><input type="text" name="social" maxlength="200" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="https://www.instagram.com/twoj_profil"></label>
           </div>
         </fieldset>
         <fieldset>
@@ -77,7 +78,7 @@
           <legend>06 / START</legend>
           <div class="elite-grid">
             <label>KIEDY CHCESZ ZACZĄĆ? *<select name="readiness" required><option value="">Wybierz</option><option value="teraz">Teraz</option><option value="miesiac">W ciągu miesiąca</option><option value="pozniej">Później</option></select></label>
-            <label>CZY PAKIET ELITE (1499 ZŁ) JEST W ZASIĘGU? *<select name="budget" required><option value="">Wybierz</option><option value="tak">Tak</option><option value="zastanowie">Muszę się zastanowić</option><option value="nie">Nie</option></select></label>
+            <label>CZY JESTEŚ W STANIE ZAINWESTOWAĆ W ZMIANĘ SWOJEJ SYLWETKI? *<select name="budget" required><option value="">Wybierz</option><option value="tak">Tak</option><option value="nie">Nie</option></select></label>
           </div>
         </fieldset>
         <label class="elite-consent"><input type="checkbox" name="consent_privacy" required> <span>Wyrażam zgodę na przetwarzanie danych podanych w zgłoszeniu w celu jego analizy i przesłania mi propozycji współpracy. Zapoznałem(-am) się z <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityką prywatności</a>. *</span></label>
@@ -87,9 +88,8 @@
         <p class="elite-form-status" id="elite-form-status" role="status" aria-live="polite"></p>
       </form>
       <div class="elite-apply-success" id="elite-apply-success" hidden tabindex="-1">
-        <span aria-hidden="true">✓</span>
         <h3>Dzięki! Przeanalizuję Twoje zgłoszenie i odezwę się w ciągu 24h.</h3>
-        <p>Odpowiedź przyjdzie na podany adres e-mail. Sprawdź też folder spam.</p>
+        <p id="elite-success-channel">Odpowiedź przyjdzie na podany adres e-mail. Sprawdź też folder spam.</p>
       </div>
     </section>
   </main>

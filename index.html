@@ -27,7 +27,7 @@
     <button class="menu-toggle" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
     </button>
-    <a class="individual-plan-link" href="/plan-indywidualny.html">PLAN INDYWIDUALNY <span aria-hidden="true">↗</span></a>
+    <a class="individual-plan-link" href="/plan-indywidualny.html">PLAN INDYWIDUALNY</a>
     <nav class="main-nav" id="main-nav" aria-label="Nawigacja główna">
       <a href="#start">START</a>
       <a href="#oferta">OFERTA</a>
@@ -59,7 +59,6 @@
 
       <a class="sf-hero-scroll" href="#oferta" aria-label="Przewiń do wyboru planu">
         <span>PRZEJDŹ DO WYBORU PLANU</span>
-        <span class="sf-hero-scroll-arrow" aria-hidden="true">↓</span>
       </a>
     </section>
 
@@ -75,6 +74,7 @@
       </div>
 
       <div class="sf-offer-stack" aria-label="Pakiety Systemu Formy">
+        <p class="sf-offer-group-label"><span>PROWADZENIE ZE WSPARCIEM TRENERA</span> SYSTEM ELITE I SYSTEM PRO</p>
         <details class="sf-offer-accordion sf-offer-elite" id="pakiet-elite">
           <summary class="sf-offer-summary">
             <span class="sf-offer-number">03</span>
@@ -104,7 +104,7 @@
               <div class="sf-offer-duration"><span>OKRES WSPÓŁPRACY</span><strong>12 TYGODNI</strong></div>
               <div class="sf-offer-cta-group">
                 <button class="guarantee-card-trigger" type="button" data-open-guarantee aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">ZOBACZ WARUNKI GWARANCJI</button>
-                <a class="button button-light buy-button" href="/produkt-elite.html">POZNAJ SYSTEM ELITE <span aria-hidden="true">↗</span></a>
+                <a class="button button-light buy-button" href="/produkt-elite.html">POZNAJ SYSTEM ELITE</a>
               </div>
             </div>
           </div>
@@ -137,11 +137,12 @@
             </div>
             <div class="sf-offer-detail-footer">
               <div class="sf-offer-duration"><span>OKRES WSPÓŁPRACY</span><strong>8 TYGODNI</strong></div>
-              <a class="button button-light buy-button" href="/produkt-pro.html">POZNAJ SYSTEM PRO <span aria-hidden="true">↗</span></a>
+              <a class="button button-light buy-button" href="/produkt-pro.html">POZNAJ SYSTEM PRO</a>
             </div>
           </div>
         </details>
 
+        <p class="sf-offer-group-label sf-offer-group-self"><span>SAMODZIELNA REALIZACJA</span> SYSTEM START</p>
         <details class="sf-offer-accordion sf-offer-start" id="pakiet-start">
           <summary class="sf-offer-summary">
             <span class="sf-offer-number">01</span>
@@ -169,12 +170,12 @@
             </div>
             <div class="sf-offer-detail-footer">
               <div class="sf-offer-duration"><span>FORMA PRODUKTU</span><strong>DO SAMODZIELNEJ PRACY</strong></div>
-              <a class="button button-outline buy-button" href="/produkt-start.html">POZNAJ SYSTEM START <span aria-hidden="true">↗</span></a>
+              <a class="button button-outline buy-button" href="/produkt-start.html">POZNAJ SYSTEM START</a>
             </div>
           </div>
         </details>
       </div>
-      <p class="offer-footnote"><span>WAŻNE</span> Wybierz poziom wsparcia, który odpowiada Twoim potrzebom. Ceny, warunki zakupu i pełne informacje znajdziesz na stronie wybranego pakietu.</p>
+      <p class="offer-footnote"><span>WAŻNE</span> Wybierz poziom wsparcia, który odpowiada Twoim potrzebom. Ceny START i PRO oraz warunki zakupu znajdziesz na stronie pakietu. Szczegóły i cenę ELITE otrzymasz po bezpłatnej analizie celu.</p>
     </section>
 
     <section class="comparison section-shell" id="porownanie" aria-labelledby="comparison-title">
@@ -188,21 +189,22 @@
       <div class="table-wrap" role="region" aria-label="Porównanie pakietów — przewiń tabelę w poziomie na małym ekranie" tabindex="0">
         <table class="comparison-table">
           <thead>
-            <tr><th scope="col">ZAKRES</th><th scope="col" class="pro-column">SYSTEM PRO</th><th scope="col">SYSTEM START</th><th scope="col">SYSTEM ELITE</th></tr>
+            <tr class="comparison-group-row"><td aria-hidden="true"></td><th scope="colgroup" colspan="2" class="group-support">PROWADZENIE ZE WSPARCIEM TRENERA</th><th scope="colgroup" class="self-column group-self">SAMODZIELNA REALIZACJA</th></tr>
+            <tr><th scope="col">ZAKRES</th><th scope="col" class="pro-column">SYSTEM PRO</th><th scope="col" class="support-column">SYSTEM ELITE</th><th scope="col" class="self-column">SYSTEM START</th></tr>
           </thead>
           <tbody>
-            <tr><th scope="row">Plan treningowy</th><td class="pro-column">Indywidualny</td><td>Gotowy — dom lub siłownia</td><td>Indywidualny</td></tr>
-            <tr><th scope="row">Materiały edukacyjne</th><td class="pro-column">Materiały edukacyjne, wskazówki żywienia i regeneracji</td><td>E-book startowy, instrukcje ćwiczeń, podstawy żywienia i regeneracji</td><td>Materiały edukacyjne, wskazówki żywienia i regeneracji</td></tr>
-            <tr><th scope="row">Kontakt z prowadzącym</th><td class="pro-column">Indywidualny czat</td><td>Brak — samodzielna realizacja</td><td>Priorytetowy czat</td></tr>
-            <tr><th scope="row">Kontrola postępów</th><td class="pro-column">Co 2 tygodnie</td><td>Arkusz monitorowania</td><td>Cotygodniowa analiza i raport</td></tr>
-            <tr><th scope="row">Korekty planu</th><td class="pro-column">Jedna zaplanowana korekta</td><td>Instrukcja progresowania</td><td>Regularne dostosowywanie planu</td></tr>
+            <tr><th scope="row">Plan treningowy</th><td class="pro-column">Indywidualny</td><td class="support-column">Indywidualny</td><td class="self-column">Gotowy — dom lub siłownia</td></tr>
+            <tr><th scope="row">Materiały edukacyjne</th><td class="pro-column">Materiały edukacyjne, wskazówki żywienia i regeneracji</td><td class="support-column">Materiały edukacyjne, wskazówki żywienia i regeneracji</td><td class="self-column">E-book startowy, instrukcje ćwiczeń, podstawy żywienia i regeneracji</td></tr>
+            <tr><th scope="row">Kontakt z prowadzącym</th><td class="pro-column">Indywidualny czat</td><td class="support-column">Priorytetowy czat</td><td class="self-column">Brak — samodzielna realizacja</td></tr>
+            <tr><th scope="row">Kontrola postępów</th><td class="pro-column">Co 2 tygodnie</td><td class="support-column">Cotygodniowa analiza i raport</td><td class="self-column">Arkusz monitorowania</td></tr>
+            <tr><th scope="row">Korekty planu</th><td class="pro-column">Jedna zaplanowana korekta</td><td class="support-column">Regularne dostosowywanie planu</td><td class="self-column">Instrukcja progresowania</td></tr>
             <tr class="guarantee-row">
               <th scope="row">Gwarancja osiągnięcia celu</th>
               <td class="pro-column">—</td>
-              <td>—</td>
-              <td><span class="guarantee-available">TAK</span><button class="guarantee-trigger" type="button" data-open-guarantee aria-label="Otwórz warunki gwarancji SYSTEM ELITE" aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">?</button></td>
+              <td class="support-column"><span class="guarantee-available">TAK</span><button class="guarantee-trigger" type="button" data-open-guarantee aria-label="Otwórz warunki gwarancji SYSTEM ELITE" aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">?</button></td>
+              <td class="self-column">—</td>
             </tr>
-            <tr><th scope="row">Czas</th><td class="pro-column">8 tygodni</td><td>Samodzielna realizacja</td><td>12 tygodni</td></tr>
+            <tr><th scope="row">Czas</th><td class="pro-column">8 tygodni</td><td class="support-column">12 tygodni</td><td class="self-column">Samodzielna realizacja</td></tr>
           </tbody>
         </table>
       </div>
