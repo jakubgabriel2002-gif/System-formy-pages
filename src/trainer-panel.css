@@ -26,3 +26,25 @@
 .admin-review-status.verified{color:var(--green);border-color:#386b51}
 .admin-review-status.rejected{color:var(--red);border-color:#78433e}
 @media(max-width:760px){.reviews-admin-view{padding:13px}.admin-review-card{padding:14px}}
+
+/* Zgłoszenia ELITE */
+.tab-count{display:inline-grid;place-items:center;min-width:18px;height:18px;margin-left:6px;padding:0 5px;border-radius:18px;background:var(--red);color:#151515;font-size:10px;font-weight:900}
+.dashboard-tab.active .tab-count{background:#151515;color:var(--yellow)}
+.elite-admin-view{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.elite-admin-layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:16px;align-items:start}
+.elite-admin-list{max-height:72vh;overflow:auto}
+.elite-row{display:block;width:100%;text-align:left;color:var(--text);cursor:pointer;font:inherit}
+.elite-row:hover,.elite-row.selected{border-color:var(--yellow)}
+.elite-row-goal{margin:10px 0;color:#d8dbd6;font-size:12px;line-height:1.5}
+.elite-admin-detail{background:#101213;border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.elite-detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.elite-detail-head .eyebrow{margin:0 0 8px}
+.elite-detail-head h2{margin:0 0 4px;font-size:24px;letter-spacing:-.02em}
+.elite-admin-detail code{color:var(--yellow);word-break:break-all}
+.elite-status-new{color:var(--yellow);border-color:var(--yellow)}
+.elite-status-in_review{color:#9ec3f1;border-color:#4b6a8f}
+.elite-status-proposal_sent{color:#d3b4f1;border-color:#6d5290}
+.elite-status-client{color:var(--green);border-color:#3c6f54}
+.elite-status-rejected{color:var(--red);border-color:#7d403c}
+@media(max-width:1050px){.elite-admin-layout{grid-template-columns:1fr}.elite-admin-list{max-height:none}}
+@media(max-width:760px){.elite-admin-view{padding:13px}.elite-admin-detail{padding:14px}}

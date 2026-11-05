@@ -208,3 +208,42 @@
 .survey-review-section .survey-review-row:last-child{border-bottom:0}
 .survey-review-section .survey-review-row strong{display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;color:rgba(255,255,255,.58)}
 .survey-review-section .survey-review-row span{display:block;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;color:#fff}
+
+/* ELITE — zgłoszenie i bezpłatna analiza celu */
+.elite-apply-cta, .elite-analysis-link { width: 100%; text-align: center; text-decoration: none; }
+.elite-analysis-link { margin-top: 10px; }
+.elite-apply { padding-top: clamp(56px, 7vw, 96px); border-top: 1px solid var(--line, #30302e); scroll-margin-top: 90px; }
+.elite-apply[hidden] { display: none; }
+.elite-apply h2 { margin: 18px 0 14px; color: var(--white, #f4f4f2); font: 800 clamp(32px, 5vw, 58px)/.98 var(--display); letter-spacing: .01em; }
+.elite-apply h2 span { color: var(--accent, #e7c84b); }
+.elite-apply-lead { max-width: 640px; margin: 0 0 30px; color: #a2a29d; font-size: 12px; line-height: 1.9; }
+.elite-apply-form, .elite-apply-success { max-width: 980px; padding: clamp(20px, 4vw, 38px); border: 1px solid rgba(231,200,75,.35); background: #10100e; }
+.elite-apply-form[hidden] { display: none; }
+.elite-apply-form fieldset { margin: 0 0 26px; padding: 0; border: 0; min-width: 0; }
+.elite-apply-form legend { margin-bottom: 14px; padding: 0; color: var(--accent, #e7c84b); font-size: 9px; font-weight: 900; letter-spacing: .19em; }
+.elite-apply-form legend small, .elite-apply-form label small { color: #77776f; font-weight: 600; letter-spacing: .04em; }
+.elite-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.elite-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.elite-wide { grid-column: 1 / -1; }
+.elite-apply-form label { display: grid; gap: 9px; color: #c9c9c1; font-size: 9px; font-weight: 900; letter-spacing: .12em; }
+.elite-apply-form input:not([type="checkbox"]), .elite-apply-form select, .elite-apply-form textarea { width: 100%; min-height: 48px; padding: 13px 14px; border: 1px solid #44443e; border-radius: 0; background: #080808; color: #f2f2ed; font: 500 16px/1.5 var(--font, Arial, sans-serif); letter-spacing: 0; resize: vertical; -webkit-appearance: none; appearance: none; }
+.elite-apply-form select { background-image: linear-gradient(45deg, transparent 50%, #c9c9c1 50%), linear-gradient(135deg, #c9c9c1 50%, transparent 50%); background-position: calc(100% - 18px) 21px, calc(100% - 13px) 21px; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px; }
+.elite-apply-form input:focus, .elite-apply-form select:focus, .elite-apply-form textarea:focus { outline: none; border-color: var(--accent, #e7c84b); box-shadow: 0 0 0 3px rgba(231,200,75,.12); }
+.elite-apply-form input::placeholder, .elite-apply-form textarea::placeholder { color: #66665f; }
+.elite-apply-form .elite-consent { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0; color: #b8b8b1; font-size: 11px; font-weight: 500; letter-spacing: 0; line-height: 1.7; }
+.elite-consent input { flex: 0 0 auto; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent, #e7c84b); }
+.elite-consent a { color: var(--accent, #e7c84b); }
+.elite-consent.is-required { color: #f1f1ed; }
+.elite-honeypot { position: absolute !important; left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important; }
+.elite-submit { width: 100%; margin-top: 8px; }
+.elite-form-status { min-height: 18px; margin: 14px 0 0; color: #a2a29d; font-size: 11px; line-height: 1.7; }
+.elite-form-status.is-error { color: #f1c3b8; }
+.elite-apply-success { text-align: center; outline: none; }
+.elite-apply-success span { display: grid; place-items: center; width: 54px; height: 54px; margin: 0 auto 18px; border: 1px solid var(--accent, #e7c84b); color: var(--accent, #e7c84b); font-size: 24px; }
+.elite-apply-success h3 { max-width: 620px; margin: 0 auto 12px; color: #f1f1ed; font: 800 clamp(24px, 3.6vw, 34px)/1.1 var(--display); }
+.elite-apply-success p { margin: 0; color: #a2a29d; font-size: 11px; line-height: 1.8; }
+@media (max-width: 1000px) { .elite-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  .elite-grid, .elite-grid-4 { grid-template-columns: 1fr; gap: 14px; }
+  .elite-apply-form .elite-consent { font-size: 10px; }
+}

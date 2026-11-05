@@ -62,8 +62,17 @@
   }
 
   document.title = `${product.title.replace(/<[^>]+>/g, '').replace(/\./g, '')} — SYSTEM FORMY`;
+  const pageParams = new URLSearchParams(window.location.search);
+  // ELITE: domyślnie aplikacja i bezpłatna analiza celu. Bezpośredni zakup tylko pod linkiem
+  // produkt-elite.html?zakup=1, który trener wysyła po zaakceptowaniu zgłoszenia.
+  const eliteApplyMode = productKey === 'elite' && pageParams.get('zakup') !== '1';
+  const applyUrl = productKey === 'pro' ? '/produkt-elite.html?z=pro#aplikuj' : '#aplikuj';
+  const processItems = eliteApplyMode
+    ? ['Wypełniasz krótkie zgłoszenie z celem, doświadczeniem i możliwościami.', 'Analizuję zgłoszenie i odsyłam propozycję współpracy na e-mail.', 'Po akceptacji opłacasz pakiet, wypełniasz ankietę startową i zaczynasz 12 tygodni współpracy.']
+    : product.process;
+  const stepLabels = eliteApplyMode ? ['APLIKUJESZ', 'ANALIZA', 'ROZPOCZYNASZ'] : ['WYBIERASZ', 'UZUPEŁNIASZ', 'ROZPOCZYNASZ'];
   const bullets = product.bullets.map(item => `<li>${escapeHtml(item)}</li>`).join('');
-  const steps = product.process.map((item, index) => `<article class="product-step"><b>0${index + 1}</b><strong>${['WYBIERASZ', 'UZUPEŁNIASZ', 'ROZPOCZYNASZ'][index]}</strong><p>${escapeHtml(item)}</p></article>`).join('');
+  const steps = processItems.map((item, index) => `<article class="product-step"><b>0${index + 1}</b><strong>${stepLabels[index]}</strong><p>${escapeHtml(item)}</p></article>`).join('');
   const serviceProducts = new Set(['pro', 'elite', 'individual-monitor', 'individual-full']);
   const needsEarlyServiceStart = serviceProducts.has(productKey);
   const digitalContentProducts = new Set(['start', 'individual-basic']);
@@ -95,10 +104,14 @@
         <h2>${product.title}</h2>
         <div class="price-line"><strong>${product.price}</strong><span>zł</span></div>
         <p class="price-caption">${escapeHtml(product.duration)}</p>
+        ${eliteApplyMode ? `
+        <a class="button button-light elite-apply-cta" href="#aplikuj">APLIKUJ DO ELITE – BEZPŁATNA ANALIZA CELU</a>
+        <p class="checkout-microcopy">Zgłoszenie jest bezpłatne i do niczego nie zobowiązuje. Po analizie celu otrzymasz propozycję współpracy na e-mail.</p>` : `
         ${consentMarkup}
         <button class="button button-light" type="button" id="product-buy" data-product="${escapeHtml(productKey)}" disabled>KUPUJĘ I PRZECHODZĘ DO PŁATNOŚCI</button>
+        ${productKey === 'pro' ? `<a class="button button-outline elite-analysis-link" href="${applyUrl}">NIE WIESZ, CZY TO DLA CIEBIE? BEZPŁATNA ANALIZA</a>` : ''}
         <p class="checkout-microcopy">Płatność obsługuje Stripe. Po opłaceniu zamówienia wrócisz na stronę SYSTEM FORMY, gdzie pobierzesz materiały lub wypełnisz ankietę.</p>
-        <p class="checkout-policy">Płatność jest jednorazowa. Przed zakupem sprawdź zakres świadczenia, czas trwania i warunki realizacji przedstawione na tej stronie.</p>
+        <p class="checkout-policy">Płatność jest jednorazowa. Przed zakupem sprawdź zakres świadczenia, czas trwania i warunki realizacji przedstawione na tej stronie.</p>`}
       </aside>
     </div>
     <div class="product-steps" aria-label="Jak wygląda zakup">${steps}</div>
@@ -117,6 +130,8 @@
   };
   consentInputs.forEach(input => input.addEventListener('change', updateBuyState));
   updateBuyState();
+  const applySection = document.querySelector('#aplikuj');
+  if (applySection) applySection.hidden = !eliteApplyMode;
 
   buy?.addEventListener('click', async () => {
     if (buy.disabled || !updateBuyState()) {

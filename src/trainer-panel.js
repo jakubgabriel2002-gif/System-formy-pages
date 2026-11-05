@@ -11,7 +11,10 @@
   const statsGrid = $('#client-stats');
   const reviewsView = $('#reviews-admin-view');
   const reviewsList = $('#reviews-admin-list');
-  const state = { orders: [], selectedOrderRef: null, debounce: null, productFilter: 'all', reviews: [], dashboardTab: 'clients' };
+  const eliteView = $('#elite-admin-view');
+  const eliteList = $('#elite-admin-list');
+  const eliteDetail = $('#elite-admin-detail');
+  const state = { orders: [], selectedOrderRef: null, debounce: null, productFilter: 'all', reviews: [], dashboardTab: 'clients', elite: [], selectedEliteId: null };
 
   const labels = {
     name:'Imię i nazwisko',email:'E-mail',age:'Wiek',gender:'Płeć',heightCm:'Wzrost (cm)',bodyWeightKg:'Masa ciała (kg)',
@@ -275,7 +278,7 @@
     catch(error){status.className='save-state error';status.textContent=error.message;}
     finally{button.disabled=false;}
   }
-  async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';await loadOrders();}
+  async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';loadElite({ silent: true });await loadOrders();}
   async function loadReviews() {
     if (!reviewsList) return;
     reviewsList.innerHTML = '<div class="empty-state">Pobieranie opinii…</div>';
@@ -313,8 +316,109 @@
     if (workspace) workspace.hidden = tab !== 'clients';
     if (statsGrid) statsGrid.hidden = tab !== 'clients';
     if (reviewsView) reviewsView.hidden = tab !== 'reviews';
+    if (eliteView) eliteView.hidden = tab !== 'elite';
     if (tab === 'reviews') loadReviews();
+    else if (tab === 'elite') loadElite();
     else loadOrders();
+  }
+
+  // ===== Zgłoszenia ELITE (bezpłatna analiza celu) =====
+  const eliteStatusLabels = { new:'NOWE', in_review:'W ANALIZIE', proposal_sent:'WYSŁANO PROPOZYCJĘ', client:'KLIENT', rejected:'ODRZUCONE' };
+  const eliteEnumLabels = {
+    source:{ elite:'Strona ELITE', pro:'Strona PRO (przycisk „Bezpłatna analiza”)' },
+    gender:{ mezczyzna:'Mężczyzna', kobieta:'Kobieta', inna:'Inna', brak:'Nie podano' },
+    goal:{ redukcja:'Redukcja', masa:'Budowa mięśni', sila:'Siła', kondycja:'Kondycja', inny:'Inny' },
+    experience:{ poczatkujacy:'Zaczyna / < 3 miesiące', do1roku:'Do 1 roku', '1do3lat':'1–3 lata', powyzej3lat:'Ponad 3 lata', powrot:'Powrót po przerwie' },
+    location:{ dom:'Dom', silownia:'Siłownia', oba:'Dom i siłownia' },
+    readiness:{ teraz:'Teraz', miesiac:'W ciągu miesiąca', pozniej:'Później' },
+    budget:{ tak:'Tak, 1499 zł w zasięgu', zastanowie:'Musi się zastanowić', nie:'Nie' }
+  };
+  const eliteLabel = (field, value) => eliteEnumLabels[field]?.[value] || value || '—';
+  function updateEliteCounter() {
+    const badge = $('#elite-new-count');
+    const fresh = state.elite.filter(item => item.status === 'new').length;
+    if (badge) { badge.textContent = String(fresh); badge.hidden = fresh === 0; }
+    const summary = $('#elite-summary');
+    if (summary) summary.textContent = `Łącznie: ${state.elite.length} · nowe: ${fresh}`;
+  }
+  async function loadElite({ silent = false } = {}) {
+    if (!eliteList) return;
+    if (!silent) eliteList.innerHTML = '<div class="empty-state">Pobieranie zgłoszeń…</div>';
+    try {
+      const data = await api('/api/trainer/elite-applications');
+      state.elite = Array.isArray(data.applications) ? data.applications : [];
+      updateEliteCounter();
+      renderEliteList();
+      if (state.selectedEliteId) renderEliteDetail();
+    } catch (error) {
+      if (!silent) eliteList.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+    }
+  }
+  function renderEliteList() {
+    const filter = $('#elite-status-filter')?.value || 'all';
+    const rows = state.elite.filter(item => filter === 'all' || item.status === filter);
+    if (!rows.length) { eliteList.innerHTML = '<div class="empty-state">Brak zgłoszeń w wybranym widoku.</div>'; return; }
+    eliteList.innerHTML = rows.map(item => `
+      <button class="admin-review-card elite-row${item.application_id === state.selectedEliteId ? ' selected' : ''}" type="button" data-elite-id="${escapeHtml(item.application_id)}">
+        <div class="admin-review-meta"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(formatDate(item.created_at))}</span></div>
+        <p class="elite-row-goal">${escapeHtml(eliteLabel('goal', item.goal))} · ${escapeHtml(eliteLabel('readiness', item.readiness))} · budżet: ${escapeHtml(eliteLabel('budget', item.budget))}</p>
+        <div class="admin-review-meta"><span class="admin-review-status elite-status-${escapeHtml(item.status)}">${eliteStatusLabels[item.status] || escapeHtml(item.status)}</span><span>${escapeHtml(item.email)}</span></div>
+      </button>`).join('');
+  }
+  function renderEliteDetail() {
+    const item = state.elite.find(row => row.application_id === state.selectedEliteId);
+    if (!item) { eliteDetail.innerHTML = '<div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div>'; return; }
+    const row = (label, value, wide = false) => cell(label, value, wide);
+    const statusOptions = Object.entries(eliteStatusLabels).map(([value, label]) => `<option value="${value}"${value === item.status ? ' selected' : ''}>${label}</option>`).join('');
+    eliteDetail.innerHTML = `
+      <div class="elite-detail-head">
+        <div><p class="eyebrow">ZGŁOSZENIE ELITE</p><h2>${escapeHtml(item.name)}</h2><p class="muted small">${escapeHtml(formatDate(item.created_at))} · ${escapeHtml(eliteLabel('source', item.source))}</p></div>
+        <span class="admin-review-status elite-status-${escapeHtml(item.status)}">${eliteStatusLabels[item.status] || escapeHtml(item.status)}</span>
+      </div>
+      ${section('Kontakt', `<div class="data-grid">${row('E-mail', item.email)}${row('Instagram / TikTok', item.social)}</div>`)}
+      ${section('Dane podstawowe', `<div class="data-grid">${row('Wiek', item.age)}${row('Płeć', eliteLabel('gender', item.gender))}${row('Wzrost (cm)', item.height_cm)}${row('Waga (kg)', item.weight_kg)}</div>`)}
+      ${section('Cel', `<div class="data-grid">${row('Główny cel', eliteLabel('goal', item.goal))}${row('Doświadczenie', eliteLabel('experience', item.experience))}${row('Cel w liczbach i czas', item.goal_details, true)}</div>`)}
+      ${section('Możliwości', `<div class="data-grid">${row('Miejsce treningu', eliteLabel('location', item.location))}${row('Dni w tygodniu', item.days_per_week)}${row('Sprzęt', item.equipment, true)}${row('Co nie działało', item.what_failed, true)}</div>`)}
+      ${section('Zdrowie', `<div class="data-grid">${row('Kontuzje / ograniczenia', item.health_limitations, true)}${row('Zgoda na dane o zdrowiu', item.consent_health ? 'TAK' : 'NIE')}</div>`)}
+      ${section('Start i budżet', `<div class="data-grid">${row('Gotowość do startu', eliteLabel('readiness', item.readiness))}${row('Budżet 1499 zł', eliteLabel('budget', item.budget))}</div>`)}
+      <form class="detail-form" id="elite-edit-form">
+        <label for="elite-status">Status zgłoszenia</label>
+        <select id="elite-status" name="status">${statusOptions}</select>
+        <label for="elite-note">Notatka trenera (widoczna tylko w panelu)</label>
+        <textarea id="elite-note" name="trainer_note" rows="5" maxlength="4000">${escapeHtml(item.trainer_note || '')}</textarea>
+        <div class="detail-form-footer">
+          <button class="button button-primary" type="submit">ZAPISZ</button>
+          <button class="button button-danger" type="button" id="elite-delete">USUŃ ZGŁOSZENIE</button>
+          <span class="muted small" id="elite-save-status" role="status"></span>
+        </div>
+        <p class="muted small">Link do zakupu dla zaakceptowanej osoby: <code>/produkt-elite.html?zakup=1</code></p>
+      </form>`;
+    $('#elite-edit-form').addEventListener('submit', saveElite);
+    $('#elite-delete').addEventListener('click', deleteElite);
+  }
+  async function saveElite(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button[type="submit"]');
+    const info = $('#elite-save-status');
+    button.disabled = true; info.textContent = 'Zapisywanie…';
+    try {
+      const result = await api('/api/trainer/elite-applications', { method: 'PATCH', body: JSON.stringify({ application_id: state.selectedEliteId, status: form.elements.status.value, trainer_note: form.elements.trainer_note.value }) });
+      const item = state.elite.find(row => row.application_id === state.selectedEliteId);
+      if (item) { item.status = result.status; item.trainer_note = result.trainer_note; item.updated_at = result.updated_at; }
+      updateEliteCounter(); renderEliteList(); renderEliteDetail();
+      $('#elite-save-status').textContent = 'Zapisano.';
+    } catch (error) { info.textContent = error.message; }
+    finally { button.disabled = false; }
+  }
+  async function deleteElite() {
+    if (!window.confirm('Usunąć to zgłoszenie z bazy danych? Tej operacji nie można cofnąć.')) return;
+    try {
+      await api(`/api/trainer/elite-applications?application_id=${encodeURIComponent(state.selectedEliteId)}`, { method: 'DELETE' });
+      state.selectedEliteId = null;
+      eliteDetail.innerHTML = '<div class="empty-state">Zgłoszenie zostało usunięte.</div>';
+      await loadElite();
+    } catch (error) { window.alert(error.message); }
   }
 
   async function boot(){
@@ -330,6 +434,16 @@
   $$('.product-tab').forEach(button=>button.addEventListener('click',()=>{state.productFilter=button.dataset.productFilter;$$('.product-tab').forEach(tab=>tab.classList.toggle('active',tab===button));loadOrders();}));
   $$('[data-dashboard-tab]').forEach(button => button.addEventListener('click', () => showDashboardTab(button.dataset.dashboardTab)));
   $('#refresh-reviews')?.addEventListener('click', loadReviews);
+  $('#refresh-elite')?.addEventListener('click', () => loadElite());
+  $('#elite-status-filter')?.addEventListener('change', renderEliteList);
+  eliteList?.addEventListener('click', event => {
+    const row = event.target.closest('[data-elite-id]');
+    if (!row) return;
+    state.selectedEliteId = row.dataset.eliteId;
+    renderEliteList();
+    renderEliteDetail();
+    if (window.matchMedia('(max-width: 1050px)').matches) eliteDetail.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
   $('#reviews-status-filter')?.addEventListener('change', renderAdminReviews);
   reviewsList?.addEventListener('click', async event => {
     const action = event.target.closest('[data-review-action]');
