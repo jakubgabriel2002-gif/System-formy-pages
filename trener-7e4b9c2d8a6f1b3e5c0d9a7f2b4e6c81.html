@@ -7,7 +7,7 @@
   <meta name="referrer" content="same-origin">
   <meta name="theme-color" content="#111111">
   <title>Panel trenera | SYSTEM FORMY</title>
-  <link rel="stylesheet" href="/src/trainer-panel.css">
+  <link rel="stylesheet" href="/src/trainer-panel.css?v=20261106-1">
 </head>
 <body>
   <main class="app-shell">
@@ -49,6 +49,7 @@
         <button class="dashboard-tab active" type="button" data-dashboard-tab="clients">KLIENCI</button>
         <button class="dashboard-tab" type="button" data-dashboard-tab="reviews">OPINIE</button>
         <button class="dashboard-tab" type="button" data-dashboard-tab="elite">ZGŁOSZENIA ELITE <span class="tab-count" id="elite-new-count" hidden>0</span></button>
+        <button class="dashboard-tab" type="button" data-dashboard-tab="raport">RAPORT STARTOWY <span class="tab-count" id="raport-new-count" hidden>0</span></button>
       </nav>
 
       <section class="stats-grid" aria-label="Podsumowanie klientów" id="client-stats">
@@ -135,6 +136,26 @@
           <section class="elite-admin-detail" id="elite-admin-detail" aria-live="polite"><div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div></section>
         </div>
       </section>
+      <section class="elite-admin-view raport-admin-view" id="raport-admin-view" hidden>
+        <div class="reviews-admin-toolbar">
+          <div><h2>Raport startowy</h2><p class="muted small">Zgłoszenia z formularza „Bezpłatny Raport startowy”. Najnowsze na górze. <span id="raport-summary"></span></p></div>
+          <div class="admin-review-actions">
+            <select id="raport-status-filter" aria-label="Filtr statusu zgłoszeń raportu">
+              <option value="all">Wszystkie statusy</option>
+              <option value="nowe">Nowe</option>
+              <option value="raport_wyslany">Raport wysłany</option>
+              <option value="rozmowa">Rozmowa</option>
+              <option value="klient">Klient</option>
+              <option value="odrzucone">Odrzucone</option>
+            </select>
+            <button class="button button-outline" id="refresh-raport" type="button">ODŚWIEŻ ZGŁOSZENIA</button>
+          </div>
+        </div>
+        <div class="elite-admin-layout">
+          <div class="reviews-admin-list elite-admin-list" id="raport-admin-list" aria-live="polite"><div class="empty-state">Pobieranie zgłoszeń…</div></div>
+          <section class="elite-admin-detail" id="raport-admin-detail" aria-live="polite"><div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div></section>
+        </div>
+      </section>
       <footer class="dashboard-footer">SYSTEM FORMY · Dane klientów są dostępne wyłącznie po zalogowaniu.</footer>
     </section>
 
@@ -142,6 +163,6 @@
       <div class="login-card"><div class="brand-mark">SYSTEM <span>FORMY</span></div><h1>Panel chwilowo niedostępny</h1><p class="muted" id="fatal-message">Sprawdź konfigurację panelu w Cloudflare.</p></div>
     </section>
   </main>
-  <script src="/src/trainer-panel.js" defer></script>
+  <script src="/src/trainer-panel.js?v=20261106-1" defer></script>
 </body>
 </html>

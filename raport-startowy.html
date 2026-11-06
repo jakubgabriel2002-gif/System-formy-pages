@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080808"><meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Bezpłatny Raport startowy SYSTEM FORMY — opisz cel i warunki, a otrzymasz krótką rekomendację, od czego zacząć.">
+  <link rel="icon" type="image/png" href="/assets/system-formy-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles.css"><link rel="stylesheet" href="/src/product-pages.css?v=20261106-1"><link rel="stylesheet" href="/src/raport-startowy.css?v=20261106-1">
+  <title>Bezpłatny Raport startowy — SYSTEM FORMY</title>
+</head>
+<body class="raport-page">
+  <header class="site-header"><a class="brand" href="/" aria-label="SYSTEM FORMY — strona główna"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" class="brand-logo" width="190" height="141"></a></header>
+  <main id="main" class="raport-main">
+    <section class="raport-intro" aria-labelledby="raport-title">
+      <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / RAPORT STARTOWY</p>
+      <h1 id="raport-title">BEZPŁATNY <span>RAPORT STARTOWY.</span></h1>
+      <p class="raport-lead">Opisz swój cel i warunki treningowe, a przygotuję krótki raport z rekomendacją, od czego zacząć. Odeślę raport najszybciej, jak to możliwe.</p>
+    </section>
+
+    <form class="elite-apply-form raport-form" id="raport-form" novalidate>
+      <fieldset>
+        <legend>01 / KONTAKT</legend>
+        <div class="elite-grid">
+          <label class="elite-wide">IMIĘ *<input type="text" name="imie" required minlength="2" maxlength="80" autocomplete="given-name"><span class="raport-error" data-error-for="imie"></span></label>
+          <label class="elite-wide">E-MAIL *<input type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"><span class="raport-error" data-error-for="email"></span></label>
+          <label class="elite-wide">LINK DO PROFILU INSTAGRAM LUB TIKTOK <small>(opcjonalnie)</small><input type="text" name="profil_link" maxlength="200" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="https://www.instagram.com/twoj_profil"><span class="raport-error" data-error-for="profil_link"></span></label>
+          <label class="elite-wide">SKĄD WIESZ O SYSTEM FORMY? *<select name="zrodlo" required><option value="">Wybierz</option><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="youtube">YouTube</option><option value="facebook">Facebook</option><option value="inne">Inne</option></select><span class="raport-error" data-error-for="zrodlo"></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>02 / CEL</legend>
+        <div class="elite-grid">
+          <label>GŁÓWNY CEL *<select name="cel" required><option value="">Wybierz</option><option value="sylwetka">Sylwetka</option><option value="sila">Siła</option><option value="powrot">Powrót po przerwie</option><option value="inne">Inne</option></select><span class="raport-error" data-error-for="cel"></span></label>
+          <label>W JAKIM CZASIE CHCESZ GO OSIĄGNĄĆ? *<input type="text" name="czas" required minlength="2" maxlength="100" placeholder="np. 3 miesiące"><span class="raport-error" data-error-for="czas"></span></label>
+          <label class="elite-wide">OPISZ CEL DOKŁADNIEJ <small>(opcjonalnie)</small><input type="text" name="cel_inne" maxlength="200" placeholder="np. chcę podciągnąć się 10 razy"><span class="raport-error" data-error-for="cel_inne"></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>03 / WARUNKI</legend>
+        <div class="elite-grid">
+          <label>DOŚWIADCZENIE TRENINGOWE *<select name="doswiadczenie" required><option value="">Wybierz</option><option value="poczatkujacy">Początkujący</option><option value="do1roku">Do 1 roku</option><option value="1do3lat">1–3 lata</option><option value="powyzej3lat">Powyżej 3 lat</option></select><span class="raport-error" data-error-for="doswiadczenie"></span></label>
+          <label>GDZIE TRENUJESZ? *<select name="miejsce" required><option value="">Wybierz</option><option value="dom">Dom</option><option value="silownia">Siłownia</option><option value="oba">Dom i siłownia</option></select><span class="raport-error" data-error-for="miejsce"></span></label>
+          <label class="elite-wide">JAKI MASZ SPRZĘT? <small>(opcjonalnie)</small><input type="text" name="sprzet" maxlength="500" placeholder="np. hantle do 20 kg, drążek / pełna siłownia"><span class="raport-error" data-error-for="sprzet"></span></label>
+          <label class="elite-wide">ILE DNI W TYGODNIU REALNIE MOŻESZ TRENOWAĆ? *<select name="dni" required><option value="">Wybierz</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select><span class="raport-error" data-error-for="dni"></span></label>
+          <label class="elite-wide">CO WCZEŚNIEJ NIE DZIAŁAŁO? <small>(opcjonalnie)</small><textarea name="co_nie_dzialalo" rows="3" maxlength="1000" placeholder="np. brak regularności, plany z internetu, brak efektów mimo treningu"></textarea><span class="raport-error" data-error-for="co_nie_dzialalo"></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="raport-choice" id="raport-inwestycja">
+        <legend>04 / CZY JESTEŚ W STANIE ZAINWESTOWAĆ W ZMIANĘ SWOJEJ SYLWETKI? *</legend>
+        <div class="raport-choice-row">
+          <label class="raport-pill"><input type="radio" name="inwestycja" value="tak" required><span>TAK</span></label>
+          <label class="raport-pill"><input type="radio" name="inwestycja" value="nie"><span>NIE</span></label>
+        </div>
+        <span class="raport-error" data-error-for="inwestycja"></span>
+      </fieldset>
+
+      <label class="elite-consent"><input type="checkbox" name="zgoda_przetwarzanie" required> <span>Zgadzam się na przetwarzanie moich danych w celu przygotowania i wysłania raportu. <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityka prywatności</a>. *</span></label>
+      <span class="raport-error raport-error-consent" data-error-for="zgoda_przetwarzanie"></span>
+      <label class="elite-consent"><input type="checkbox" name="zgoda_marketing"> <span>Chcę otrzymywać od System Formy wiadomości o ofercie. <small>(opcjonalnie)</small></span></label>
+
+      <label class="elite-honeypot" aria-hidden="true">Nie wypełniaj tego pola<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="button button-light elite-submit" type="submit">WYŚLIJ ZGŁOSZENIE</button>
+      <p class="elite-form-status" id="raport-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <section class="elite-apply-success raport-success" id="raport-success" hidden tabindex="-1" aria-labelledby="raport-success-title">
+      <h2 id="raport-success-title">Dzięki! Raport wyślę na podany adres najszybciej, jak to możliwe.</h2>
+      <p>Do tego czasu możesz zajrzeć na profile System Formy.</p>
+      <div class="raport-follow" id="raport-follow"></div>
+    </section>
+  </main>
+  <footer class="site-footer product-footer"><a class="footer-brand" href="/"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="190" height="141"></a><p class="copyright">© <span id="current-year">2026</span> SYSTEM FORMY</p></footer>
+  <script src="/src/raport-startowy.js?v=20261106-2" defer></script>
+</body>
+</html>
