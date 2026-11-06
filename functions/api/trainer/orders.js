@@ -30,8 +30,8 @@ export async function onRequestGet({ request, env }) {
     conditions.push(`(o.customer_email LIKE ? ESCAPE '\\' OR o.order_ref LIKE ? ESCAPE '\\' OR o.product_name LIKE ? ESCAPE '\\' OR COALESCE(json_extract(o.intake_json, '$.profile.name'), '') LIKE ? ESCAPE '\\')`);
     values.push(like, like, like, like);
   }
-  try {
-    const result = await env.DB.prepare(`SELECT
+  const hiddenCondition = '(o.trainer_hidden_at IS NULL OR (o.intake_submitted_at IS NOT NULL AND o.intake_submitted_at > o.trainer_hidden_at))';
+  const runQuery = withHidden => env.DB.prepare(`SELECT
         o.order_ref, o.product_key, o.product_name, o.amount_minor, o.currency,
         o.payment_status, o.customer_email, o.created_at, o.paid_at,
         o.intake_submitted_at,
@@ -42,9 +42,17 @@ export async function onRequestGet({ request, env }) {
         (SELECT card_status FROM sf_elite_goal_cards c WHERE c.order_ref = o.order_ref) AS elite_card_status
       FROM sf_orders o
       LEFT JOIN sf_trainer_meta m ON m.order_ref = o.order_ref
-      WHERE ${conditions.join(' AND ')}
+      WHERE ${[...conditions, ...(withHidden ? [hiddenCondition] : [])].join(' AND ')}
       ORDER BY COALESCE(o.intake_submitted_at, o.paid_at, o.created_at) DESC
       LIMIT 250`).bind(...values).all();
+  try {
+    let result;
+    try { result = await runQuery(true); }
+    catch (error) {
+      // Kolumna trainer_hidden_at jeszcze nie istnieje — pokaż listę jak dotąd.
+      if (!/trainer_hidden_at/.test(error instanceof Error ? error.message : '')) throw error;
+      result = await runQuery(false);
+    }
     return json({ orders: result.results || [] });
   } catch (error) {
     console.error('Trainer orders read failed', error instanceof Error ? error.message : 'unknown');
