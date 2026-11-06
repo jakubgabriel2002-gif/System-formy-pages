@@ -51,3 +51,8 @@
 .elite-reply-box{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;padding:12px;border:1px solid var(--yellow);border-radius:10px;background:rgba(255,212,0,.05)}
 .elite-reply-link{text-decoration:none}
 @media(max-width:760px){.elite-reply-link{width:100%;text-align:center}}
+
+/* Raport startowy */
+.raport-actions{justify-content:flex-start}
+.raport-actions .elite-reply-link{flex:0 1 auto}
+@media(max-width:760px){.raport-actions .elite-reply-link{flex:1 1 100%}}

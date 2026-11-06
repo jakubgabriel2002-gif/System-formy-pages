@@ -1,0 +1,28 @@
+/* Strona "Bezpłatny Raport startowy" — korzysta ze stylów formularza ELITE z product-pages.css */
+.raport-main { width: min(100%, 980px); margin: 0 auto; padding: clamp(36px, 6vw, 80px) clamp(16px, 5vw, 40px) 90px; }
+.raport-intro { margin-bottom: 26px; }
+.raport-intro h1 { margin: 16px 0 16px; color: var(--white, #f4f4f2); font: 800 clamp(40px, 8vw, 72px)/.94 var(--display); }
+.raport-intro h1 span { color: var(--accent, #e7c84b); }
+.raport-lead { max-width: 640px; margin: 0; color: #b3b3ad; font-size: 14px; line-height: 1.8; }
+.raport-form { max-width: none; }
+.raport-error { display: block; min-height: 0; color: #f1c3b8; font-size: 11px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
+.raport-error:empty { display: none; }
+.raport-error-consent { margin: -6px 0 10px 28px; }
+.raport-form [aria-invalid="true"]:not([type="radio"]):not([type="checkbox"]) { border-color: #d98b78 !important; }
+.raport-form input:not([type="checkbox"]):not([type="radio"]), .raport-form select, .raport-form textarea { min-height: 52px; font-size: 16px; }
+.raport-choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+.raport-form .raport-pill { position: relative; display: block; cursor: pointer; }
+.raport-pill input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.raport-pill span { display: grid; place-items: center; min-height: 52px; border: 1px solid #44443e; background: #080808; color: #f2f2ed; font-size: 12px; font-weight: 900; letter-spacing: .16em; }
+.raport-pill input:checked + span { border-color: var(--accent, #e7c84b); background: rgba(231,200,75,.12); color: var(--accent, #e7c84b); }
+.raport-pill input:focus-visible + span { box-shadow: 0 0 0 3px rgba(231,200,75,.25); }
+.raport-choice legend { line-height: 1.6; }
+.elite-submit[aria-busy="true"] { opacity: .7; cursor: progress; }
+.raport-success h2 { max-width: 620px; margin: 0 auto 12px; color: #f1f1ed; font: 800 clamp(26px, 4vw, 36px)/1.1 var(--display); }
+.raport-follow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 520px; margin: 24px auto 0; }
+.raport-follow-link { text-align: center; text-decoration: none; }
+.raport-follow:empty { display: none; }
+@media (max-width: 520px) {
+  .raport-follow { grid-template-columns: 1fr; }
+  .raport-error-consent { margin-left: 0; }
+}

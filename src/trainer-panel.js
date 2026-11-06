@@ -14,7 +14,10 @@
   const eliteView = $('#elite-admin-view');
   const eliteList = $('#elite-admin-list');
   const eliteDetail = $('#elite-admin-detail');
-  const state = { orders: [], selectedOrderRef: null, debounce: null, productFilter: 'all', reviews: [], dashboardTab: 'clients', elite: [], selectedEliteId: null };
+  const raportView = $('#raport-admin-view');
+  const raportList = $('#raport-admin-list');
+  const raportDetail = $('#raport-admin-detail');
+  const state = { orders: [], selectedOrderRef: null, debounce: null, productFilter: 'all', reviews: [], dashboardTab: 'clients', elite: [], selectedEliteId: null, raport: [], selectedRaportId: null };
 
   const labels = {
     name:'Imię i nazwisko',email:'E-mail',age:'Wiek',gender:'Płeć',heightCm:'Wzrost (cm)',bodyWeightKg:'Masa ciała (kg)',
@@ -278,7 +281,7 @@
     catch(error){status.className='save-state error';status.textContent=error.message;}
     finally{button.disabled=false;}
   }
-  async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';loadElite({ silent: true });await loadOrders();}
+  async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';loadElite({ silent: true });loadRaport({ silent: true });await loadOrders();}
   async function loadReviews() {
     if (!reviewsList) return;
     reviewsList.innerHTML = '<div class="empty-state">Pobieranie opinii…</div>';
@@ -317,8 +320,10 @@
     if (statsGrid) statsGrid.hidden = tab !== 'clients';
     if (reviewsView) reviewsView.hidden = tab !== 'reviews';
     if (eliteView) eliteView.hidden = tab !== 'elite';
+    if (raportView) raportView.hidden = tab !== 'raport';
     if (tab === 'reviews') loadReviews();
     else if (tab === 'elite') loadElite();
+    else if (tab === 'raport') loadRaport();
     else loadOrders();
   }
 
@@ -427,6 +432,141 @@
     } catch (error) { window.alert(error.message); }
   }
 
+  // ===== Raport startowy (bezpłatny raport z /raport-startowy.html) =====
+  const raportStatusLabels = { nowe:'NOWE', raport_wyslany:'RAPORT WYSŁANY', rozmowa:'ROZMOWA', klient:'KLIENT', odrzucone:'ODRZUCONE' };
+  const raportEnumLabels = {
+    zrodlo:{ instagram:'Instagram', tiktok:'TikTok', youtube:'YouTube', facebook:'Facebook', inne:'Inne' },
+    cel:{ sylwetka:'Sylwetka', sila:'Siła', powrot:'Powrót po przerwie', inne:'Inne' },
+    doswiadczenie:{ poczatkujacy:'Początkujący', do1roku:'Do 1 roku', '1do3lat':'1–3 lata', powyzej3lat:'Powyżej 3 lat' },
+    miejsce:{ dom:'Dom', silownia:'Siłownia', oba:'Dom i siłownia' },
+    inwestycja:{ tak:'Tak', nie:'Nie' }
+  };
+  const raportLabel = (field, value) => raportEnumLabels[field]?.[value] || value || '—';
+  const raportStatusClass = { nowe:'new', raport_wyslany:'proposal_sent', rozmowa:'in_review', klient:'client', odrzucone:'rejected' };
+  function updateRaportCounter() {
+    const badge = $('#raport-new-count');
+    const fresh = state.raport.filter(item => item.status === 'nowe').length;
+    if (badge) { badge.textContent = String(fresh); badge.hidden = fresh === 0; }
+    const summary = $('#raport-summary');
+    if (summary) summary.textContent = `Łącznie: ${state.raport.length} · nowe: ${fresh}`;
+  }
+  async function loadRaport({ silent = false } = {}) {
+    if (!raportList) return;
+    if (!silent) raportList.innerHTML = '<div class="empty-state">Pobieranie zgłoszeń…</div>';
+    try {
+      const data = await api('/api/trainer/raport-leads');
+      state.raport = Array.isArray(data.leads) ? data.leads : [];
+      updateRaportCounter();
+      renderRaportList();
+      if (state.selectedRaportId) renderRaportDetail();
+    } catch (error) {
+      if (!silent) raportList.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+    }
+  }
+  function renderRaportList() {
+    const filter = $('#raport-status-filter')?.value || 'all';
+    const rows = state.raport.filter(item => filter === 'all' || item.status === filter);
+    if (!rows.length) { raportList.innerHTML = '<div class="empty-state">Brak zgłoszeń w wybranym widoku.</div>'; return; }
+    raportList.innerHTML = rows.map(item => `
+      <button class="admin-review-card elite-row${item.id === state.selectedRaportId ? ' selected' : ''}" type="button" data-raport-id="${escapeHtml(item.id)}">
+        <div class="admin-review-meta"><strong>${escapeHtml(item.imie)}</strong><span>${escapeHtml(formatDate(item.utworzono))}</span></div>
+        <p class="elite-row-goal">${escapeHtml(item.email)}<br>Źródło: ${escapeHtml(raportLabel('zrodlo', item.zrodlo))} · cel: ${escapeHtml(raportLabel('cel', item.cel))} · inwestycja: ${escapeHtml(raportLabel('inwestycja', item.inwestycja))}</p>
+        <div class="admin-review-meta"><span class="admin-review-status elite-status-${raportStatusClass[item.status] || 'new'}">${raportStatusLabels[item.status] || escapeHtml(item.status)}</span></div>
+      </button>`).join('');
+  }
+  function raportPlainText(item) {
+    const v = value => (value === '' || value === null || value === undefined) ? '—' : String(value);
+    return [
+      'ZGŁOSZENIE — BEZPŁATNY RAPORT STARTOWY',
+      `Data: ${formatDate(item.utworzono)}`,
+      `Imię: ${v(item.imie)}`,
+      `E-mail: ${v(item.email)}`,
+      `Profil: ${v(item.profil_link)}`,
+      `Skąd wie o System Formy: ${raportLabel('zrodlo', item.zrodlo)}`,
+      `Główny cel: ${raportLabel('cel', item.cel)}`,
+      `Cel dokładniej: ${v(item.cel_inne)}`,
+      `W jakim czasie: ${v(item.czas)}`,
+      `Doświadczenie treningowe: ${raportLabel('doswiadczenie', item.doswiadczenie)}`,
+      `Gdzie trenuje: ${raportLabel('miejsce', item.miejsce)}`,
+      `Sprzęt: ${v(item.sprzet)}`,
+      `Dni treningowe w tygodniu: ${v(item.dni)}`,
+      `Co wcześniej nie działało: ${v(item.co_nie_dzialalo)}`,
+      `Gotów zainwestować w zmianę sylwetki: ${raportLabel('inwestycja', item.inwestycja)}`
+    ].join('\n');
+  }
+  async function copyText(text) {
+    try { await navigator.clipboard.writeText(text); return true; }
+    catch {
+      const area = document.createElement('textarea');
+      area.value = text; area.setAttribute('readonly', ''); area.style.position = 'fixed'; area.style.opacity = '0';
+      document.body.append(area); area.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch { ok = false; }
+      area.remove(); return ok;
+    }
+  }
+  function renderRaportDetail() {
+    const item = state.raport.find(row => row.id === state.selectedRaportId);
+    if (!item) { raportDetail.innerHTML = '<div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div>'; return; }
+    const profileUrl = /^https:\/\/(www\.instagram\.com|www\.tiktok\.com)\//.test(String(item.profil_link || '')) ? String(item.profil_link) : '';
+    const statusOptions = Object.entries(raportStatusLabels).map(([value, label]) => `<option value="${value}"${value === item.status ? ' selected' : ''}>${label}</option>`).join('');
+    raportDetail.innerHTML = `
+      <div class="elite-detail-head">
+        <div><p class="eyebrow">RAPORT STARTOWY</p><h2>${escapeHtml(item.imie)}</h2><p class="muted small">${escapeHtml(formatDate(item.utworzono))}</p></div>
+        <span class="admin-review-status elite-status-${raportStatusClass[item.status] || 'new'}">${raportStatusLabels[item.status] || escapeHtml(item.status)}</span>
+      </div>
+      <div class="elite-reply-box raport-actions">
+        <a class="button button-primary elite-reply-link" href="mailto:${escapeHtml(item.email)}">NAPISZ E-MAIL</a>
+        ${profileUrl ? `<a class="button button-outline elite-reply-link" href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener noreferrer">OTWÓRZ PROFIL ${profileUrl.includes('tiktok.com') ? 'TIKTOK' : 'INSTAGRAM'}</a>` : ''}
+        <button class="button button-outline elite-reply-link" type="button" id="raport-copy">KOPIUJ ODPOWIEDZI</button>
+        <span class="muted small" id="raport-copy-status" role="status"></span>
+      </div>
+      ${section('Kontakt', `<div class="data-grid">${cell('E-mail', item.email)}${cell('Link do profilu', item.profil_link)}${cell('Skąd wie o System Formy', raportLabel('zrodlo', item.zrodlo))}</div>`)}
+      ${section('Cel', `<div class="data-grid">${cell('Główny cel', raportLabel('cel', item.cel))}${cell('W jakim czasie', item.czas)}${cell('Cel dokładniej', item.cel_inne, true)}</div>`)}
+      ${section('Warunki', `<div class="data-grid">${cell('Doświadczenie', raportLabel('doswiadczenie', item.doswiadczenie))}${cell('Gdzie trenuje', raportLabel('miejsce', item.miejsce))}${cell('Dni w tygodniu', item.dni)}${cell('Sprzęt', item.sprzet, true)}${cell('Co wcześniej nie działało', item.co_nie_dzialalo, true)}</div>`)}
+      ${section('Inwestycja i zgody', `<div class="data-grid">${cell('Gotów zainwestować', raportLabel('inwestycja', item.inwestycja))}${cell('Zgoda marketingowa', Number(item.zgoda_marketing) === 1 ? 'TAK' : 'NIE')}${cell('Urządzenie', item.user_agent_skrot)}${cell('Treść zgód z chwili zapisu', item.tresc_zgody, true)}</div>`)}
+      <form class="detail-form" id="raport-edit-form">
+        <label for="raport-status">Status zgłoszenia</label>
+        <select id="raport-status" name="status">${statusOptions}</select>
+        <label for="raport-note">Notatka trenera (widoczna tylko w panelu)</label>
+        <textarea id="raport-note" name="notatka" rows="5" maxlength="4000">${escapeHtml(item.notatka || '')}</textarea>
+        <div class="detail-form-footer">
+          <button class="button button-primary" type="submit">ZAPISZ</button>
+          <button class="button button-danger" type="button" id="raport-delete">USUŃ ZGŁOSZENIE</button>
+          <span class="muted small" id="raport-save-status" role="status"></span>
+        </div>
+      </form>`;
+    $('#raport-copy').addEventListener('click', async () => {
+      const ok = await copyText(raportPlainText(item));
+      $('#raport-copy-status').textContent = ok ? 'Skopiowano.' : 'Nie udało się skopiować.';
+    });
+    $('#raport-edit-form').addEventListener('submit', saveRaport);
+    $('#raport-delete').addEventListener('click', deleteRaport);
+  }
+  async function saveRaport(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button[type="submit"]');
+    const info = $('#raport-save-status');
+    button.disabled = true; info.textContent = 'Zapisywanie…';
+    try {
+      const result = await api('/api/trainer/raport-leads', { method: 'PATCH', body: JSON.stringify({ id: state.selectedRaportId, status: form.elements.status.value, notatka: form.elements.notatka.value }) });
+      const item = state.raport.find(row => row.id === state.selectedRaportId);
+      if (item) { item.status = result.status; item.notatka = result.notatka; item.zaktualizowano = result.zaktualizowano; }
+      updateRaportCounter(); renderRaportList(); renderRaportDetail();
+      $('#raport-save-status').textContent = 'Zapisano.';
+    } catch (error) { info.textContent = error.message; }
+    finally { button.disabled = false; }
+  }
+  async function deleteRaport() {
+    if (!window.confirm('Usunąć to zgłoszenie z bazy danych? Tej operacji nie można cofnąć.')) return;
+    try {
+      await api(`/api/trainer/raport-leads?id=${encodeURIComponent(state.selectedRaportId)}`, { method: 'DELETE' });
+      state.selectedRaportId = null;
+      raportDetail.innerHTML = '<div class="empty-state">Zgłoszenie zostało usunięte.</div>';
+      await loadRaport();
+    } catch (error) { window.alert(error.message); }
+  }
+
   async function boot(){
     try {const response=await fetch('/api/trainer/session',{credentials:'same-origin',cache:'no-store'});if(response.status===503){$('#fatal-message').textContent='Brakuje konfiguracji panelu lub wymaganej migracji bazy. Ustaw sekrety i wykonaj migrację D1.';showOnly(fatalView);return;}const data=await response.json();if(data.authenticated)await startDashboard();else showOnly(loginView);}
     catch{$('#fatal-message').textContent='Nie udało się połączyć z API panelu. Sprawdź deployment Cloudflare Pages.';showOnly(fatalView);}
@@ -442,6 +582,16 @@
   $('#refresh-reviews')?.addEventListener('click', loadReviews);
   $('#refresh-elite')?.addEventListener('click', () => loadElite());
   $('#elite-status-filter')?.addEventListener('change', renderEliteList);
+  $('#refresh-raport')?.addEventListener('click', () => loadRaport());
+  $('#raport-status-filter')?.addEventListener('change', renderRaportList);
+  raportList?.addEventListener('click', event => {
+    const row = event.target.closest('[data-raport-id]');
+    if (!row) return;
+    state.selectedRaportId = row.dataset.raportId;
+    renderRaportList();
+    renderRaportDetail();
+    if (window.matchMedia('(max-width: 1050px)').matches) raportDetail.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
   eliteList?.addEventListener('click', event => {
     const row = event.target.closest('[data-elite-id]');
     if (!row) return;
