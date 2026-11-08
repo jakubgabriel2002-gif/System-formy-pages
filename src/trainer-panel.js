@@ -594,7 +594,7 @@
   const leadStatusLabels = { nowe:'NOWE', w_analizie:'W ANALIZIE', propozycja:'WYSŁANO PROPOZYCJĘ', klient:'KLIENT', odrzucone:'ODRZUCONE' };
   const leadStatusClass = { nowe:'new', w_analizie:'in_review', propozycja:'proposal_sent', klient:'client', odrzucone:'rejected' };
   const leadEnumLabels = {
-    zakres:{ pro:'SYSTEM PRO', elite:'SYSTEM ELITE', plan:'Plan treningowy', niewiem:'Nie wie — prosi o doradzenie' },
+    zakres:{ pro:'Z przycisku SYSTEM PRO', elite:'Z przycisku SYSTEM ELITE', plan:'Z przycisku planów treningowych', niewiem:'Ankieta ogólna' },
     cel:{ redukcja:'Redukcja tkanki tłuszczowej', masa:'Budowa masy mięśniowej', sylwetka:'Poprawa sylwetki', sila:'Więcej siły', kondycja:'Lepsza kondycja', powrot:'Powrót po przerwie', inne:'Inny' },
     doswiadczenie:{ poczatkujacy:'Dopiero zaczyna', do1roku:'Do 1 roku', '1do3lat':'1–3 lata', powyzej3lat:'Powyżej 3 lat', powrot:'Wraca po przerwie' },
     miejsce:{ dom:'W domu', silownia:'Na siłowni', oba:'Dom i siłownia' },
@@ -649,7 +649,7 @@
       `Wiek: ${v(item.wiek)}`,
       `Wzrost: ${v(item.wzrost_cm)} cm`,
       `Waga: ${v(item.waga_kg)} kg`,
-      `Interesuje go: ${leadLabel('zakres', item.zakres)}`,
+      `Źródło ankiety: ${leadLabel('zakres', item.zakres)}`,
       `Główny cel: ${leadLabel('cel', item.cel)}`,
       `Cel własnymi słowami: ${v(item.cel_opis)}`,
       `Doświadczenie: ${leadLabel('doswiadczenie', item.doswiadczenie)}`,
@@ -679,7 +679,7 @@
         <span class="muted small" id="lead-copy-status" role="status"></span>
       </div>
       ${section('Dane podstawowe', `<div class="data-grid">${cell('E-mail', item.email)}${cell('Wiek', item.wiek)}${cell('Wzrost (cm)', item.wzrost_cm)}${cell('Waga (kg)', item.waga_kg)}</div>`)}
-      ${section('Współpraca i cel', `<div class="data-grid">${cell('Interesuje go', leadLabel('zakres', item.zakres))}${cell('Główny cel', leadLabel('cel', item.cel))}${cell('Cel własnymi słowami', item.cel_opis, true)}</div>`)}
+      ${section('Współpraca i cel', `<div class="data-grid">${cell('Źródło ankiety', leadLabel('zakres', item.zakres))}${cell('Główny cel', leadLabel('cel', item.cel))}${cell('Cel własnymi słowami', item.cel_opis, true)}</div>`)}
       ${section('Warunki', `<div class="data-grid">${cell('Doświadczenie', leadLabel('doswiadczenie', item.doswiadczenie))}${cell('Gdzie trenuje', leadLabel('miejsce', item.miejsce))}${cell('Dni w tygodniu', item.dni)}</div>`)}
       ${section('Inwestycja i zgody', `<div class="data-grid">${cell('Gotów zainwestować w zmianę sylwetki', leadLabel('inwestycja', item.inwestycja))}${cell('Zgoda marketingowa', Number(item.zgoda_marketing) === 1 ? 'TAK' : 'NIE')}${cell('Urządzenie', item.user_agent_skrot)}${cell('Treść zgód z chwili zapisu', item.tresc_zgody, true)}</div>`)}
       <form class="detail-form" id="lead-edit-form">

@@ -16,7 +16,6 @@
     wiek: 'Podaj wiek (16–90 lat).',
     wzrost_cm: 'Podaj wzrost w centymetrach (120–230).',
     waga_kg: 'Podaj wagę w kilogramach (35–300).',
-    zakres: 'Wybierz, jaka współpraca Cię interesuje.',
     cel: 'Wybierz główny cel.',
     cel_opis: '',
     doswiadczenie: 'Wybierz doświadczenie treningowe.',
@@ -26,13 +25,10 @@
     zgoda_przetwarzanie: 'Zaznacz wymaganą zgodę na przetwarzanie danych.'
   };
 
-  // Wstępny wybór zakresu z linku, np. /ankieta.html?zakres=elite
-  const preset = new URLSearchParams(location.search).get('zakres');
+  // Zakres nie jest pytaniem w ankiecie. Zapisujemy tylko, z którego przycisku przyszła osoba
+  // (np. /ankieta.html?zakres=elite). Bez parametru: „niewiem” = ankieta ogólna.
   const presetMap = { pro: 'pro', elite: 'elite', plan: 'plan', plany: 'plan' };
-  if (presetMap[preset]) {
-    const radio = form.querySelector(`input[name="zakres"][value="${presetMap[preset]}"]`);
-    if (radio) radio.checked = true;
-  }
+  const zakres = presetMap[new URLSearchParams(location.search).get('zakres')] || 'niewiem';
 
   const errorEl = name => form.querySelector(`[data-error-for="${name}"]`);
   function setError(name, text) {
@@ -61,7 +57,7 @@
     if (!intIn(value('wzrost_cm'), 120, 230)) errors.wzrost_cm = messages.wzrost_cm;
     const w = weight();
     if (!value('waga_kg') || !Number.isFinite(w) || w < 35 || w > 300) errors.waga_kg = messages.waga_kg;
-    for (const name of ['zakres', 'cel', 'doswiadczenie', 'miejsce', 'dni', 'inwestycja']) if (!value(name)) errors[name] = messages[name];
+    for (const name of ['cel', 'doswiadczenie', 'miejsce', 'dni', 'inwestycja']) if (!value(name)) errors[name] = messages[name];
     if (!value('zgoda_przetwarzanie')) errors.zgoda_przetwarzanie = messages.zgoda_przetwarzanie;
     return errors;
   }
@@ -95,7 +91,7 @@
 
     const payload = {
       imie: value('imie'), email: value('email'), wiek: Number(value('wiek')), wzrost_cm: Number(value('wzrost_cm')),
-      waga_kg: weight(), zakres: value('zakres'), cel: value('cel'), cel_opis: value('cel_opis'),
+      waga_kg: weight(), zakres, cel: value('cel'), cel_opis: value('cel_opis'),
       doswiadczenie: value('doswiadczenie'), miejsce: value('miejsce'), dni: Number(value('dni')),
       inwestycja: value('inwestycja'), zgoda_przetwarzanie: value('zgoda_przetwarzanie') === true,
       zgoda_marketing: value('zgoda_marketing') === true, website: String(form.elements.website.value || '')
