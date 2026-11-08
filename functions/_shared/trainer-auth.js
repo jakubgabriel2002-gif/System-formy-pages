@@ -1,4 +1,4 @@
-import { json } from './stripe.js';
+import { json } from './http.js';
 
 const COOKIE_NAME = 'sf_trainer_session';
 const SESSION_SECONDS = 8 * 60 * 60;

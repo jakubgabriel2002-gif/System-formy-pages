@@ -7,7 +7,7 @@
   <meta name="referrer" content="same-origin">
   <meta name="theme-color" content="#111111">
   <title>Panel trenera | SYSTEM FORMY</title>
-  <link rel="stylesheet" href="/src/trainer-panel.css?v=20261106-1">
+  <link rel="stylesheet" href="/src/trainer-panel.css?v=20261108-2">
 </head>
 <body>
   <main class="app-shell">
@@ -47,13 +47,14 @@
 
       <nav class="dashboard-tabs" aria-label="Sekcje panelu">
         <button class="dashboard-tab active" type="button" data-dashboard-tab="clients">KLIENCI</button>
+        <button class="dashboard-tab" type="button" data-dashboard-tab="leads">ZGŁOSZENIA <span class="tab-count" id="leads-new-count" hidden>0</span></button>
         <button class="dashboard-tab" type="button" data-dashboard-tab="reviews">OPINIE</button>
-        <button class="dashboard-tab" type="button" data-dashboard-tab="elite">ZGŁOSZENIA ELITE <span class="tab-count" id="elite-new-count" hidden>0</span></button>
-        <button class="dashboard-tab" type="button" data-dashboard-tab="raport">RAPORT STARTOWY <span class="tab-count" id="raport-new-count" hidden>0</span></button>
+        <button class="dashboard-tab" type="button" data-dashboard-tab="elite">ARCHIWUM ELITE <span class="tab-count" id="elite-new-count" hidden>0</span></button>
+        <button class="dashboard-tab" type="button" data-dashboard-tab="raport">ARCHIWUM RAPORT <span class="tab-count" id="raport-new-count" hidden>0</span></button>
       </nav>
 
       <section class="stats-grid" aria-label="Podsumowanie klientów" id="client-stats">
-        <article class="stat-card"><span>Opłacone współprace</span><strong id="stat-total">—</strong></article>
+        <article class="stat-card"><span>Zamówienia</span><strong id="stat-total">—</strong></article>
         <article class="stat-card"><span>Nowe</span><strong id="stat-new">—</strong></article>
         <article class="stat-card"><span>W trakcie</span><strong id="stat-progress">—</strong></article>
         <article class="stat-card"><span>Brak ankiety</span><strong id="stat-missing">—</strong></article>
@@ -90,7 +91,7 @@
             </select>
           </div>
           <div class="client-list" id="client-list" aria-live="polite"><div class="empty-state">Pobieranie klientów…</div></div>
-          <p class="list-limit-note">Wyświetlane jest maksymalnie 250 najnowszych opłaconych zamówień wymagających ankiety.</p>
+          <p class="list-limit-note">Wyświetlane jest maksymalnie 250 najnowszych zamówień z ankietą po zakupie. Płatność potwierdzasz ręcznie po sprawdzeniu w Stripe.</p>
         </div>
 
         <section class="detail-panel" id="detail-panel" aria-live="polite">
@@ -100,6 +101,26 @@
             <p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę, przejrzeć ankietę i zaktualizować status współpracy.</p>
           </div>
         </section>
+      </section>
+      <section class="elite-admin-view raport-admin-view" id="leads-admin-view" hidden>
+        <div class="reviews-admin-toolbar">
+          <div><h2>Zgłoszenia z bezpłatnej ankiety</h2><p class="muted small">Osoby, które wypełniły ankietę na stronie i pobrały ebook. Odpisz e-mailem z propozycją i linkiem do płatności. <span id="leads-summary"></span></p></div>
+          <div class="admin-review-actions">
+            <select id="leads-status-filter" aria-label="Filtr statusu zgłoszeń">
+              <option value="all">Wszystkie statusy</option>
+              <option value="nowe">Nowe</option>
+              <option value="w_analizie">W analizie</option>
+              <option value="propozycja">Wysłano propozycję</option>
+              <option value="klient">Klient</option>
+              <option value="odrzucone">Odrzucone</option>
+            </select>
+            <button class="button button-outline" id="refresh-leads" type="button">ODŚWIEŻ ZGŁOSZENIA</button>
+          </div>
+        </div>
+        <div class="elite-admin-layout">
+          <div class="reviews-admin-list elite-admin-list" id="leads-admin-list" aria-live="polite"><div class="empty-state">Pobieranie zgłoszeń…</div></div>
+          <section class="elite-admin-detail" id="leads-admin-detail" aria-live="polite"><div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div></section>
+        </div>
       </section>
       <section class="reviews-admin-view" id="reviews-admin-view" hidden>
         <div class="reviews-admin-toolbar">
@@ -118,7 +139,7 @@
       </section>
       <section class="elite-admin-view" id="elite-admin-view" hidden>
         <div class="reviews-admin-toolbar">
-          <div><h2>Zgłoszenia ELITE</h2><p class="muted small">Bezpłatne analizy celu z formularza „Aplikuj do ELITE”. Najnowsze na górze. <span id="elite-summary"></span></p></div>
+          <div><h2>Archiwum: zgłoszenia ELITE</h2><p class="muted small">Bezpłatne analizy celu z formularza „Aplikuj do ELITE”. Najnowsze na górze. <span id="elite-summary"></span></p></div>
           <div class="admin-review-actions">
             <select id="elite-status-filter" aria-label="Filtr statusu zgłoszeń">
               <option value="all">Wszystkie statusy</option>
@@ -138,7 +159,7 @@
       </section>
       <section class="elite-admin-view raport-admin-view" id="raport-admin-view" hidden>
         <div class="reviews-admin-toolbar">
-          <div><h2>Raport startowy</h2><p class="muted small">Zgłoszenia z formularza „Bezpłatny Raport startowy”. Najnowsze na górze. <span id="raport-summary"></span></p></div>
+          <div><h2>Archiwum: Raport startowy</h2><p class="muted small">Zgłoszenia z formularza „Bezpłatny Raport startowy”. Najnowsze na górze. <span id="raport-summary"></span></p></div>
           <div class="admin-review-actions">
             <select id="raport-status-filter" aria-label="Filtr statusu zgłoszeń raportu">
               <option value="all">Wszystkie statusy</option>
@@ -163,6 +184,7 @@
       <div class="login-card"><div class="brand-mark">SYSTEM <span>FORMY</span></div><h1>Panel chwilowo niedostępny</h1><p class="muted" id="fatal-message">Sprawdź konfigurację panelu w Cloudflare.</p></div>
     </section>
   </main>
-  <script src="/src/trainer-panel.js?v=20261106-2" defer></script>
+  <script src="/src/payment-links.js?v=20261108-2" defer></script>
+  <script src="/src/trainer-panel.js?v=20261108-2" defer></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { isSameOrigin, requireTrainer } from '../../_shared/trainer-auth.js';
 
 export async function onRequestDelete({ request, env }) {
@@ -15,7 +15,7 @@ export async function onRequestDelete({ request, env }) {
 
   try {
     // Zamówienie, e-mail płatnika, kwota, waluta i status płatności pozostają bez zmian.
-    const order = await env.DB.prepare("SELECT order_ref FROM sf_orders WHERE order_ref = ? AND payment_status = 'paid' AND product_key <> 'start'").bind(orderRef).first();
+    const order = await env.DB.prepare("SELECT order_ref FROM sf_orders WHERE order_ref = ? AND payment_status IN ('paid','unverified') AND product_key <> 'start'").bind(orderRef).first();
     if (!order) return json({ error: 'Nie znaleziono opłaconego zamówienia klienta.' }, 404);
 
     const files = await env.DB.prepare('SELECT object_key FROM sf_intake_files WHERE order_ref = ?').bind(orderRef).all();

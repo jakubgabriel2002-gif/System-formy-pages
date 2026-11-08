@@ -1,4 +1,4 @@
-import { json } from '../_shared/stripe.js';
+import { json } from '../_shared/http.js';
 import { isSameOrigin, sha256Hex } from '../_shared/trainer-auth.js';
 
 const clean = (value, max) => String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);

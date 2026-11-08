@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080808">
-  <meta name="description" content="Wybierz poziom wsparcia Systemu Formy. Gotowy plan treningowy, indywidualna kontrola postępów lub pełniejsze prowadzenie i regularne korekty.">
+  <meta name="description" content="Trener online dla mężczyzn, którzy chcą pracować nad sylwetką. Prowadzenie PRO (8 tygodni), ELITE (12 tygodni) albo plan treningowy do samodzielnej realizacji. Zacznij od bezpłatnej ankiety.">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SYSTEM FORMY — Zbuduj swoją formę">
-  <meta property="og:description" content="Trening bez przypadku. Wybierz jeden z trzech poziomów wsparcia SYSTEM FORMY.">
+  <meta property="og:title" content="SYSTEM FORMY | Trener online">
+  <meta property="og:description" content="Trening według planu, nie przypadku. Wypełnij bezpłatną ankietę i odbierz ebook „Zacznij trenować”.">
   <meta property="og:image" content="/assets/system-formy-logo.png">
   <link rel="icon" type="image/png" href="/assets/system-formy-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/styles.css">
   <link rel="stylesheet" href="/src/home-enhancements.css">
-  <title>SYSTEM FORMY — Zbuduj swoją formę. Działaj według systemu.</title>
+  <link rel="stylesheet" href="/src/landing.css?v=20261108-2">
+  <title>SYSTEM FORMY | Trener online — trening według planu</title>
 </head>
 <body>
   <a class="skip-link" href="#main">Przejdź do treści</a>
@@ -27,84 +28,104 @@
     <button class="menu-toggle" type="button" aria-label="Otwórz menu" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
     </button>
-    <a class="individual-plan-link" href="/plan-indywidualny.html">PLAN INDYWIDUALNY</a>
+    <a class="individual-plan-link" href="/plan-indywidualny.html">PLANY TRENINGOWE</a>
     <nav class="main-nav" id="main-nav" aria-label="Nawigacja główna">
-      <a href="#start">START</a>
+      <a href="#korzysci">KORZYŚCI</a>
       <a href="#oferta">OFERTA</a>
       <a href="#jak-to-dziala">JAK TO DZIAŁA</a>
       <a href="#metamorfozy">METAMORFOZY</a>
       <a href="#opinie">OPINIE</a>
-      <a href="#porownanie">PORÓWNANIE</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="header-cta" href="#oferta">WYBIERZ PLAN</a>
+    <a class="header-cta" href="/ankieta.html">BEZPŁATNA ANKIETA</a>
   </header>
 
   <main id="main">
     <section class="hero section-shell sf-hero" id="start" aria-labelledby="hero-title">
       <div class="hero-copy sf-hero-copy">
-        <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / WSPÓŁPRACA TRENINGOWA</p>
-        <h1 id="hero-title">ZBUDUJ SWOJĄ FORMĘ.<br><span>DZIAŁAJ WEDŁUG SYSTEMU.</span></h1>
-        <p class="hero-lead">Trening bez przypadku. Jasny plan, konkretne działanie i system, który pomoże Ci konsekwentnie realizować swoje cele.</p>
-        <div class="hero-actions" aria-label="Przejdź do wyboru współpracy lub zobacz metamorfozy">
-          <a class="button button-light" href="#oferta">WYBIERZ SWÓJ PLAN</a>
-          <a class="hero-proof-link" href="#metamorfozy">ZOBACZ PRAWDZIWE EFEKTY</a>
+        <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / TRENER ONLINE</p>
+        <h1 id="hero-title">TRENUJ WEDŁUG PLANU.<br><span>NIE PRZYPADKU.</span></h1>
+        <p class="hero-lead">Prowadzenie treningowe online dla mężczyzn, którzy chcą wreszcie zobaczyć zmianę w sylwetce. Zacznij od bezpłatnej ankiety — przeanalizuję Twój cel, doświadczenie i warunki, a potem zaproponuję zakres współpracy, który ma sens właśnie dla Ciebie.</p>
+        <div class="hero-actions" aria-label="Wypełnij ankietę lub zobacz ofertę">
+          <a class="button button-light" href="/ankieta.html">WYPEŁNIJ BEZPŁATNĄ ANKIETĘ</a>
+          <a class="hero-proof-link" href="#oferta">ZOBACZ FORMY WSPÓŁPRACY</a>
         </div>
-        <div class="sf-hero-points" aria-label="Filary SYSTEMU FORMY">
-          <span>INDYWIDUALNE PODEJŚCIE</span>
-          <span>PLAN DZIAŁANIA</span>
-          <span>KONSEKWENTNY PROGRES</span>
-        </div>
+        <ul class="start-hero-facts" aria-label="Najważniejsze informacje o ankiecie">
+          <li>BEZPŁATNIE</li>
+          <li>BEZ ZOBOWIĄZAŃ</li>
+          <li>EBOOK „ZACZNIJ TRENOWAĆ” OD RAZU PO WYSŁANIU</li>
+        </ul>
       </div>
 
-      <a class="sf-hero-scroll" href="#oferta" aria-label="Przewiń do wyboru planu">
-        <span>PRZEJDŹ DO WYBORU PLANU</span>
+      <a class="sf-hero-scroll" href="#korzysci" aria-label="Przewiń do korzyści">
+        <span>SPRAWDŹ, CO ZYSKUJESZ</span>
       </a>
     </section>
 
     <div class="ticker" aria-hidden="true"><div>TRENING BEZ PRZYPADKU <b> / </b> JASNY PLAN <b> / </b> KONSEKWENTNE DZIAŁANIE <b> / </b> TWÓJ PROGRES <b> / </b></div></div>
 
+    <section class="section-shell start-benefits" id="korzysci" aria-labelledby="benefits-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> CO ZYSKUJESZ</p>
+          <h2 id="benefits-title">WSPÓŁPRACA,<br><span>KTÓRA MA PLAN.</span></h2>
+        </div>
+        <p class="section-intro">Nie dostajesz kolejnej rozpiski z internetu. Plan powstaje na podstawie Twojego celu, doświadczenia, sprzętu i czasu — a w prowadzeniu jest regularnie sprawdzany i korygowany.</p>
+      </div>
+      <ul class="start-benefit-list">
+        <li><b>01</b><h3>PLAN POD CIEBIE</h3><p>Ćwiczenia dobrane do celu, doświadczenia i sprzętu — w domu albo na siłowni.</p></li>
+        <li><b>02</b><h3>KONTROLA POSTĘPÓW</h3><p>W prowadzeniu analizuję postępy i koryguję plan — co 2 tygodnie w PRO, co tydzień w ELITE.</p></li>
+        <li><b>03</b><h3>KONTAKT Z TRENEREM</h3><p>Pytania i wątpliwości omawiasz na czacie. W ELITE kontakt jest priorytetowy.</p></li>
+        <li><b>04</b><h3>JASNE ZASADY</h3><p>Wiesz, co trenować, jak progresować i jak mierzyć postęp szerzej niż samą wagą.</p></li>
+      </ul>
+    </section>
+
     <section class="offer section-shell sf-plan-selector" id="oferta" aria-labelledby="offer-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow"><span class="eyebrow-line"></span> OFERTA SYSTEMU FORMY</p>
+          <p class="eyebrow"><span class="eyebrow-line"></span> FORMY WSPÓŁPRACY</p>
           <h2 id="offer-title">WYBIERZ SWÓJ<br><span>POZIOM WSPARCIA.</span></h2>
         </div>
-        <p class="section-intro">Trzy drogi, jeden kierunek: uporządkowany trening i konsekwentna praca nad sylwetką. Rozwiń pakiet, aby sprawdzić, co dokładnie otrzymujesz.</p>
+        <p class="section-intro">Prowadzenie z trenerem albo plan do samodzielnej realizacji. Nie musisz wybierać sam — po ankiecie podpowiem, który zakres ma sens przy Twoim celu.</p>
       </div>
 
-      <div class="sf-offer-stack" aria-label="Pakiety Systemu Formy">
+      <div class="sf-offer-stack" aria-label="Formy współpracy SYSTEM FORMY">
         <p class="sf-offer-group-label"><span>PROWADZENIE ZE WSPARCIEM TRENERA</span> SYSTEM ELITE I SYSTEM PRO</p>
         <details class="sf-offer-accordion sf-offer-elite" id="pakiet-elite">
           <summary class="sf-offer-summary">
-            <span class="sf-offer-number">03</span>
+            <span class="sf-offer-number">01</span>
             <span class="sf-offer-summary-copy">
-              <span class="sf-offer-eyebrow">NAJWIĘCEJ WSPARCIA</span>
+              <span class="sf-offer-eyebrow">NAJWIĘCEJ WSPARCIA / 12 TYGODNI</span>
               <span class="sf-offer-name">SYSTEM ELITE</span>
-              <span class="sf-offer-teaser">Pełniejsze prowadzenie, cotygodniowa analiza i regularne korekty.</span>
+              <span class="sf-offer-teaser">Cotygodniowa analiza, regularne aktualizacje planu i gwarancja osiągnięcia uzgodnionego celu.</span>
             </span>
             <span class="sf-offer-expand"><span class="sf-offer-expand-label">ZOBACZ KORZYŚCI</span><span class="sf-offer-plus" aria-hidden="true">+</span></span>
           </summary>
           <div class="sf-offer-details">
             <div class="sf-offer-detail-intro">
               <p class="sf-offer-detail-kicker">DLA OSÓB, KTÓRE CHCĄ MAKSYMALNEGO WSPARCIA</p>
-              <p>Nie zostajesz z planem sam. Proces jest regularnie analizowany i dostosowywany na podstawie Twoich raportów oraz uzgodnionego celu.</p>
+              <p>Nie zostajesz z planem sam. Co tydzień analizuję Twój raport i dostosowuję plan do tego, jak faktycznie idzie realizacja uzgodnionego celu.</p>
             </div>
             <div class="sf-offer-benefits-wrap">
               <h4>CO ZYSKUJESZ W SYSTEM ELITE</h4>
               <ul class="sf-offer-benefits">
                 <li>Szczegółową analizę celu, doświadczenia i możliwości</li>
                 <li>Indywidualny plan treningowy oraz wskazówki dotyczące żywienia i regeneracji</li>
-                <li>Cotygodniową analizę raportów i regularne korekty planu</li>
-                <li>Priorytetową kolejność obsługi i analizę napotkanych trudności</li>
+                <li>Cotygodniową analizę raportów i regularne aktualizacje planu</li>
+                <li>Priorytetowy kontakt przez czat</li>
                 <li>Podsumowanie 12 tygodni i rekomendacje na dalszy etap</li>
               </ul>
+              <div class="landing-guarantee">
+                <strong>GWARANCJA OSIĄGNIĘCIA CELU</strong>
+                <span>Dotyczy celu zatwierdzonego w Karcie Celu ELITE i obowiązuje na określonych warunkach.</span>
+                <button class="guarantee-card-trigger" type="button" data-open-guarantee aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">ZOBACZ WARUNKI</button>
+              </div>
             </div>
             <div class="sf-offer-detail-footer">
               <div class="sf-offer-duration"><span>OKRES WSPÓŁPRACY</span><strong>12 TYGODNI</strong></div>
               <div class="sf-offer-cta-group">
-                <button class="guarantee-card-trigger" type="button" data-open-guarantee aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">ZOBACZ WARUNKI GWARANCJI</button>
-                <a class="button button-light buy-button" href="/produkt-elite.html">POZNAJ SYSTEM ELITE</a>
+                <a class="hero-proof-link" href="/produkt-elite.html">SZCZEGÓŁY ELITE</a>
+                <a class="button button-light" href="/ankieta.html?zakres=elite">WYPEŁNIJ ANKIETĘ</a>
               </div>
             </div>
           </div>
@@ -114,16 +135,16 @@
           <summary class="sf-offer-summary">
             <span class="sf-offer-number">02</span>
             <span class="sf-offer-summary-copy">
-              <span class="sf-offer-eyebrow">NAJCZĘŚCIEJ WYBIERANY PRZEZ KLIENTÓW</span>
+              <span class="sf-offer-eyebrow">PLAN I REGULARNA KONTROLA / 8 TYGODNI</span>
               <span class="sf-offer-name">SYSTEM PRO</span>
-              <span class="sf-offer-teaser">Indywidualny plan, kontrola postępów i wsparcie w realizacji.</span>
+              <span class="sf-offer-teaser">Indywidualny plan, kontrola postępów co 2 tygodnie i kontakt z trenerem.</span>
             </span>
             <span class="sf-offer-expand"><span class="sf-offer-expand-label">ZOBACZ KORZYŚCI</span><span class="sf-offer-plus" aria-hidden="true">+</span></span>
           </summary>
           <div class="sf-offer-details">
             <div class="sf-offer-detail-intro">
-              <p class="sf-offer-detail-kicker">NAJLEPSZY WYBÓR, GDY POTRZEBUJESZ PLANU I REGULARNEJ KONTROLI</p>
-              <p>Otrzymujesz plan dopasowany do swojej sytuacji i konkretny rytm sprawdzania postępów — bez konieczności pełnego, cotygodniowego prowadzenia.</p>
+              <p class="sf-offer-detail-kicker">GDY POTRZEBUJESZ PLANU I KOGOŚ, KTO GO SPRAWDZA</p>
+              <p>Otrzymujesz plan dopasowany do swojej sytuacji i konkretny rytm sprawdzania postępów — bez pełnego, cotygodniowego prowadzenia.</p>
             </div>
             <div class="sf-offer-benefits-wrap">
               <h4>CO ZYSKUJESZ W SYSTEM PRO</h4>
@@ -132,97 +153,66 @@
                 <li>Indywidualny plan treningowy</li>
                 <li>Edukacyjne wskazówki dotyczące żywienia i regeneracji</li>
                 <li>Kontrolę postępów co 2 tygodnie</li>
-                <li>Jedną zaplanowaną korektę planu oraz kontakt na czacie</li>
+                <li>Jedną zaplanowaną korektę planu oraz kontakt przez czat</li>
               </ul>
             </div>
             <div class="sf-offer-detail-footer">
               <div class="sf-offer-duration"><span>OKRES WSPÓŁPRACY</span><strong>8 TYGODNI</strong></div>
-              <a class="button button-light buy-button" href="/produkt-pro.html">POZNAJ SYSTEM PRO</a>
+              <div class="sf-offer-cta-group">
+                <a class="hero-proof-link" href="/produkt-pro.html">SZCZEGÓŁY PRO</a>
+                <a class="button button-light" href="/ankieta.html?zakres=pro">WYPEŁNIJ ANKIETĘ</a>
+              </div>
             </div>
           </div>
         </details>
 
-        <p class="sf-offer-group-label sf-offer-group-self"><span>SAMODZIELNA REALIZACJA</span> SYSTEM START</p>
-        <details class="sf-offer-accordion sf-offer-start" id="pakiet-start">
+        <p class="sf-offer-group-label sf-offer-group-self"><span>SAMODZIELNA REALIZACJA</span> PLANY TRENINGOWE</p>
+        <details class="sf-offer-accordion sf-offer-start" id="plany-treningowe">
           <summary class="sf-offer-summary">
-            <span class="sf-offer-number">01</span>
+            <span class="sf-offer-number">03</span>
             <span class="sf-offer-summary-copy">
-              <span class="sf-offer-eyebrow">SAMODZIELNA REALIZACJA</span>
-              <span class="sf-offer-name">SYSTEM START</span>
-              <span class="sf-offer-teaser">Gotowy plan i narzędzia, dzięki którym wiesz, od czego zacząć.</span>
+              <span class="sf-offer-eyebrow">4 TYGODNIE / TRZY WARIANTY</span>
+              <span class="sf-offer-name">PLANY TRENINGOWE</span>
+              <span class="sf-offer-teaser">Indywidualny plan na 4 tygodnie — sam plan, plan z monitoringiem albo z kontrolą techniki.</span>
             </span>
             <span class="sf-offer-expand"><span class="sf-offer-expand-label">ZOBACZ KORZYŚCI</span><span class="sf-offer-plus" aria-hidden="true">+</span></span>
           </summary>
           <div class="sf-offer-details">
             <div class="sf-offer-detail-intro">
-              <p class="sf-offer-detail-kicker">DLA OSÓB, KTÓRE CHCĄ DZIAŁAĆ NA WŁASNYCH ZASADACH</p>
-              <p>Dostajesz uporządkowany system treningowy do samodzielnej realizacji — bez indywidualnego prowadzenia i kontaktu z trenerem.</p>
+              <p class="sf-offer-detail-kicker">DLA OSÓB, KTÓRE CHCĄ DZIAŁAĆ SAMODZIELNIE</p>
+              <p>Dostajesz plan przygotowany pod Twój cel i sprzęt, a sam decydujesz, ile wsparcia potrzebujesz w trakcie jego realizacji.</p>
             </div>
             <div class="sf-offer-benefits-wrap">
-              <h4>CO ZYSKUJESZ W SYSTEM START</h4>
+              <h4>WARIANTY PLANU</h4>
               <ul class="sf-offer-benefits">
-                <li>Gotowy plan do wyboru: trening w domu albo na siłowni</li>
-                <li>Trzy jednostki treningowe: A, B i C</li>
-                <li>Instrukcje ćwiczeń i wskazówki dotyczące progresji</li>
-                <li>Materiały edukacyjne oraz podstawy żywienia i regeneracji</li>
-                <li>Arkusz do samodzielnego monitorowania postępów</li>
+                <li>BASIC — indywidualny plan do samodzielnej realizacji</li>
+                <li>PLAN + MONITORING — plan oraz monitoring postępów i kontakt przez 4 tygodnie</li>
+                <li>PLAN + KONTROLA TECHNIKI — dodatkowo informacja zwrotna do nagrań wskazanych ćwiczeń</li>
               </ul>
             </div>
             <div class="sf-offer-detail-footer">
-              <div class="sf-offer-duration"><span>FORMA PRODUKTU</span><strong>DO SAMODZIELNEJ PRACY</strong></div>
-              <a class="button button-outline buy-button" href="/produkt-start.html">POZNAJ SYSTEM START</a>
+              <div class="sf-offer-duration"><span>OKRES REALIZACJI</span><strong>4 TYGODNIE</strong></div>
+              <a class="button button-outline" href="/plan-indywidualny.html">ZOBACZ PLANY TRENINGOWE</a>
             </div>
           </div>
         </details>
       </div>
-      <p class="offer-footnote"><span>WAŻNE</span> Wybierz poziom wsparcia, który odpowiada Twoim potrzebom. Ceny START i PRO oraz warunki zakupu znajdziesz na stronie pakietu. Szczegóły i cenę ELITE otrzymasz po bezpłatnej analizie celu.</p>
-    </section>
-
-    <section class="comparison section-shell" id="porownanie" aria-labelledby="comparison-title">
-      <div class="section-heading comparison-heading">
-        <div>
-          <p class="eyebrow"><span class="eyebrow-line"></span> ZESTAWIENIE OFERTY</p>
-          <h2 id="comparison-title">PORÓWNAJ<br><span>PAKIETY.</span></h2>
-        </div>
-        <p class="section-intro">Sprawdź najważniejsze różnice i wybierz zakres, który odpowiada Twojemu sposobowi działania.</p>
-      </div>
-      <div class="table-wrap" role="region" aria-label="Porównanie pakietów — przewiń tabelę w poziomie na małym ekranie" tabindex="0">
-        <table class="comparison-table">
-          <thead>
-            <tr class="comparison-group-row"><td aria-hidden="true"></td><th scope="colgroup" colspan="2" class="group-support">PROWADZENIE ZE WSPARCIEM TRENERA</th><th scope="colgroup" class="self-column group-self">SAMODZIELNA REALIZACJA</th></tr>
-            <tr><th scope="col">ZAKRES</th><th scope="col" class="pro-column">SYSTEM PRO</th><th scope="col" class="support-column">SYSTEM ELITE</th><th scope="col" class="self-column">SYSTEM START</th></tr>
-          </thead>
-          <tbody>
-            <tr><th scope="row">Plan treningowy</th><td class="pro-column">Indywidualny</td><td class="support-column">Indywidualny</td><td class="self-column">Gotowy — dom lub siłownia</td></tr>
-            <tr><th scope="row">Materiały edukacyjne</th><td class="pro-column">Materiały edukacyjne, wskazówki żywienia i regeneracji</td><td class="support-column">Materiały edukacyjne, wskazówki żywienia i regeneracji</td><td class="self-column">E-book startowy, instrukcje ćwiczeń, podstawy żywienia i regeneracji</td></tr>
-            <tr><th scope="row">Kontakt z prowadzącym</th><td class="pro-column">Indywidualny czat</td><td class="support-column">Priorytetowy czat</td><td class="self-column">Brak — samodzielna realizacja</td></tr>
-            <tr><th scope="row">Kontrola postępów</th><td class="pro-column">Co 2 tygodnie</td><td class="support-column">Cotygodniowa analiza i raport</td><td class="self-column">Arkusz monitorowania</td></tr>
-            <tr><th scope="row">Korekty planu</th><td class="pro-column">Jedna zaplanowana korekta</td><td class="support-column">Regularne dostosowywanie planu</td><td class="self-column">Instrukcja progresowania</td></tr>
-            <tr class="guarantee-row">
-              <th scope="row">Gwarancja osiągnięcia celu</th>
-              <td class="pro-column">—</td>
-              <td class="support-column"><span class="guarantee-available">TAK</span><button class="guarantee-trigger" type="button" data-open-guarantee aria-label="Otwórz warunki gwarancji SYSTEM ELITE" aria-haspopup="dialog" aria-controls="elite-guarantee-dialog">?</button></td>
-              <td class="self-column">—</td>
-            </tr>
-            <tr><th scope="row">Czas</th><td class="pro-column">8 tygodni</td><td class="support-column">12 tygodni</td><td class="self-column">Samodzielna realizacja</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <p class="offer-footnote"><span>WAŻNE</span> PRO i ELITE nie są dostępne do zakupu na stronie. Zacznij od bezpłatnej ankiety — szczegóły współpracy, cenę i link do płatności otrzymasz e-mailem. Plany treningowe kupisz bezpośrednio na stronie planów.</p>
     </section>
 
     <section class="how section-shell" id="jak-to-dziala" aria-labelledby="how-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow"><span class="eyebrow-line"></span> OD WYBORU DO DZIAŁANIA</p>
-          <h2 id="how-title">PROSTO OD<br><span>PLANU DO PROGRESU.</span></h2>
+          <p class="eyebrow"><span class="eyebrow-line"></span> JAK TO DZIAŁA</p>
+          <h2 id="how-title">OD ANKIETY<br><span>DO PLANU.</span></h2>
         </div>
-        <p class="section-intro">Bez zbędnych etapów. Wiesz, co dzieje się po zakupie i jak rozpocząć pracę z wybranym pakietem.</p>
+        <p class="section-intro">Najpierw poznaję Twoją sytuację. Dopiero potem rozmawiamy o współpracy.</p>
       </div>
-      <ol class="steps-list sf-process-list">
-        <li><span class="step-number">01</span><div><h3>WYBIERASZ ZAKRES</h3><p>START do samodzielnej pracy, PRO z kontrolą co 2 tygodnie albo ELITE z cotygodniowym prowadzeniem.</p></div></li>
-        <li><span class="step-number">02</span><div><h3>OPŁACASZ ZAMÓWIENIE</h3><p>Finalizujesz jednorazową płatność przez bezpieczny checkout Stripe.</p></div></li>
-        <li><span class="step-number">03</span><div><h3>ODBIERASZ MATERIAŁY LUB WYPEŁNIASZ ANKIETĘ</h3><p>START: wybierasz wersję materiałów. PRO i ELITE: uzupełniasz ankietę potrzebną do przygotowania indywidualnego planu.</p></div></li>
-        <li><span class="step-number">04</span><div><h3>REALIZUJESZ SWÓJ PLAN</h3><p>Działasz według planu. Zakres monitorowania, kontaktu i korekt zależy od wybranego pakietu.</p></div></li>
+      <ol class="steps-list sf-process-list start-steps">
+        <li><span class="step-number">01</span><div><h3>WYPEŁNIASZ ANKIETĘ</h3><p>Kilka pytań o cel, doświadczenie, sprzęt i czas. Od razu pobierasz ebook „Zacznij trenować”.</p></div></li>
+        <li><span class="step-number">02</span><div><h3>DOSTAJESZ PROPOZYCJĘ</h3><p>Analizuję odpowiedzi i wysyłam na e-mail propozycję współpracy z ceną i linkiem do płatności.</p></div></li>
+        <li><span class="step-number">03</span><div><h3>WYPEŁNIASZ ANKIETĘ STARTOWĄ</h3><p>Po opłaceniu trafiasz do szczegółowej ankiety, na podstawie której przygotowuję plan.</p></div></li>
+        <li><span class="step-number">04</span><div><h3>REALIZUJESZ PLAN</h3><p>Trenujesz według planu, a ja kontroluję postępy i koryguję plan w ramach wybranego zakresu.</p></div></li>
       </ol>
     </section>
 
@@ -328,15 +318,25 @@
       <p class="sf-review-note">Opinie są publikowane za zgodą autora. Oznaczenie niezweryfikowanej opinii znika po jej sprawdzeniu.</p>
     </section>
 
-
-    <section class="final-cta" aria-labelledby="final-title">
-      <div class="final-cta-inner">
-        <p class="eyebrow"><span class="eyebrow-line"></span> CZAS NA DZIAŁANIE</p>
-        <h2 id="final-title">TWÓJ CEL.<br><span>TWÓJ SYSTEM.</span><br>TWOJA FORMA.</h2>
-        <p>Nie odkładaj działania na później. Wybierz poziom wsparcia odpowiedni do swoich potrzeb i zacznij realizować swój plan.</p>
-        <a class="button button-light" href="#oferta">WYBIERAM SWÓJ SYSTEM</a>
+    <section class="section-shell start-ebook" id="ebook" aria-labelledby="ebook-title">
+      <div class="start-ebook-card">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> PREZENT ZA ANKIETĘ</p>
+          <h2 id="ebook-title">EBOOK<br><span>„ZACZNIJ TRENOWAĆ”.</span></h2>
+          <p class="start-ebook-lead">Praktyczny start w świat treningu: krótkie rozdziały o tym, jak uporządkować trening, mierzyć postęp i ułożyć pierwszy tydzień. Wypełnij bezpłatną ankietę, a pobierzesz go od razu po jej wysłaniu.</p>
+          <div class="start-ebook-cta"><a class="button button-light" href="/ankieta.html">WYPEŁNIJ ANKIETĘ I ODBIERZ EBOOK</a></div>
+          <p class="start-ebook-note">Około 2 minut. Bezpłatnie i bez zobowiązań.</p>
+        </div>
+        <ul class="start-ebook-list">
+          <li>Twój punkt startowy</li>
+          <li>Progresja, nie przypadkowość</li>
+          <li>Technika i kontrola ruchu</li>
+          <li>Jak mierzyć postęp szerzej niż wagą</li>
+          <li>3 błędy, które blokują początkujących</li>
+          <li>Dom czy siłownia?</li>
+          <li>Twój pierwszy tydzień</li>
+        </ul>
       </div>
-      <div class="final-cta-mark" aria-hidden="true">SF<span> / SYSTEM FORMY</span></div>
     </section>
 
     <section class="faq section-shell" id="faq" aria-labelledby="faq-title">
@@ -345,38 +345,52 @@
           <p class="eyebrow"><span class="eyebrow-line"></span> MASZ PYTANIA?</p>
           <h2 id="faq-title">NAJWAŻNIEJSZE<br><span>ODPOWIEDZI.</span></h2>
         </div>
-        <p class="section-intro">Przed wyborem pakietu sprawdź, jak wygląda zakres planu, wsparcia i realizacji.</p>
+        <p class="section-intro">Jak wygląda ankieta, płatność i różnice między formami współpracy.</p>
       </div>
       <div class="faq-list">
         <details>
-          <summary><span>Czym różni się START od PRO?</span><b aria-hidden="true">+</b></summary>
-          <p>START to gotowy plan do samodzielnej realizacji: wybierasz dom lub siłownię i otrzymujesz treningi A/B/C oraz materiały edukacyjne. PRO obejmuje indywidualny plan, dobór ćwiczeń do dostępnego sprzętu, kontrolę co 2 tygodnie, jedną zaplanowaną korektę i kontakt przez czat przez 8 tygodni.</p>
+          <summary><span>Czy ankieta coś kosztuje?</span><b aria-hidden="true">+</b></summary>
+          <p>Nie. Ankieta i ebook „Zacznij trenować” są bezpłatne.</p>
+        </details>
+        <details>
+          <summary><span>Czy po ankiecie muszę coś kupić?</span><b aria-hidden="true">+</b></summary>
+          <p>Nie. Dostaniesz propozycję współpracy na e-mail, a decyzja należy wyłącznie do Ciebie.</p>
+        </details>
+        <details>
+          <summary><span>Kiedy dostanę odpowiedź?</span><b aria-hidden="true">+</b></summary>
+          <p>Staram się odpowiadać na zgłoszenia w ciągu 12 h. Propozycję wysyłam na adres e-mail podany w ankiecie.</p>
         </details>
         <details>
           <summary><span>Czym różni się PRO od ELITE?</span><b aria-hidden="true">+</b></summary>
-          <p>PRO trwa 8 tygodni i obejmuje kontrolę postępów co 2 tygodnie oraz jedną zaplanowaną korektę planu. ELITE trwa 12 tygodni i obejmuje cotygodniową analizę, regularne dostosowywanie planu, cotygodniowe raporty oraz priorytetowy kontakt przez czat.</p>
+          <p>PRO trwa 8 tygodni i obejmuje kontrolę postępów co 2 tygodnie, jedną zaplanowaną korektę planu i kontakt przez czat. ELITE trwa 12 tygodni i obejmuje cotygodniową analizę, regularne aktualizacje planu, priorytetowy kontakt oraz gwarancję osiągnięcia celu zatwierdzonego w Karcie Celu ELITE — na warunkach opisanych w regulaminie.</p>
         </details>
         <details>
-          <summary><span>Czy muszę mieć doświadczenie treningowe?</span><b aria-hidden="true">+</b></summary>
-          <p>W opisie pakietów nie ma określonego minimalnego stażu treningowego. W PRO i ELITE doświadczenie jest częścią analizy początkowej. START zawiera gotowy plan, instrukcje ćwiczeń i materiały z podstawami treningu.</p>
+          <summary><span>Jak wygląda płatność za PRO i ELITE?</span><b aria-hidden="true">+</b></summary>
+          <p>PRO i ELITE nie są dostępne do zakupu na stronie. Po ankiecie otrzymujesz e-mailem propozycję z ceną i linkiem do bezpiecznej płatności Stripe. Po opłaceniu przechodzisz do ankiety startowej, na podstawie której przygotowuję plan.</p>
+        </details>
+        <details>
+          <summary><span>A jeśli chcę tylko plan treningowy?</span><b aria-hidden="true">+</b></summary>
+          <p>Wybierz jeden z trzech wariantów na stronie planów treningowych. Po płatności przejdziesz do ankiety, na podstawie której przygotuję plan na 4 tygodnie.</p>
         </details>
         <details>
           <summary><span>Czy mogę trenować w domu?</span><b aria-hidden="true">+</b></summary>
-          <p>W SYSTEM START wybierasz plan do domu lub na siłownię. W PRO dobór ćwiczeń uwzględnia dostępny sprzęt. W ELITE plan jest indywidualny i poprzedza go analiza celu, doświadczenia oraz możliwości.</p>
+          <p>Tak. Plan uwzględnia miejsce treningu i sprzęt, który masz do dyspozycji.</p>
         </details>
         <details>
-          <summary><span>Jak wygląda kontakt podczas współpracy?</span><b aria-hidden="true">+</b></summary>
-          <p>START realizujesz samodzielnie, bez indywidualnego prowadzenia. PRO obejmuje indywidualny kontakt przez czat, a ELITE — priorytetowy kontakt przez czat.</p>
-        </details>
-        <details>
-          <summary><span>Kiedy otrzymam swój plan?</span><b aria-hidden="true">+</b></summary>
-          <p>Materiały START są przewidziane do automatycznej dostawy po zakupie. W PRO i ELITE najpierw wypełniasz ankietę początkową, a termin rozpoczęcia współpracy i przekazania planu ustalamy z Tobą indywidualnie.</p>
-        </details>
-        <details>
-          <summary><span>Jak wygląda płatność?</span><b aria-hidden="true">+</b></summary>
-          <p>Po poznaniu szczegółów wybranej oferty przechodzisz do bezpiecznej płatności Stripe. Po potwierdzeniu płatności otrzymujesz dostęp do materiałów lub ankiety startowej.</p>
+          <summary><span>Czy muszę mieć doświadczenie treningowe?</span><b aria-hidden="true">+</b></summary>
+          <p>Nie. Doświadczenie jest jednym z pytań w ankiecie i bierzemy je pod uwagę przy doborze planu.</p>
         </details>
       </div>
+    </section>
+
+    <section class="final-cta" aria-labelledby="final-title">
+      <div class="final-cta-inner">
+        <p class="eyebrow"><span class="eyebrow-line"></span> PIERWSZY KROK</p>
+        <h2 id="final-title">TWÓJ CEL.<br><span>TWÓJ SYSTEM.</span><br>TWOJA FORMA.</h2>
+        <p>Wypełnij bezpłatną ankietę, odbierz ebook i dostań propozycję współpracy dopasowaną do Ciebie.</p>
+        <a class="button button-light" href="/ankieta.html">WYPEŁNIJ BEZPŁATNĄ ANKIETĘ</a>
+      </div>
+      <div class="final-cta-mark" aria-hidden="true">SF<span> / SYSTEM FORMY</span></div>
     </section>
 
   </main>
@@ -397,11 +411,13 @@
     <a class="footer-brand" href="#start" aria-label="SYSTEM FORMY — wróć na początek"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="190" height="141"></a>
     <nav class="footer-nav" aria-label="Nawigacja w stopce">
       <a href="#oferta">OFERTA</a>
-      <a href="#porownanie">PORÓWNANIE</a>
       <a href="#jak-to-dziala">JAK TO DZIAŁA</a>
       <a href="#metamorfozy">METAMORFOZY</a>
       <a href="#opinie">OPINIE</a>
       <a href="#faq">FAQ</a>
+      <a href="/plan-indywidualny.html">PLANY TRENINGOWE</a>
+      <a href="/ankieta.html">BEZPŁATNA ANKIETA</a>
+      <a href="/kontakt.html">KONTAKT</a>
       <a href="/regulamin.html">REGULAMIN</a>
       <a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a>
       <a href="/cookies.html">COOKIES</a>
@@ -414,6 +430,6 @@
   <script src="/src/main.js" defer></script>
   <script src="/src/home-animations.js" defer></script>
   <script src="/src/home-carousels.js" defer></script>
-  <script src="/src/review-submit.js" defer></script>
+  <script src="/src/review-submit.js?v=20261108-2" defer></script>
 </body>
 </html>

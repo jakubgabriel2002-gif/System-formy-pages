@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080808"><meta name="robots" content="noindex,follow">
+  <meta name="description" content="Bezpłatna ankieta SYSTEM FORMY. Opisz swój cel, a odeślę propozycję współpracy. Po wysłaniu pobierzesz ebook „Zacznij trenować”.">
+  <link rel="icon" type="image/png" href="/assets/system-formy-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles.css"><link rel="stylesheet" href="/src/product-pages.css?v=20261108-2"><link rel="stylesheet" href="/src/zgloszenie.css?v=20261108-2">
+  <title>Bezpłatna ankieta — SYSTEM FORMY</title>
+</head>
+<body class="raport-page">
+  <a class="skip-link" href="#main">Przejdź do treści</a>
+  <header class="site-header"><a class="brand" href="/" aria-label="SYSTEM FORMY — strona główna"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" class="brand-logo" width="190" height="141"></a></header>
+  <main id="main" class="raport-main">
+    <section class="raport-intro" aria-labelledby="raport-title">
+      <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / BEZPŁATNA ANKIETA</p>
+      <h1 id="raport-title">PIERWSZY KROK <span>DO PLANU.</span></h1>
+      <p class="raport-lead">Odpowiedz na kilka pytań o swój cel i warunki treningowe. Przeanalizuję odpowiedzi i odeślę na e-mail propozycję współpracy dopasowaną do Ciebie. Ankieta jest bezpłatna i do niczego nie zobowiązuje — zajmie około 2 minut.</p>
+      <ul class="raport-perks" aria-label="Co otrzymujesz">
+        <li><b>01</b> Propozycję współpracy na e-mail</li>
+        <li><b>02</b> Ebook „Zacznij trenować” od razu po wysłaniu</li>
+      </ul>
+    </section>
+
+    <form class="elite-apply-form raport-form" id="lead-form" novalidate>
+      <fieldset>
+        <legend>01 / PODSTAWOWE DANE</legend>
+        <div class="elite-grid">
+          <label>IMIĘ *<input type="text" name="imie" required minlength="2" maxlength="80" autocomplete="given-name"><span class="raport-error" data-error-for="imie"></span></label>
+          <label>E-MAIL *<input type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"><span class="raport-error" data-error-for="email"></span></label>
+          <label>WIEK *<input type="number" name="wiek" required min="16" max="90" step="1" inputmode="numeric" placeholder="np. 28"><span class="raport-error" data-error-for="wiek"></span></label>
+          <label>WZROST (CM) *<input type="number" name="wzrost_cm" required min="120" max="230" step="1" inputmode="numeric" placeholder="np. 180"><span class="raport-error" data-error-for="wzrost_cm"></span></label>
+          <label class="elite-wide">WAGA (KG) *<input type="text" name="waga_kg" required inputmode="decimal" maxlength="6" placeholder="np. 82,5"><span class="raport-error" data-error-for="waga_kg"></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="raport-choice" id="lead-zakres">
+        <legend>02 / JAKA FORMA WSPÓŁPRACY CIĘ INTERESUJE? *</legend>
+        <div class="raport-choice-row raport-choice-row-4">
+          <label class="raport-pill"><input type="radio" name="zakres" value="pro" required><span>SYSTEM PRO<br><small>8 TYGODNI PROWADZENIA</small></span></label>
+          <label class="raport-pill"><input type="radio" name="zakres" value="elite"><span>SYSTEM ELITE<br><small>12 TYGODNI PROWADZENIA</small></span></label>
+          <label class="raport-pill"><input type="radio" name="zakres" value="plan"><span>PLAN TRENINGOWY<br><small>SAMODZIELNA REALIZACJA</small></span></label>
+          <label class="raport-pill"><input type="radio" name="zakres" value="niewiem"><span>NIE WIEM<br><small>DORADŹ MI</small></span></label>
+        </div>
+        <span class="raport-error" data-error-for="zakres"></span>
+      </fieldset>
+
+      <fieldset>
+        <legend>03 / CEL I WARUNKI</legend>
+        <div class="elite-grid">
+          <label>GŁÓWNY CEL *<select name="cel" required><option value="">Wybierz</option><option value="redukcja">Redukcja tkanki tłuszczowej</option><option value="masa">Budowa masy mięśniowej</option><option value="sylwetka">Poprawa sylwetki</option><option value="sila">Więcej siły</option><option value="kondycja">Lepsza kondycja</option><option value="powrot">Powrót po przerwie</option><option value="inne">Inny</option></select><span class="raport-error" data-error-for="cel"></span></label>
+          <label>DOŚWIADCZENIE TRENINGOWE *<select name="doswiadczenie" required><option value="">Wybierz</option><option value="poczatkujacy">Dopiero zaczynam</option><option value="do1roku">Do 1 roku</option><option value="1do3lat">1–3 lata</option><option value="powyzej3lat">Powyżej 3 lat</option><option value="powrot">Wracam po przerwie</option></select><span class="raport-error" data-error-for="doswiadczenie"></span></label>
+          <label>GDZIE TRENUJESZ? *<select name="miejsce" required><option value="">Wybierz</option><option value="dom">W domu</option><option value="silownia">Na siłowni</option><option value="oba">Dom i siłownia</option></select><span class="raport-error" data-error-for="miejsce"></span></label>
+          <label>ILE DNI W TYGODNIU MOŻESZ TRENOWAĆ? *<select name="dni" required><option value="">Wybierz</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><span class="raport-error" data-error-for="dni"></span></label>
+          <label class="elite-wide">OPISZ KRÓTKO SWÓJ CEL <small>(opcjonalnie)</small><textarea name="cel_opis" rows="3" maxlength="300" placeholder="np. chcę zrzucić brzuch i zacząć regularnie trenować"></textarea><span class="raport-error" data-error-for="cel_opis"></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="raport-choice" id="lead-inwestycja">
+        <legend>04 / CZY JESTEŚ W STANIE ZAINWESTOWAĆ W ZMIANĘ SWOJEJ SYLWETKI? *</legend>
+        <div class="raport-choice-row">
+          <label class="raport-pill"><input type="radio" name="inwestycja" value="tak" required><span>TAK</span></label>
+          <label class="raport-pill"><input type="radio" name="inwestycja" value="nie"><span>NIE</span></label>
+        </div>
+        <span class="raport-error" data-error-for="inwestycja"></span>
+      </fieldset>
+
+      <label class="elite-consent"><input type="checkbox" name="zgoda_przetwarzanie" required> <span>Zgadzam się na przetwarzanie moich danych podanych w ankiecie w celu jej analizy i przesłania mi propozycji współpracy. <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityka prywatności</a>. *</span></label>
+      <span class="raport-error raport-error-consent" data-error-for="zgoda_przetwarzanie"></span>
+      <label class="elite-consent"><input type="checkbox" name="zgoda_marketing"> <span>Wyrażam zgodę na otrzymywanie od Jakuba Gabriela prowadzącego SYSTEM FORMY informacji handlowych i marketingowych na podany przeze mnie adres e-mail. Zgodę mogę wycofać w dowolnym momencie. <small>(opcjonalnie)</small></span></label>
+
+      <label class="elite-honeypot" aria-hidden="true">Nie wypełniaj tego pola<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <button class="button button-light elite-submit" type="submit">WYŚLIJ ANKIETĘ I ODBIERZ EBOOK</button>
+      <p class="elite-form-status" id="lead-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <section class="elite-apply-success raport-success" id="lead-success" hidden tabindex="-1" aria-labelledby="lead-success-title">
+      <h2 id="lead-success-title">DZIĘKUJĘ ZA ZGŁOSZENIE.</h2>
+      <p class="raport-success-text">Przeanalizuję Twoje odpowiedzi i odeślę propozycję współpracy na podany adres e-mail. Staram się odpowiadać na zgłoszenia w ciągu 12 h.</p>
+      <div class="raport-ebook-box">
+        <p>Twój ebook „Zacznij trenować” jest gotowy.</p>
+        <a class="button button-light" href="/assets/ebook/system-formy-zacznij-trenowac.pdf" download="System-Formy-Zacznij-trenowac.pdf">POBIERZ EBOOK</a>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer product-footer"><a class="footer-brand" href="/"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="190" height="141"></a><nav class="footer-nav" aria-label="Dokumenty"><a href="/regulamin.html">REGULAMIN</a><a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a></nav><p class="copyright">© <span id="current-year">2026</span> SYSTEM FORMY</p></footer>
+  <script src="/src/zgloszenie.js?v=20261108-2" defer></script>
+</body>
+</html>

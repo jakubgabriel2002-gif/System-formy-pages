@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { isSameOrigin, requireTrainer } from '../../_shared/trainer-auth.js';
 import { ELITE_STATUSES } from '../../_shared/elite-application.js';
 

@@ -1,0 +1,59 @@
+import { json } from '../../_shared/http.js';
+import { isSameOrigin, requireTrainer } from '../../_shared/trainer-auth.js';
+import { LEAD_STATUSES } from '../../_shared/lead.js';
+
+// Panel trenera — zgłoszenia z bezpłatnej ankiety (sf_leads).
+const ID_RE = /^[0-9a-f-]{36}$/i;
+const clean = (value, max) => String(value ?? '').replace(/\u0000/g, '').trim().slice(0, max);
+
+export async function onRequestGet({ request, env }) {
+  const auth = await requireTrainer({ request, env });
+  if (!auth.ok) return auth.response;
+  try {
+    const result = await env.DB.prepare(`SELECT id, utworzono, zaktualizowano, imie, email, wiek, wzrost_cm, waga_kg, zakres, cel, cel_opis,
+        doswiadczenie, miejsce, dni, inwestycja, zgoda_marketing, tresc_zgody, status, notatka, user_agent_skrot
+      FROM sf_leads ORDER BY utworzono DESC LIMIT 500`).all();
+    return json({ leads: result.results || [] });
+  } catch (error) {
+    console.error('Trainer leads read failed', error instanceof Error ? error.name : 'unknown');
+    return json({ error: 'Nie udało się pobrać zgłoszeń. Sprawdź, czy tabela sf_leads istnieje w D1.' }, 503);
+  }
+}
+
+export async function onRequestPatch({ request, env }) {
+  if (!isSameOrigin(request)) return json({ error: 'Żądanie odrzucone.' }, 403);
+  const auth = await requireTrainer({ request, env });
+  if (!auth.ok) return auth.response;
+  let body;
+  try { body = await request.json(); } catch { return json({ error: 'Nieprawidłowe żądanie.' }, 400); }
+  const id = clean(body?.id, 64);
+  const status = clean(body?.status, 20);
+  const note = clean(body?.notatka, 4000);
+  if (!ID_RE.test(id) || !LEAD_STATUSES.includes(status)) return json({ error: 'Nieprawidłowy identyfikator lub status zgłoszenia.' }, 400);
+  const now = new Date().toISOString();
+  try {
+    const result = await env.DB.prepare('UPDATE sf_leads SET status = ?, notatka = ?, zaktualizowano = ? WHERE id = ?')
+      .bind(status, note, now, id).run();
+    if (Number(result.meta?.changes || 0) !== 1) return json({ error: 'Nie znaleziono zgłoszenia.' }, 404);
+    return json({ ok: true, status, notatka: note, zaktualizowano: now });
+  } catch (error) {
+    console.error('Trainer lead update failed', error instanceof Error ? error.name : 'unknown');
+    return json({ error: 'Nie udało się zapisać zmian.' }, 503);
+  }
+}
+
+export async function onRequestDelete({ request, env }) {
+  if (!isSameOrigin(request)) return json({ error: 'Żądanie odrzucone.' }, 403);
+  const auth = await requireTrainer({ request, env });
+  if (!auth.ok) return auth.response;
+  const id = new URL(request.url).searchParams.get('id') || '';
+  if (!ID_RE.test(id)) return json({ error: 'Nieprawidłowy identyfikator zgłoszenia.' }, 400);
+  try {
+    const result = await env.DB.prepare('DELETE FROM sf_leads WHERE id = ?').bind(id).run();
+    if (Number(result.meta?.changes || 0) !== 1) return json({ error: 'Nie znaleziono zgłoszenia.' }, 404);
+    return json({ ok: true });
+  } catch (error) {
+    console.error('Trainer lead delete failed', error instanceof Error ? error.name : 'unknown');
+    return json({ error: 'Nie udało się usunąć zgłoszenia.' }, 503);
+  }
+}

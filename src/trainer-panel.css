@@ -56,3 +56,8 @@
 .raport-actions{justify-content:flex-start}
 .raport-actions .elite-reply-link{flex:0 1 auto}
 @media(max-width:760px){.raport-actions .elite-reply-link{flex:1 1 100%}}
+
+/* Płatności z linków Stripe — do ręcznego potwierdzenia */
+.badge-payment{color:#151515;background:var(--yellow);border-color:var(--yellow)}
+.payment-confirm-box{border:1px solid var(--yellow);background:rgba(255,212,0,.06)}
+.payment-confirm-box .button{margin-top:10px}

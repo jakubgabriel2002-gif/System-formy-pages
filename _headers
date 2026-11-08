@@ -5,3 +5,10 @@
   Referrer-Policy: same-origin
   Cache-Control: no-store
   Content-Security-Policy: default-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'
+
+/assets/ebook/*
+  X-Robots-Tag: noindex, nofollow
+
+/ankieta-*
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: same-origin

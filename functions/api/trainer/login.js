@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { constantTimeStringMatch, createTrainerCookie, isSameOrigin, sha256Hex, trainerConfigReady } from '../../_shared/trainer-auth.js';
 
 const WINDOW_MS = 15 * 60 * 1000;

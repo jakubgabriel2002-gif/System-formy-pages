@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { isTrainerAuthenticated, trainerConfigReady } from '../../_shared/trainer-auth.js';
 
 export async function onRequestGet({ request, env }) {

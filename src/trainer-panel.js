@@ -70,7 +70,7 @@
         <span class="client-row-top"><span class="client-name">${escapeHtml(name)}</span><span class="badge badge-status">${escapeHtml(statusLabels[order.work_status]||'Nowa ankieta')}</span></span>
         <span class="client-product">${escapeHtml(order.product_name||order.product_key)} · ${escapeHtml(formatMoney(order.amount_minor,order.currency))}</span>
         <span class="client-email">${escapeHtml(order.customer_email||'Brak e-maila')}</span>
-        <span class="client-row-bottom"><span class="badge ${submitted?'badge-ok':'badge-missing'}">${submitted?'Ankieta wypełniona':'Brak ankiety'}</span><span class="row-date">${escapeHtml(formatDate(order.intake_submitted_at||order.paid_at||order.created_at))}</span></span>
+        <span class="client-row-bottom"><span class="badge ${submitted?'badge-ok':'badge-missing'}">${submitted?'Ankieta wypełniona':'Brak ankiety'}</span>${order.payment_status==='unverified'?'<span class="badge badge-payment">Płatność do potwierdzenia</span>':''}<span class="row-date">${escapeHtml(formatDate(order.intake_submitted_at||order.paid_at||order.created_at))}</span></span>
       </button>`;
     }).join('');
   }
@@ -149,6 +149,9 @@
     </div>`:'';
     detailPanel.innerHTML=`
       <div class="detail-header"><div class="detail-title"><h2>${escapeHtml(profile.name||order.customer_email||'Karta klienta')}</h2><p>${escapeHtml(order.customer_email||profile.email||'Brak e-maila')}</p><div class="detail-order-meta"><span class="meta-chip">${escapeHtml(order.product_name||order.product_key)}</span><span class="meta-chip">${escapeHtml(getVariant(intake,order))}</span><span class="meta-chip">Zamówienie ${escapeHtml(order.order_ref||'')}</span></div></div><div class="detail-price">${escapeHtml(formatMoney(order.amount_minor,order.currency))}</div></div>
+      ${order.payment_status==='unverified'
+        ? `<section class="detail-section payment-confirm-box"><h3>Płatność do potwierdzenia</h3><p class="muted small">Ankieta przyszła ze strony po linku płatności. Sprawdź w Stripe (Payments), czy jest wpłata za <strong>${escapeHtml(order.product_name||order.product_key)}</strong> z adresu <strong>${escapeHtml(order.customer_email||'')}</strong>, i dopiero wtedy potwierdź.</p><button class="button button-primary" type="button" id="confirm-payment">POTWIERDŹ PŁATNOŚĆ</button><p class="save-state" id="confirm-payment-state" role="status"></p></section>`
+        : `<section class="detail-section"><h3>Płatność</h3><p class="muted small">Potwierdzona${order.paid_at?` · ${escapeHtml(formatDate(order.paid_at))}`:''}.</p></section>`}
       ${section('Metadane zgłoszenia',`<div class="data-grid">${cell('Identyfikator zgłoszenia',intake.submission_id)}${cell('Typ ankiety',intake.survey_type)}${cell('Wysłano',formatDate(intake.submitted_at||order.intake_submitted_at))}${cell('Status ankiety',statusLabels[meta.work_status]||statusLabels.new_survey)}${cell('Brakujące / do ustalenia',intake.missing_fields||[])}</div>`)}
       ${content.join('')}
       <form class="detail-form" id="trainer-edit-form"><h3>Obsługa zgłoszenia</h3>
@@ -189,6 +192,7 @@
       try { await navigator.clipboard.writeText(text); $('#brief-copy-state').textContent='Skopiowano do schowka.'; }
       catch { $('#ai-brief').focus(); $('#ai-brief').select(); $('#brief-copy-state').textContent='Zaznaczony tekst możesz skopiować ręcznie.'; }
     });
+    $('#confirm-payment')?.addEventListener('click',()=>confirmPayment(order.order_ref));
     // Usuwanie w dwóch krokach: 1. klik uzbraja przycisk, 2. klik w ciągu 10 s + potwierdzenie wykonuje.
     let deleteArmTimer=null;
     $('#delete-client-data').addEventListener('click',async()=>{
@@ -272,6 +276,14 @@
     } catch(error){clientList.innerHTML=`<div class="empty-state">${escapeHtml(error.message)}</div>`;}
     finally{clientList.classList.remove('loading');}
   }
+  async function confirmPayment(orderRef) {
+    const button=$('#confirm-payment'); const info=$('#confirm-payment-state');
+    if(!button) return;
+    if(!window.confirm('Potwierdzić płatność za to zamówienie? Zrób to dopiero po sprawdzeniu wpłaty w Stripe.')) return;
+    button.disabled=true; info.textContent='Zapisywanie…';
+    try { await api('/api/trainer/confirm-payment',{method:'POST',body:JSON.stringify({order_ref:orderRef})}); await loadOrders(); await openOrder(orderRef,false); }
+    catch(error){ info.textContent=error.message; button.disabled=false; }
+  }
   async function openOrder(orderRef,refreshList=true) {
     state.selectedOrderRef=orderRef; if(refreshList) renderOrders(); detailPanel.classList.add('loading'); detailPanel.innerHTML='<div class="empty-state">Otwieranie karty klienta…</div>';
     try {const data=await api(`/api/trainer/order?order_ref=${encodeURIComponent(orderRef)}`);renderDetail(data);if(window.matchMedia('(max-width: 760px)').matches)detailPanel.scrollIntoView({behavior:'smooth',block:'start'});}
@@ -287,7 +299,7 @@
     catch(error){status.className='save-state error';status.textContent=error.message;}
     finally{button.disabled=false;}
   }
-  async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';loadElite({ silent: true });loadRaport({ silent: true });await loadOrders();}
+  async function startDashboard(){showOnly(dashboardView);detailPanel.innerHTML='<div class="detail-placeholder"><div class="placeholder-icon">SF</div><h2>Wybierz klienta</h2><p class="muted">Kliknij osobę z listy, aby otworzyć jej kartę.</p></div>';loadLeads({ silent: true });loadElite({ silent: true });loadRaport({ silent: true });await loadOrders();}
   async function loadReviews() {
     if (!reviewsList) return;
     reviewsList.innerHTML = '<div class="empty-state">Pobieranie opinii…</div>';
@@ -327,7 +339,10 @@
     if (reviewsView) reviewsView.hidden = tab !== 'reviews';
     if (eliteView) eliteView.hidden = tab !== 'elite';
     if (raportView) raportView.hidden = tab !== 'raport';
+    const leadsView = $('#leads-admin-view');
+    if (leadsView) leadsView.hidden = tab !== 'leads';
     if (tab === 'reviews') loadReviews();
+    else if (tab === 'leads') loadLeads();
     else if (tab === 'elite') loadElite();
     else if (tab === 'raport') loadRaport();
     else loadOrders();
@@ -408,7 +423,6 @@
           <button class="button button-danger" type="button" id="elite-delete">USUŃ ZGŁOSZENIE</button>
           <span class="muted small" id="elite-save-status" role="status"></span>
         </div>
-        <p class="muted small">Link do zakupu dla zaakceptowanej osoby: <code>/produkt-elite.html?zakup=1</code></p>
       </form>`;
     $('#elite-edit-form').addEventListener('submit', saveElite);
     $('#elite-delete').addEventListener('click', deleteElite);
@@ -572,6 +586,155 @@
       await loadRaport();
     } catch (error) { window.alert(error.message); }
   }
+
+  // ===== Zgłoszenia z bezpłatnej ankiety (/ankieta.html → sf_leads) =====
+  const leadsList = $('#leads-admin-list');
+  const leadsDetail = $('#leads-admin-detail');
+  state.leads = []; state.selectedLeadId = null;
+  const leadStatusLabels = { nowe:'NOWE', w_analizie:'W ANALIZIE', propozycja:'WYSŁANO PROPOZYCJĘ', klient:'KLIENT', odrzucone:'ODRZUCONE' };
+  const leadStatusClass = { nowe:'new', w_analizie:'in_review', propozycja:'proposal_sent', klient:'client', odrzucone:'rejected' };
+  const leadEnumLabels = {
+    zakres:{ pro:'SYSTEM PRO', elite:'SYSTEM ELITE', plan:'Plan treningowy', niewiem:'Nie wie — prosi o doradzenie' },
+    cel:{ redukcja:'Redukcja tkanki tłuszczowej', masa:'Budowa masy mięśniowej', sylwetka:'Poprawa sylwetki', sila:'Więcej siły', kondycja:'Lepsza kondycja', powrot:'Powrót po przerwie', inne:'Inny' },
+    doswiadczenie:{ poczatkujacy:'Dopiero zaczyna', do1roku:'Do 1 roku', '1do3lat':'1–3 lata', powyzej3lat:'Powyżej 3 lat', powrot:'Wraca po przerwie' },
+    miejsce:{ dom:'W domu', silownia:'Na siłowni', oba:'Dom i siłownia' },
+    inwestycja:{ tak:'TAK', nie:'NIE' }
+  };
+  const leadLabel = (field, value) => leadEnumLabels[field]?.[value] || value || '—';
+  const PLANS_PAGE_URL = 'https://systemformy.com.pl/plan-indywidualny.html';
+  // Link płatności z wpisanym e-mailem klienta (Stripe Payment Links obsługuje ?prefilled_email=).
+  function paymentLinkFor(key, email) {
+    const base = (window.SF_PAYMENT_LINKS || {})[key] || '';
+    if (!/^https:\/\/(buy\.stripe\.com|checkout\.stripe\.com)\//.test(base)) return '';
+    try { const url = new URL(base); if (email) url.searchParams.set('prefilled_email', email); return url.toString(); } catch { return ''; }
+  }
+  function updateLeadsCounter() {
+    const badge = $('#leads-new-count');
+    const fresh = state.leads.filter(item => item.status === 'nowe').length;
+    if (badge) { badge.textContent = String(fresh); badge.hidden = fresh === 0; }
+    const summary = $('#leads-summary');
+    if (summary) summary.textContent = `Łącznie: ${state.leads.length} · nowe: ${fresh}`;
+  }
+  async function loadLeads({ silent = false } = {}) {
+    if (!leadsList) return;
+    if (!silent) leadsList.innerHTML = '<div class="empty-state">Pobieranie zgłoszeń…</div>';
+    try {
+      const data = await api('/api/trainer/leads');
+      state.leads = Array.isArray(data.leads) ? data.leads : [];
+      updateLeadsCounter();
+      renderLeadsList();
+      if (state.selectedLeadId) renderLeadDetail();
+    } catch (error) {
+      if (!silent) leadsList.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+    }
+  }
+  function renderLeadsList() {
+    const filter = $('#leads-status-filter')?.value || 'all';
+    const rows = state.leads.filter(item => filter === 'all' || item.status === filter);
+    if (!rows.length) { leadsList.innerHTML = '<div class="empty-state">Brak zgłoszeń w wybranym widoku.</div>'; return; }
+    leadsList.innerHTML = rows.map(item => `
+      <button class="admin-review-card elite-row${item.id === state.selectedLeadId ? ' selected' : ''}" type="button" data-lead-id="${escapeHtml(item.id)}">
+        <div class="admin-review-meta"><strong>${escapeHtml(item.imie)}</strong><span>${escapeHtml(formatDate(item.utworzono))}</span></div>
+        <p class="elite-row-goal">${escapeHtml(leadLabel('zakres', item.zakres))} · ${escapeHtml(leadLabel('cel', item.cel))}<br>Inwestycja: ${escapeHtml(leadLabel('inwestycja', item.inwestycja))} · ${escapeHtml(String(item.wiek))} lat · ${escapeHtml(String(item.wzrost_cm))} cm · ${escapeHtml(String(item.waga_kg))} kg</p>
+        <div class="admin-review-meta"><span class="admin-review-status elite-status-${leadStatusClass[item.status] || 'new'}">${leadStatusLabels[item.status] || escapeHtml(item.status)}</span></div>
+      </button>`).join('');
+  }
+  function leadPlainText(item) {
+    const v = value => (value === '' || value === null || value === undefined) ? '—' : String(value);
+    return [
+      'ZGŁOSZENIE — BEZPŁATNA ANKIETA SYSTEM FORMY',
+      `Data: ${formatDate(item.utworzono)}`,
+      `Imię: ${v(item.imie)}`,
+      `E-mail: ${v(item.email)}`,
+      `Wiek: ${v(item.wiek)}`,
+      `Wzrost: ${v(item.wzrost_cm)} cm`,
+      `Waga: ${v(item.waga_kg)} kg`,
+      `Interesuje go: ${leadLabel('zakres', item.zakres)}`,
+      `Główny cel: ${leadLabel('cel', item.cel)}`,
+      `Cel własnymi słowami: ${v(item.cel_opis)}`,
+      `Doświadczenie: ${leadLabel('doswiadczenie', item.doswiadczenie)}`,
+      `Gdzie trenuje: ${leadLabel('miejsce', item.miejsce)}`,
+      `Dni treningowe w tygodniu: ${v(item.dni)}`,
+      `Gotów zainwestować w zmianę sylwetki: ${leadLabel('inwestycja', item.inwestycja)}`
+    ].join('\n');
+  }
+  function renderLeadDetail() {
+    const item = state.leads.find(row => row.id === state.selectedLeadId);
+    if (!item) { leadsDetail.innerHTML = '<div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div>'; return; }
+    const statusOptions = Object.entries(leadStatusLabels).map(([value, label]) => `<option value="${value}"${value === item.status ? ' selected' : ''}>${label}</option>`).join('');
+    const mail = `mailto:${escapeHtml(item.email)}?subject=${encodeURIComponent('SYSTEM FORMY — propozycja współpracy')}`;
+    const payButtons = [['pro', 'PRO'], ['elite', 'ELITE']].map(([key, label]) => paymentLinkFor(key, item.email)
+      ? `<button class="button button-outline elite-reply-link" type="button" data-copy-pay="${key}">KOPIUJ LINK PŁATNOŚCI ${label}</button>`
+      : `<span class="muted small">Brak linku płatności ${label} w pliku payment-links.js</span>`).join('');
+    leadsDetail.innerHTML = `
+      <div class="elite-detail-head">
+        <div><p class="eyebrow">BEZPŁATNA ANKIETA</p><h2>${escapeHtml(item.imie)}</h2><p class="muted small">${escapeHtml(formatDate(item.utworzono))} · ${escapeHtml(item.email)}</p></div>
+        <span class="admin-review-status elite-status-${leadStatusClass[item.status] || 'new'}">${leadStatusLabels[item.status] || escapeHtml(item.status)}</span>
+      </div>
+      <div class="elite-reply-box raport-actions">
+        <a class="button button-primary elite-reply-link" href="${mail}">NAPISZ E-MAIL</a>
+        <button class="button button-outline elite-reply-link" type="button" id="lead-copy">KOPIUJ ODPOWIEDZI</button>
+        ${payButtons}
+        <button class="button button-outline elite-reply-link" type="button" data-copy-plans>KOPIUJ LINK DO PLANÓW</button>
+        <span class="muted small" id="lead-copy-status" role="status"></span>
+      </div>
+      ${section('Dane podstawowe', `<div class="data-grid">${cell('E-mail', item.email)}${cell('Wiek', item.wiek)}${cell('Wzrost (cm)', item.wzrost_cm)}${cell('Waga (kg)', item.waga_kg)}</div>`)}
+      ${section('Współpraca i cel', `<div class="data-grid">${cell('Interesuje go', leadLabel('zakres', item.zakres))}${cell('Główny cel', leadLabel('cel', item.cel))}${cell('Cel własnymi słowami', item.cel_opis, true)}</div>`)}
+      ${section('Warunki', `<div class="data-grid">${cell('Doświadczenie', leadLabel('doswiadczenie', item.doswiadczenie))}${cell('Gdzie trenuje', leadLabel('miejsce', item.miejsce))}${cell('Dni w tygodniu', item.dni)}</div>`)}
+      ${section('Inwestycja i zgody', `<div class="data-grid">${cell('Gotów zainwestować w zmianę sylwetki', leadLabel('inwestycja', item.inwestycja))}${cell('Zgoda marketingowa', Number(item.zgoda_marketing) === 1 ? 'TAK' : 'NIE')}${cell('Urządzenie', item.user_agent_skrot)}${cell('Treść zgód z chwili zapisu', item.tresc_zgody, true)}</div>`)}
+      <form class="detail-form" id="lead-edit-form">
+        <label for="lead-status">Status zgłoszenia</label>
+        <select id="lead-status" name="status">${statusOptions}</select>
+        <label for="lead-note">Notatka trenera (widoczna tylko w panelu)</label>
+        <textarea id="lead-note" name="notatka" rows="5" maxlength="4000">${escapeHtml(item.notatka || '')}</textarea>
+        <div class="detail-form-footer">
+          <button class="button button-primary" type="submit">ZAPISZ</button>
+          <button class="button button-danger" type="button" id="lead-delete">USUŃ ZGŁOSZENIE</button>
+          <span class="muted small" id="lead-save-status" role="status"></span>
+        </div>
+      </form>`;
+    const info = $('#lead-copy-status');
+    const report = ok => { info.textContent = ok ? 'Skopiowano.' : 'Nie udało się skopiować.'; };
+    $('#lead-copy').addEventListener('click', async () => report(await copyText(leadPlainText(item))));
+    leadsDetail.querySelectorAll('[data-copy-pay]').forEach(button => button.addEventListener('click', async () => report(await copyText(paymentLinkFor(button.dataset.copyPay, item.email)))));
+    leadsDetail.querySelector('[data-copy-plans]').addEventListener('click', async () => report(await copyText(PLANS_PAGE_URL)));
+    $('#lead-edit-form').addEventListener('submit', saveLead);
+    $('#lead-delete').addEventListener('click', deleteLead);
+  }
+  async function saveLead(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = form.querySelector('button[type="submit"]');
+    const info = $('#lead-save-status');
+    button.disabled = true; info.textContent = 'Zapisywanie…';
+    try {
+      const result = await api('/api/trainer/leads', { method: 'PATCH', body: JSON.stringify({ id: state.selectedLeadId, status: form.elements.status.value, notatka: form.elements.notatka.value }) });
+      const item = state.leads.find(row => row.id === state.selectedLeadId);
+      if (item) { item.status = result.status; item.notatka = result.notatka; item.zaktualizowano = result.zaktualizowano; }
+      updateLeadsCounter(); renderLeadsList(); renderLeadDetail();
+      $('#lead-save-status').textContent = 'Zapisano.';
+    } catch (error) { info.textContent = error.message; }
+    finally { button.disabled = false; }
+  }
+  async function deleteLead() {
+    if (!window.confirm('Usunąć to zgłoszenie z bazy danych? Tej operacji nie można cofnąć.')) return;
+    try {
+      await api(`/api/trainer/leads?id=${encodeURIComponent(state.selectedLeadId)}`, { method: 'DELETE' });
+      state.selectedLeadId = null;
+      leadsDetail.innerHTML = '<div class="empty-state">Zgłoszenie zostało usunięte.</div>';
+      await loadLeads();
+    } catch (error) { window.alert(error.message); }
+  }
+  $('#refresh-leads')?.addEventListener('click', () => loadLeads());
+  $('#leads-status-filter')?.addEventListener('change', renderLeadsList);
+  leadsList?.addEventListener('click', event => {
+    const row = event.target.closest('[data-lead-id]');
+    if (!row) return;
+    state.selectedLeadId = row.dataset.leadId;
+    renderLeadsList();
+    renderLeadDetail();
+    if (window.matchMedia('(max-width: 1050px)').matches) leadsDetail.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
 
   async function boot(){
     try {const response=await fetch('/api/trainer/session',{credentials:'same-origin',cache:'no-store'});if(response.status===503){$('#fatal-message').textContent='Brakuje konfiguracji panelu lub wymaganej migracji bazy. Ustaw sekrety i wykonaj migrację D1.';showOnly(fatalView);return;}const data=await response.json();if(data.authenticated)await startDashboard();else showOnly(loginView);}

@@ -1,0 +1,61 @@
+/* Strona "Bezpłatny Raport startowy" — korzysta ze stylów formularza ELITE z product-pages.css */
+.raport-main { width: min(100%, 980px); margin: 0 auto; padding: clamp(36px, 6vw, 80px) clamp(16px, 5vw, 40px) 90px; }
+.raport-intro { margin-bottom: 26px; }
+.raport-intro h1 { margin: 16px 0 16px; color: var(--white, #f4f4f2); font: 800 clamp(40px, 8vw, 72px)/.94 var(--display); }
+.raport-intro h1 span { color: var(--accent, #e7c84b); }
+.raport-lead { max-width: 640px; margin: 0; color: #b3b3ad; font-size: 14px; line-height: 1.8; }
+.raport-form { max-width: none; }
+.raport-error { display: block; min-height: 0; color: #f1c3b8; font-size: 11px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
+.raport-error:empty { display: none; }
+.raport-error-consent { margin: -6px 0 10px 28px; }
+.raport-form [aria-invalid="true"]:not([type="radio"]):not([type="checkbox"]) { border-color: #d98b78 !important; }
+.raport-form input:not([type="checkbox"]):not([type="radio"]), .raport-form select, .raport-form textarea { min-height: 52px; font-size: 16px; }
+.raport-choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+.raport-form .raport-pill { position: relative; display: block; cursor: pointer; }
+.raport-pill input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.raport-pill span { display: grid; place-items: center; min-height: 52px; border: 1px solid #44443e; background: #080808; color: #f2f2ed; font-size: 12px; font-weight: 900; letter-spacing: .16em; }
+.raport-pill input:checked + span { border-color: var(--accent, #e7c84b); background: rgba(231,200,75,.12); color: var(--accent, #e7c84b); }
+.raport-pill input:focus-visible + span { box-shadow: 0 0 0 3px rgba(231,200,75,.25); }
+.raport-choice legend { line-height: 1.6; }
+.elite-submit[aria-busy="true"] { opacity: .7; cursor: progress; }
+.raport-success h2 { max-width: 620px; margin: 0 auto 12px; color: #f1f1ed; font: 800 clamp(26px, 4vw, 36px)/1.1 var(--display); }
+.raport-follow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 520px; margin: 24px auto 0; }
+.raport-follow-link { text-align: center; text-decoration: none; }
+.raport-follow:empty { display: none; }
+@media (max-width: 520px) {
+  .raport-follow { grid-template-columns: 1fr; }
+  .raport-error-consent { margin-left: 0; }
+}
+
+/* Ankieta zgłoszeniowa i ankiety po zakupie */
+.raport-choice-row-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.raport-choice-row-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.raport-choice-row-3 .raport-pill span, .raport-choice-row-4 .raport-pill span { padding: 10px 6px; text-align: center; line-height: 1.35; }
+.raport-pill small { color: #a2a29d; font-size: 9px; letter-spacing: .12em; }
+.raport-pill input:checked + span small { color: inherit; }
+.raport-perks { display: grid; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+.raport-perks li { color: #e8e8e4; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.raport-perks b { margin-right: 8px; color: var(--accent, #e7c84b); }
+.raport-success { text-align: center; }
+.raport-success-text { max-width: 560px; margin: 0 auto; color: #c9c9c1; font-size: 14px; line-height: 1.8; }
+.raport-ebook-box { max-width: 520px; margin: 26px auto 0; padding: 20px; border: 1px solid rgba(231,200,75,.45); background: rgba(231,200,75,.06); text-align: center; }
+.raport-ebook-box p { margin: 0 0 14px; color: #d6d6cf; font-size: 12px; line-height: 1.7; }
+.raport-ebook-box .button { width: 100%; text-decoration: none; }
+.raport-note { margin: 0 0 14px; padding: 12px 14px; border-left: 2px solid var(--accent, #e7c84b); background: rgba(231,200,75,.06); color: #c9c9c1; font-size: 12px; line-height: 1.7; }
+.raport-form fieldset[hidden] { display: none; }
+@media (max-width: 420px) {
+  .raport-choice-row-3 { grid-template-columns: 1fr; }
+}
+.raport-q { margin: 0 0 10px; color: #f1f1ed; font-size: 11px; font-weight: 800; letter-spacing: .12em; line-height: 1.6; }
+.raport-q small { color: #8f8f89; font-weight: 600; letter-spacing: .04em; }
+.raport-check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.raport-form .raport-check { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 12px; border: 1px solid #44443e; background: #080808; color: #e8e8e4; font-size: 12px; font-weight: 600; letter-spacing: 0; cursor: pointer; }
+.raport-check input { width: 18px; height: 18px; min-height: 0 !important; flex: 0 0 auto; accent-color: var(--accent, #e7c84b); }
+.raport-check:has(input:checked) { border-color: var(--accent, #e7c84b); background: rgba(231,200,75,.08); }
+.raport-sub[hidden] { display: none; }
+.raport-sub { gap: 16px; }
+.raport-lead-small { margin-top: 12px; color: #8f8f89; font-size: 12px; }
+.raport-form .elite-wide.raport-choice { display: block; }
+#purchase-form .raport-choice-row { margin-bottom: 0; }
+@media (max-width: 420px) { .raport-check-grid { grid-template-columns: 1fr 1fr; } }
+#purchase-form .raport-pill span { padding: 8px 6px; letter-spacing: .08em; text-align: center; line-height: 1.3; font-size: 11px; }

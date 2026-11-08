@@ -1,6 +1,18 @@
 import { CATALOG } from '../_shared/catalog.js';
-import { corsafeEmail, json, retrieveCheckoutSession } from '../_shared/stripe.js';
-import { isSameOrigin } from '../_shared/trainer-auth.js';
+import { addMonthsIso, corsafeEmail, json } from '../_shared/http.js';
+import { isSameOrigin, sha256Hex } from '../_shared/trainer-auth.js';
+
+// Ankiety po zakupie przez stałe linki płatności Stripe (bez Stripe API).
+// Strona nie weryfikuje płatności — zamówienie zapisuje się jako 'unverified',
+// a trener potwierdza płatność w panelu na podstawie powiadomienia ze Stripe.
+const SURVEY_PRODUCTS = ['pro', 'elite', 'individual-basic', 'individual-monitor', 'individual-full'];
+const RETENTION_MONTHS = { pro: 8, elite: 9, 'individual-basic': 6, 'individual-monitor': 6, 'individual-full': 6 };
+const HOUR_MS = 60 * 60 * 1000;
+const START_CONSENT_VERSION = 'system-formy-survey-start-consent-2026-11-08-v2';
+const START_CONSENT_TEXTS = {
+  service: 'Żądam rozpoczęcia świadczenia zakupionej usługi przed upływem 14 dni od dnia zawarcia umowy. Przyjmuję do wiadomości, że w razie odstąpienia od umowy po rozpoczęciu usługi mogę być zobowiązany do zapłaty za świadczenia spełnione do chwili odstąpienia, proporcjonalnie do ich zakresu, jeżeli spełniono warunki określone w ustawie o prawach konsumenta.',
+  digital: 'Wyrażam wyraźną zgodę na rozpoczęcie dostarczania zakupionej treści cyfrowej (planu treningowego) przed upływem 14 dni od dnia zawarcia umowy i przyjmuję do wiadomości, że po rozpoczęciu dostarczania treści cyfrowej utracę prawo odstąpienia od umowy w zakresie tej treści, jeżeli zostaną spełnione wszystkie warunki określone w ustawie o prawach konsumenta.'
+};
 
 const clean = (value, max = 1200) => String(value ?? '').trim().slice(0, max);
 const object = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
@@ -81,25 +93,32 @@ function normalizeTechniques(value) {
 export async function onRequestPost({ request, env }) {
   if (!isSameOrigin(request)) return json({ error: 'Żądanie odrzucone.' }, 403);
   if (!request.headers.get('content-type')?.toLowerCase().includes('application/json')) return json({ error: 'Nieprawidłowy format żądania.' }, 415);
-  if (!env.DB || !env.STRIPE_SECRET_KEY) return json({ error: 'Formularz nie jest jeszcze skonfigurowany.' }, 503);
+  if (!env.DB) return json({ error: 'Formularz jest chwilowo niedostępny. Spróbuj ponownie później.' }, 503);
   let body;
   try { body = await request.json(); } catch { return json({ error: 'Nie udało się odczytać formularza.' }, 400); }
+  if (!body || typeof body !== 'object') return json({ error: 'Nie udało się odczytać formularza.' }, 400);
+  // Honeypot: boty wypełniają ukryte pole — udajemy sukces, nic nie zapisujemy.
+  if (String(body.website ?? '').trim()) return json({ ok: true, message: 'Ankieta została zapisana.' });
 
-  const sessionId = body?.session_id;
+  const productKey = clean(body.product, 40);
+  const product = CATALOG[productKey];
+  if (!SURVEY_PRODUCTS.includes(productKey) || !product) return json({ error: 'Nieprawidłowa ankieta. Otwórz link z wiadomości po płatności.' }, 400);
+  const orderRef = crypto.randomUUID();
+  const ipHash = await sha256Hex(`sf-survey:${request.headers.get('CF-Connecting-IP') || 'unknown'}`);
   try {
-    const session = await retrieveCheckoutSession(env, sessionId);
-    if (session.payment_status !== 'paid') return json({ error: 'Najpierw musi zostać potwierdzona płatność.' }, 402);
-    const productKey = session.metadata?.product_key;
-    const orderRef = session.metadata?.order_ref;
-    const product = CATALOG[productKey];
-    if (!product || product.fulfillment !== 'intake' || !orderRef) return json({ error: 'Ten produkt nie wymaga ankiety.' }, 400);
-    const order = await env.DB.prepare(`SELECT payment_status, customer_email, intake_json FROM sf_orders WHERE order_ref = ? AND session_id = ?`)
-      .bind(orderRef, session.id).first();
-    if (!order || order.payment_status !== 'paid') return json({ error: 'Zamówienie nie jest jeszcze zapisane jako opłacone.' }, 403);
+    const nowMs = Date.now();
+    await env.DB.prepare('DELETE FROM sf_form_rate WHERE created_at < ?').bind(new Date(nowMs - 24 * HOUR_MS).toISOString()).run();
+    const recent = await env.DB.prepare(`SELECT COUNT(*) AS total FROM sf_form_rate WHERE scope = 'survey' AND ip_hash = ? AND created_at >= ?`)
+      .bind(ipHash, new Date(nowMs - HOUR_MS).toISOString()).first();
+    if (Number(recent?.total || 0) >= 5) return json({ error: 'Z tego połączenia wysłano już kilka ankiet. Spróbuj ponownie później.' }, 429);
 
     const name = clean(body.name, 120);
     const email = corsafeEmail(body.email);
-    const stripeEmail = corsafeEmail(session.customer_details?.email || session.customer_email);
+    const stripeEmail = email;
+    const startConsentType = productKey === 'individual-basic' ? 'digital' : 'service';
+    if (body.startConsent !== true) return json({ error: productKey === 'individual-basic'
+      ? 'Zaznacz zgodę na rozpoczęcie dostarczania planu przed upływem terminu do odstąpienia od umowy.'
+      : 'Zaznacz żądanie rozpoczęcia usługi przed upływem 14 dni od zawarcia umowy.' }, 400);
     const age = Number(body.age);
     const adultConfirmed = bool(body.adultConfirmed);
     const termsAccepted = bool(body.termsAccepted);
@@ -108,7 +127,7 @@ export async function onRequestPost({ request, env }) {
     const gender = clean(profileRaw.gender, 30);
     const heightCm = optionalNumber(profileRaw.heightCm, 100, 250, 0);
     const bodyWeightKg = optionalNumber(profileRaw.bodyWeightKg, 25, 350, 1);
-    if (!name || !email || !stripeEmail || email !== stripeEmail) return json({ error: 'Podaj imię i nazwisko oraz ten sam adres e-mail, którego użyto podczas płatności.' }, 400);
+    if (!name || !email || !stripeEmail) return json({ error: 'Podaj imię i nazwisko oraz adres e-mail, którego użyto podczas płatności.' }, 400);
     if (!adultConfirmed || !Number.isInteger(age) || age < 18 || age > 100) return json({ error: 'Ankieta jest przeznaczona wyłącznie dla osób pełnoletnich. Potwierdź ukończenie 18 lat i sprawdź wiek.' }, 400);
     if (!termsAccepted || !privacyAcknowledged) return json({ error: 'Zaakceptuj regulamin usługi i potwierdź zapoznanie się z polityką prywatności.' }, 400);
     if (gender && !['kobieta','mezczyzna','inna','no_answer'].includes(gender)) return json({ error: 'Sprawdź wybraną opcję płci.' }, 400);
@@ -220,25 +239,9 @@ export async function onRequestPost({ request, env }) {
       productDetails = { elite, cooperation: { durationWeeks: 12, weeklyReports: true, weeklyReportAnalysis: true, regularPlanCorrections: true, contactPriority: 'priorytetowa', summaryAfterWeeks: 12 } };
       eliteCardStatus = 'to_agreement';
     } else if (productKey.startsWith('individual-')) {
-      if (productKey === 'individual-basic') {
-        productDetails = { variant: 'BASIC', basic: { planOnly: true, durationWeeks: 4, monitoring: false, chat: false, techniqueReview: false } };
-      } else {
-        const monitorRaw = object(detailsRaw.monitoring);
-        const areas = normalizeStringArray(monitorRaw.areas, new Set(['workouts','strength','bodyWeight','measurements','goal','other']), 10, 40);
-        const monitoring = {
-          areas, parameters: clean(monitorRaw.parameters, 900), hasBaselineData: clean(monitorRaw.hasBaselineData, 10),
-          baselineData: clean(monitorRaw.baselineData, 900), contactDay: clean(monitorRaw.contactDay, 30), supportNeeds: clean(monitorRaw.supportNeeds, 900)
-        };
-        if (!areas.length || !monitoring.parameters || !['yes','no'].includes(monitoring.hasBaselineData) || !DAYS.has(monitoring.contactDay)) return json({ error: 'Uzupełnij pytania dotyczące monitorowania: obszary, zapisywane parametry i preferowany dzień kontaktu.' }, 400);
-        if (monitoring.hasBaselineData === 'yes' && !monitoring.baselineData) return json({ error: 'Podaj początkowe wartości parametrów albo zaznacz, że ich nie masz.' }, 400);
-        productDetails = { variant: productKey === 'individual-full' ? 'KONTROLA TECHNIKI' : 'MONITORING I WSPARCIE', monitoring, cooperation: { durationWeeks: 4, monitoring: true, support: true, contactFrequency: 'zgodnie z ustalonym zakresem usługi' } };
-        if (productKey === 'individual-full') {
-          const technique = normalizeTechniques(detailsRaw.technique);
-          if (!technique.length) return json({ error: 'Dodaj co najmniej jedno ćwiczenie, które chcesz objąć kontrolą techniki.' }, 400);
-          productDetails.technique = technique;
-          productDetails.cooperation.techniqueReview = 'Na podstawie uzgodnionych nagrań wskazanych ćwiczeń';
-        }
-      }
+      // Ankieta planu zawiera wyłącznie pytania potrzebne do ułożenia planu — taka sama dla każdego wariantu.
+      const variantLabel = productKey === 'individual-basic' ? 'BASIC' : productKey === 'individual-monitor' ? 'MONITORING I WSPARCIE' : 'KONTROLA TECHNIKI';
+      productDetails = { variant: variantLabel, plan: { durationWeeks: 4 } };
     }
 
     const normalizedOrganization = {
@@ -258,19 +261,7 @@ export async function onRequestPost({ request, env }) {
     if (health && (!['','yes','no','unsure'].includes(health.pain) || !['','yes','no','prefer_private'].includes(health.restriction))) return json({ error: 'Sprawdź odpowiedzi w sekcji ograniczeń zdrowotnych.' }, 400);
     const healthReviewRequired = Boolean(health && ((health.pain && health.pain !== 'no') || (health.restriction && health.restriction !== 'no') || health.avoid || health.notes));
 
-    const rawFileIds = normalizeStringArray(body.attachments, null, 5, 80);
-    let attachments = [];
-    if (rawFileIds.length) {
-      if (productKey === 'pro' || productKey === 'start') return json({ error: 'Ten produkt nie obsługuje załączników do ankiety.' }, 400);
-      const placeholders = rawFileIds.map(() => '?').join(',');
-      const fileResult = await env.DB.prepare(`SELECT file_id, file_name, content_type, size_bytes, kind FROM sf_intake_files WHERE order_ref = ? AND file_id IN (${placeholders})`)
-        .bind(orderRef, ...rawFileIds).all();
-      attachments = (fileResult.results || []).map(file => ({ file_id: file.file_id, file_name: file.file_name, content_type: file.content_type, size_bytes: file.size_bytes, kind: file.kind }));
-      if (attachments.length !== rawFileIds.length) return json({ error: 'Jeden z załączników nie należy do tego zamówienia. Prześlij plik ponownie.' }, 400);
-    }
-
-    let previousIntake = {};
-    try { previousIntake = order.intake_json ? JSON.parse(order.intake_json) : {}; } catch { previousIntake = {}; }
+    const attachments = [];
     const surveyType = productKey === 'pro' ? 'pro' : productKey === 'elite' ? 'elite' : 'individual';
     const variant = productKey === 'individual-basic' ? 'BASIC' : productKey === 'individual-monitor' ? 'MONITORING' : productKey === 'individual-full' ? 'KONTROLA TECHNIKI' : product.name;
     const submittedAt = new Date().toISOString();
@@ -280,7 +271,9 @@ export async function onRequestPost({ request, env }) {
       termsAccepted: true, termsAcceptedAt: submittedAt,
       privacyAcknowledged: true, privacyAcknowledgedAt: submittedAt,
       healthConsent, healthConsentAt: healthConsent ? health.consentedAt : null,
-      healthConsentVersion: healthConsent ? health.consentVersion : null
+      healthConsentVersion: healthConsent ? health.consentVersion : null,
+      startConsent: true, startConsentType, startConsentAt: submittedAt,
+      startConsentVersion: START_CONSENT_VERSION, startConsentText: START_CONSENT_TEXTS[startConsentType]
     };
     const intake = {
       version: 'system-formy-three-surveys-v1.0', submission_id: submissionId,
@@ -291,7 +284,8 @@ export async function onRequestPost({ request, env }) {
       conditions: { location, equipmentItems: normalizedOrganization.equipmentItems, equipmentOther: normalizedOrganization.equipmentOther, standardGym: normalizedOrganization.standardGym, gymLimitations: normalizedOrganization.gymLimitations },
       organization: normalizedOrganization, tests, preferences, lifestyle, productDetails,
       health, healthReviewRequired, attachments, consents,
-      checkoutConsents: previousIntake.checkoutConsents || null,
+      checkoutConsents: null,
+      payment: { method: 'stripe_payment_link', status: 'unverified', note: 'Płatność do potwierdzenia przez trenera w panelu.' },
       missing_fields: missingFields
     };
     const responsesJson = JSON.stringify(intake);
@@ -299,12 +293,17 @@ export async function onRequestPost({ request, env }) {
     const consentJson = JSON.stringify(consents);
     const attachmentsJson = JSON.stringify(attachments);
     const statements = [
+      env.DB.prepare(`INSERT INTO sf_form_rate (scope, ip_hash, created_at) VALUES ('survey', ?, ?)`).bind(ipHash, submittedAt),
+      env.DB.prepare(`INSERT INTO sf_orders
+        (order_ref, product_key, product_name, amount_minor, currency, payment_status, customer_email, created_at, updated_at, retention_due_at)
+        VALUES (?, ?, ?, ?, 'pln', 'unverified', ?, ?, ?, ?)`)
+        .bind(orderRef, productKey, product.name, product.amount, email, submittedAt, submittedAt, addMonthsIso(submittedAt, RETENTION_MONTHS[productKey] || 6)),
       env.DB.prepare(`INSERT INTO sf_intake_submissions
         (submission_id, order_ref, survey_type, product_key, product_name, variant, identity_json, responses_json, submitted_at, submission_status, missing_fields_json, consents_json, attachments_json)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new_survey', ?, ?, ?)`)
         .bind(submissionId, orderRef, surveyType, productKey, product.name, variant, identityJson, responsesJson, submittedAt, JSON.stringify(missingFields), consentJson, attachmentsJson),
-      env.DB.prepare(`UPDATE sf_orders SET intake_json = ?, intake_submitted_at = ?, updated_at = ? WHERE order_ref = ? AND session_id = ?`)
-        .bind(responsesJson, submittedAt, submittedAt, orderRef, session.id),
+      env.DB.prepare(`UPDATE sf_orders SET intake_json = ?, intake_submitted_at = ?, updated_at = ? WHERE order_ref = ?`)
+        .bind(responsesJson, submittedAt, submittedAt, orderRef),
       env.DB.prepare(`INSERT INTO sf_trainer_workflow_status (order_ref, work_status, updated_at) VALUES (?, 'new_survey', ?)
         ON CONFLICT(order_ref) DO UPDATE SET work_status = 'new_survey', updated_at = excluded.updated_at`)
         .bind(orderRef, submittedAt)
@@ -321,10 +320,9 @@ export async function onRequestPost({ request, env }) {
         .bind(orderRef, JSON.stringify(initialCard), submittedAt));
     }
     await env.DB.batch(statements);
-    return json({ ok: true, submission_id: submissionId, status: 'new_survey', message: 'Ankieta została zapisana w bazie SYSTEM FORMY. Administrator otrzyma uporządkowane odpowiedzi w panelu trenera.' });
+    return json({ ok: true, submission_id: submissionId, status: 'new_survey', message: 'Ankieta została zapisana. Po potwierdzeniu płatności przygotuję plan i odezwę się na podany adres e-mail.' });
   } catch (error) {
-    if (error instanceof Error && error.message === 'INVALID_SESSION') return json({ error: 'Nieprawidłowa sesja płatności.' }, 400);
-    console.error('Intake submission failed', error instanceof Error ? error.message : 'unknown');
+    console.error('Intake submission failed', error instanceof Error ? error.name : 'unknown');
     return json({ error: 'Nie udało się zapisać ankiety. Spróbuj ponownie później.' }, 502);
   }
 }

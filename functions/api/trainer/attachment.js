@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { requireTrainer } from '../../_shared/trainer-auth.js';
 
 function encodedFilename(value) {
@@ -16,7 +16,7 @@ export async function onRequestGet({ request, env }) {
   try {
     const file = await env.DB.prepare(`SELECT f.object_key, f.file_name, f.content_type
       FROM sf_intake_files f JOIN sf_orders o ON o.order_ref = f.order_ref
-      WHERE f.file_id = ? AND f.order_ref = ? AND o.payment_status = 'paid'`).bind(fileId, orderRef).first();
+      WHERE f.file_id = ? AND f.order_ref = ? AND o.payment_status IN ('paid','unverified')`).bind(fileId, orderRef).first();
     if (!file) return json({ error: 'Nie znaleziono załącznika.' }, 404);
     const object = await env.PRODUCT_FILES.get(file.object_key);
     if (!object) return json({ error: 'Plik nie jest już dostępny.' }, 404);

@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { requireTrainer } from '../../_shared/trainer-auth.js';
 
 const VALID_WORK_STATUSES = ['new_survey','needs_more_data','to_analyze','plan_in_progress','elite_card_pending','awaiting_acceptance','completed','new','in_progress','waiting_client','ready'];
@@ -11,7 +11,7 @@ export async function onRequestGet({ request, env }) {
   const intake = url.searchParams.get('intake');
   const workStatus = url.searchParams.get('work_status');
   const productGroup = url.searchParams.get('product_group');
-  const conditions = ["o.payment_status = 'paid'", "o.product_key <> 'start'"];
+  const conditions = ["o.payment_status IN ('paid','unverified')", "o.product_key <> 'start'"];
   const values = [];
   const currentStatusExpr = "COALESCE((SELECT w.work_status FROM sf_trainer_workflow_status w WHERE w.order_ref = o.order_ref), (SELECT s.submission_status FROM sf_intake_submissions s WHERE s.order_ref = o.order_ref ORDER BY s.submitted_at DESC LIMIT 1), CASE COALESCE(m.work_status, 'new_survey') WHEN 'new' THEN 'new_survey' WHEN 'in_progress' THEN 'plan_in_progress' WHEN 'waiting_client' THEN 'awaiting_acceptance' WHEN 'ready' THEN 'to_analyze' ELSE COALESCE(m.work_status, 'new_survey') END)";
   if (intake === 'missing') conditions.push('o.intake_submitted_at IS NULL');

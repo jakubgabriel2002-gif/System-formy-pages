@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { isSameOrigin, requireTrainer } from '../../_shared/trainer-auth.js';
 
 const STATUSES = new Set(['pending','verified','rejected']);

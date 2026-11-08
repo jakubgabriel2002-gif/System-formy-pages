@@ -1,4 +1,4 @@
-import { json } from '../../_shared/stripe.js';
+import { json } from '../../_shared/http.js';
 import { isSameOrigin, requireTrainer } from '../../_shared/trainer-auth.js';
 
 const WORK_STATUSES = new Set(['new_survey','needs_more_data','to_analyze','plan_in_progress','elite_card_pending','awaiting_acceptance','completed','new','in_progress','waiting_client','ready']);
@@ -16,7 +16,7 @@ export async function onRequestGet({ request, env }) {
     const order = await env.DB.prepare(`SELECT order_ref, product_key, product_name, amount_minor, currency, payment_status,
         customer_email, created_at, updated_at, retention_due_at, paid_at, intake_submitted_at, intake_json,
         download_variant, downloaded_at
-      FROM sf_orders WHERE order_ref = ? AND payment_status = 'paid' AND product_key <> 'start'`).bind(orderRef).first();
+      FROM sf_orders WHERE order_ref = ? AND payment_status IN ('paid','unverified') AND product_key <> 'start'`).bind(orderRef).first();
     if (!order) return json({ error: 'Nie znaleziono opłaconego zamówienia wymagającego ankiety.' }, 404);
     const meta = await env.DB.prepare('SELECT work_status, trainer_notes, updated_at FROM sf_trainer_meta WHERE order_ref = ?').bind(orderRef).first();
     const workflowStatus = await env.DB.prepare('SELECT work_status FROM sf_trainer_workflow_status WHERE order_ref = ?').bind(orderRef).first();
@@ -50,7 +50,7 @@ export async function onRequestPatch({ request, env }) {
   const now = new Date().toISOString();
   const legacyWorkStatus = ({ new_survey: 'new', needs_more_data: 'waiting_client', to_analyze: 'ready', plan_in_progress: 'in_progress', elite_card_pending: 'waiting_client', awaiting_acceptance: 'waiting_client', completed: 'completed', new: 'new', in_progress: 'in_progress', waiting_client: 'waiting_client', ready: 'ready' })[workStatus];
   try {
-    const exists = await env.DB.prepare("SELECT order_ref, product_key FROM sf_orders WHERE order_ref = ? AND payment_status = 'paid' AND product_key <> 'start'").bind(orderRef).first();
+    const exists = await env.DB.prepare("SELECT order_ref, product_key FROM sf_orders WHERE order_ref = ? AND payment_status IN ('paid','unverified') AND product_key <> 'start'").bind(orderRef).first();
     if (!exists) return json({ error: 'Nie znaleziono opłaconego zamówienia.' }, 404);
     const statements = [env.DB.prepare(`INSERT INTO sf_trainer_meta (order_ref, work_status, trainer_notes, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?)
