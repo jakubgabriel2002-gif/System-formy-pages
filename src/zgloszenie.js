@@ -118,6 +118,10 @@
       form.hidden = true;
       document.querySelector('.raport-intro')?.setAttribute('hidden', '');
       success.hidden = false;
+      // Meta Pixel: zdarzenie Lead tylko po udanym zapisie ankiety i tylko, gdy użytkownik zgodził się na cookies marketingowe.
+      if (typeof window.fbq === 'function') {
+        try { window.fbq('track', 'Lead', { content_name: 'bezplatna-ankieta', content_category: zakres }); } catch (e) {}
+      }
       success.focus();
       success.scrollIntoView({ block: 'start' });
     } catch (error) {
