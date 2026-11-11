@@ -2,6 +2,9 @@
 // Używane przez publiczny endpoint i panel trenera.
 export { userAgentShort } from './raport-lead.js';
 
+// Kroki anonimowego licznika darmowej ankiety (tabela sf_lead_funnel).
+export const FUNNEL_STEPS = ['wejscie', 'krok2', 'krok3', 'krok4', 'krok5', 'krok6', 'krok7', 'wyslano'];
+
 export const LEAD_STATUSES = ['nowe', 'w_analizie', 'propozycja', 'klient', 'odrzucone'];
 export const LEAD_ENUMS = {
   zakres: ['pro', 'elite', 'plan', 'niewiem'],
@@ -12,9 +15,9 @@ export const LEAD_ENUMS = {
 };
 
 // Dokładne brzmienie zgód — to samo jest na stronie i zapisuje się przy każdym zgłoszeniu.
-export const LEAD_CONSENT_VERSION = 'ankieta-zgloszeniowa-v1';
-export const LEAD_CONSENT_PROCESSING_TEXT = 'Zgadzam się na przetwarzanie moich danych podanych w ankiecie w celu jej analizy i przesłania mi propozycji współpracy. Polityka prywatności: https://systemformy.com.pl/polityka-prywatnosci.html';
-export const LEAD_CONSENT_MARKETING_TEXT = 'Wyrażam zgodę na otrzymywanie od Jakuba Gabriela prowadzącego SYSTEM FORMY informacji handlowych i marketingowych na podany przeze mnie adres e-mail. Zgodę mogę wycofać w dowolnym momencie.';
+export const LEAD_CONSENT_VERSION = 'ankieta-quiz-v2-2026-11-11';
+export const LEAD_CONSENT_PROCESSING_TEXT = 'Zgadzam się na przetwarzanie moich odpowiedzi i danych w celu przygotowania i przesłania mi wskazówek treningowych oraz informacji o możliwej współpracy. Polityka prywatności: https://systemformy.com.pl/polityka-prywatnosci.html';
+export const LEAD_CONSENT_MARKETING_TEXT = 'Chcę dostawać od Jakuba Gabriela, prowadzącego SYSTEM FORMY, informacje handlowe i marketingowe na podany e-mail. Zgodę mogę wycofać w każdej chwili.';
 
 export function leadConsentRecord(marketing) {
   return [
@@ -62,6 +65,6 @@ export function validateLead(body) {
   if (!LEAD_ENUMS.miejsce.includes(data.miejsce)) return fail('miejsce', 'Wybierz, gdzie trenujesz.');
   if (data.dni === null) return fail('dni', 'Wybierz, ile dni w tygodniu możesz trenować.');
   if (!LEAD_ENUMS.inwestycja.includes(data.inwestycja)) return fail('inwestycja', 'Zaznacz odpowiedź Tak albo Nie.');
-  if (!data.zgoda_przetwarzanie) return fail('zgoda_przetwarzanie', 'Zaznacz wymaganą zgodę na przetwarzanie danych.');
+  if (!data.zgoda_przetwarzanie) return fail('zgoda_przetwarzanie', 'Zaznacz zgodę, żebym mógł przygotować i wysłać wskazówki.');
   return { ok: true, data };
 }

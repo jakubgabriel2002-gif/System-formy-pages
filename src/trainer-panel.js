@@ -615,7 +615,34 @@
     const summary = $('#leads-summary');
     if (summary) summary.textContent = `Łącznie: ${state.leads.length} · nowe: ${fresh}`;
   }
+  // Lejek darmowej ankiety (anonimowe liczniki kroków).
+  const FUNNEL_LABELS = [
+    ['wejscie', 'Otworzyli ankietę (pytanie 1)'], ['krok2', 'Pytanie 2 — doświadczenie'], ['krok3', 'Pytanie 3 — miejsce'],
+    ['krok4', 'Pytanie 4 — dni'], ['krok5', 'Pytanie 5 — wiek, wzrost, waga'], ['krok6', 'Pytanie 6 — inwestycja'],
+    ['krok7', 'Ostatni krok — imię i e-mail'], ['wyslano', 'Wysłali i zobaczyli wskazówki']
+  ];
+  async function loadLeadFunnel() {
+    const box = $('#lead-funnel-rows');
+    if (!box) return;
+    const days = $('#lead-funnel-days')?.value || '7';
+    try {
+      const data = await api(`/api/trainer/lead-funnel?dni=${encodeURIComponent(days)}`);
+      const base = Number(data.kroki?.wejscie || 0);
+      box.innerHTML = FUNNEL_LABELS.map(([key, label]) => {
+        const n = Number(data.kroki?.[key] || 0);
+        const pct = base ? Math.round((n / base) * 100) : 0;
+        return `<div class="lead-funnel-row"><span>${escapeHtml(label)}</span><strong>${n}</strong><em>${base ? pct + '%' : '—'}</em><i data-width="${base ? Math.min(100, pct) : 0}"></i></div>`;
+      }).join('') + `<div class="lead-funnel-row lead-funnel-total"><span>Zapisane zgłoszenia w bazie</span><strong>${Number(data.zgloszenia || 0)}</strong><em></em></div>`;
+      // Szerokość paska przez CSSOM — panel ma CSP bez inline styles.
+      box.querySelectorAll('i[data-width]').forEach(bar => { bar.style.width = `${Number(bar.dataset.width) || 0}%`; });
+    } catch (error) {
+      box.innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+    }
+  }
+  $('#lead-funnel-days')?.addEventListener('change', loadLeadFunnel);
+
   async function loadLeads({ silent = false } = {}) {
+    if (!silent) loadLeadFunnel();
     if (!leadsList) return;
     if (!silent) leadsList.innerHTML = '<div class="empty-state">Pobieranie zgłoszeń…</div>';
     try {

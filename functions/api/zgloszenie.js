@@ -36,9 +36,11 @@ export async function onRequestPost({ request, env }) {
       .bind(new Date(nowMs - HOUR_MS).toISOString(), ipHash, dayAgo).first();
     const byEmail = await env.DB.prepare('SELECT COUNT(*) AS last_day FROM sf_leads WHERE email = ? AND utworzono >= ?')
       .bind(data.email, dayAgo).first();
-    if (Number(byIp?.last_hour || 0) >= 3 || Number(byIp?.last_day || 0) >= 5 || Number(byEmail?.last_day || 0) >= 2) {
+    if (Number(byIp?.last_hour || 0) >= 3 || Number(byIp?.last_day || 0) >= 5) {
       return json({ error: LIMIT_MESSAGE }, 429);
     }
+    // Ten sam e-mail drugi raz tego samego dnia: nie zapisujemy duplikatu, ale osoba dostaje swoje wskazówki.
+    if (Number(byEmail?.last_day || 0) >= 1) return json({ ok: true, duplicate: true });
 
     await env.DB.prepare(`INSERT INTO sf_leads
       (id, utworzono, zaktualizowano, imie, email, wiek, wzrost_cm, waga_kg, zakres, cel, cel_opis, doswiadczenie, miejsce, dni,

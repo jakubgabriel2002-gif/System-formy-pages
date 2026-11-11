@@ -3,81 +3,156 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080808"><meta name="robots" content="noindex,follow">
-  <meta name="description" content="Bezpłatna ankieta SYSTEM FORMY. Opisz swój cel, a odeślę propozycję współpracy. Po wysłaniu pobierzesz ebook „Zacznij trenować”.">
+  <meta name="description" content="Odpowiedz na 6 krótkich pytań i od razu zobacz darmowe wskazówki treningowe pod swój cel. Do tego ebook „Zacznij trenować” za darmo.">
+  <meta property="og:title" content="Darmowe wskazówki treningowe pod Twój cel — SYSTEM FORMY">
+  <meta property="og:description" content="6 krótkich pytań. Wskazówki od razu na ekranie + ebook „Zacznij trenować”.">
+  <meta property="og:image" content="https://systemformy.com.pl/assets/ebook/okladka-zacznij-trenowac.jpg">
   <link rel="icon" type="image/png" href="/assets/system-formy-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/styles.css"><link rel="stylesheet" href="/src/product-pages.css?v=20261108-2"><link rel="stylesheet" href="/src/zgloszenie.css?v=20261108-2">
-  <title>Bezpłatna ankieta — SYSTEM FORMY</title>
-  <link rel="stylesheet" href="/assets/cookie-consent.css">
-  <script src="/assets/cookie-consent.js?v=20261110" defer></script>
+  <link rel="stylesheet" href="/src/styles.css"><link rel="stylesheet" href="/src/quiz.css?v=20261111-1">
+  <title>Darmowe wskazówki treningowe — SYSTEM FORMY</title>
+  <link rel="stylesheet" href="/assets/cookie-consent.css?v=20261111-1">
+  <script src="/assets/cookie-consent.js?v=20261111-1" defer></script>
   <script type="text/plain" data-consent="marketing" data-src="/assets/meta-pixel.js?v=20261110"></script>
 </head>
-<body class="raport-page">
+<body class="quiz-page">
   <a class="skip-link" href="#main">Przejdź do treści</a>
-  <header class="site-header"><a class="brand" href="/" aria-label="SYSTEM FORMY — strona główna"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" class="brand-logo" width="190" height="141"></a></header>
-  <main id="main" class="raport-main">
-    <section class="raport-intro" aria-labelledby="raport-title">
-      <p class="eyebrow"><span class="eyebrow-line"></span> SYSTEM FORMY / BEZPŁATNA ANKIETA</p>
-      <h1 id="raport-title">PIERWSZY KROK <span>DO PLANU.</span></h1>
-      <p class="raport-lead">Odpowiedz na kilka pytań o swój cel i warunki treningowe. Przeanalizuję odpowiedzi i odeślę na e-mail propozycję współpracy dopasowaną do Ciebie. Ankieta jest bezpłatna i do niczego nie zobowiązuje — zajmie około 2 minut.</p>
-      <ul class="raport-perks" aria-label="Co otrzymujesz">
-        <li><b>01</b> Propozycję współpracy na e-mail</li>
-        <li><b>02</b> Ebook „Zacznij trenować” od razu po wysłaniu</li>
-      </ul>
+  <header class="quiz-header">
+    <a class="quiz-brand" href="/" aria-label="SYSTEM FORMY — strona główna"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="190" height="141"></a>
+    <span class="quiz-header-tag">DARMOWO</span>
+  </header>
+
+  <main id="main" class="quiz-main">
+    <section class="quiz-intro" id="quiz-intro" aria-labelledby="quiz-title">
+      <div class="quiz-intro-copy">
+        <p class="quiz-eyebrow">DARMOWE WSKAZÓWKI + EBOOK</p>
+        <h1 id="quiz-title">JAK TRENOWAĆ, <span>ŻEBY DOJŚĆ DO CELU?</span></h1>
+        <p class="quiz-lead">6 krótkich pytań. Wskazówki dopasowane do Ciebie zobaczysz od razu, a ebook „Zacznij trenować” pobierzesz za darmo.</p>
+      </div>
+      <img class="quiz-intro-cover" src="/assets/ebook/okladka-zacznij-trenowac.webp" alt="Okładka ebooka „Zacznij trenować”" width="480" height="680">
     </section>
 
-    <form class="elite-apply-form raport-form" id="lead-form" novalidate>
-      <fieldset>
-        <legend>01 / PODSTAWOWE DANE</legend>
-        <div class="elite-grid">
-          <label>IMIĘ *<input type="text" name="imie" required minlength="2" maxlength="80" autocomplete="given-name"><span class="raport-error" data-error-for="imie"></span></label>
-          <label>E-MAIL *<input type="email" name="email" required maxlength="254" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false"><span class="raport-error" data-error-for="email"></span></label>
-          <label>WIEK *<input type="number" name="wiek" required min="16" max="90" step="1" inputmode="numeric" placeholder="np. 28"><span class="raport-error" data-error-for="wiek"></span></label>
-          <label>WZROST (CM) *<input type="number" name="wzrost_cm" required min="120" max="230" step="1" inputmode="numeric" placeholder="np. 180"><span class="raport-error" data-error-for="wzrost_cm"></span></label>
-          <label class="elite-wide">WAGA (KG) *<input type="text" name="waga_kg" required inputmode="decimal" maxlength="6" placeholder="np. 82,5"><span class="raport-error" data-error-for="waga_kg"></span></label>
+    <form class="quiz" id="lead-form" novalidate>
+      <div class="quiz-progress" aria-hidden="true"><div class="quiz-progress-bar" id="quiz-progress-bar"></div></div>
+      <div class="quiz-progress-row">
+        <button class="quiz-back" type="button" id="quiz-back" hidden>WSTECZ</button>
+        <p class="quiz-step-count" id="quiz-step-count" aria-live="polite">PYTANIE 1 Z 7</p>
+      </div>
+
+      <fieldset class="quiz-step" data-step="1" data-name="cel">
+        <legend>Jaki jest Twój główny cel?</legend>
+        <div class="quiz-tiles">
+          <label class="quiz-tile"><input type="radio" name="cel" value="redukcja"><span>Redukcja tkanki tłuszczowej</span></label>
+          <label class="quiz-tile"><input type="radio" name="cel" value="masa"><span>Budowa masy mięśniowej</span></label>
+          <label class="quiz-tile"><input type="radio" name="cel" value="sylwetka"><span>Lepsza sylwetka</span></label>
+          <label class="quiz-tile"><input type="radio" name="cel" value="sila"><span>Więcej siły</span></label>
+          <label class="quiz-tile"><input type="radio" name="cel" value="kondycja"><span>Lepsza kondycja</span></label>
+          <label class="quiz-tile"><input type="radio" name="cel" value="powrot"><span>Powrót po przerwie</span></label>
+          <label class="quiz-tile quiz-tile-wide"><input type="radio" name="cel" value="inne"><span>Inny cel</span></label>
         </div>
       </fieldset>
 
-      <fieldset>
-        <legend>02 / CEL I WARUNKI</legend>
-        <div class="elite-grid">
-          <label>GŁÓWNY CEL *<select name="cel" required><option value="">Wybierz</option><option value="redukcja">Redukcja tkanki tłuszczowej</option><option value="masa">Budowa masy mięśniowej</option><option value="sylwetka">Poprawa sylwetki</option><option value="sila">Więcej siły</option><option value="kondycja">Lepsza kondycja</option><option value="powrot">Powrót po przerwie</option><option value="inne">Inny</option></select><span class="raport-error" data-error-for="cel"></span></label>
-          <label>DOŚWIADCZENIE TRENINGOWE *<select name="doswiadczenie" required><option value="">Wybierz</option><option value="poczatkujacy">Dopiero zaczynam</option><option value="do1roku">Do 1 roku</option><option value="1do3lat">1–3 lata</option><option value="powyzej3lat">Powyżej 3 lat</option><option value="powrot">Wracam po przerwie</option></select><span class="raport-error" data-error-for="doswiadczenie"></span></label>
-          <label>GDZIE TRENUJESZ? *<select name="miejsce" required><option value="">Wybierz</option><option value="dom">W domu</option><option value="silownia">Na siłowni</option><option value="oba">Dom i siłownia</option></select><span class="raport-error" data-error-for="miejsce"></span></label>
-          <label>ILE DNI W TYGODNIU MOŻESZ TRENOWAĆ? *<select name="dni" required><option value="">Wybierz</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select><span class="raport-error" data-error-for="dni"></span></label>
-          <label class="elite-wide">OPISZ KRÓTKO SWÓJ CEL <small>(opcjonalnie)</small><textarea name="cel_opis" rows="3" maxlength="300" placeholder="np. chcę zrzucić brzuch i zacząć regularnie trenować"></textarea><span class="raport-error" data-error-for="cel_opis"></span></label>
+      <fieldset class="quiz-step" data-step="2" data-name="doswiadczenie" hidden>
+        <legend>Jak długo trenujesz?</legend>
+        <div class="quiz-tiles">
+          <label class="quiz-tile"><input type="radio" name="doswiadczenie" value="poczatkujacy"><span>Dopiero zaczynam</span></label>
+          <label class="quiz-tile"><input type="radio" name="doswiadczenie" value="do1roku"><span>Do 1 roku</span></label>
+          <label class="quiz-tile"><input type="radio" name="doswiadczenie" value="1do3lat"><span>1–3 lata</span></label>
+          <label class="quiz-tile"><input type="radio" name="doswiadczenie" value="powyzej3lat"><span>Ponad 3 lata</span></label>
+          <label class="quiz-tile quiz-tile-wide"><input type="radio" name="doswiadczenie" value="powrot"><span>Wracam po przerwie</span></label>
         </div>
       </fieldset>
 
-      <fieldset class="raport-choice" id="lead-inwestycja">
-        <legend>03 / CZY JESTEŚ W STANIE ZAINWESTOWAĆ W ZMIANĘ SWOJEJ SYLWETKI? *</legend>
-        <div class="raport-choice-row">
-          <label class="raport-pill"><input type="radio" name="inwestycja" value="tak" required><span>TAK</span></label>
-          <label class="raport-pill"><input type="radio" name="inwestycja" value="nie"><span>NIE</span></label>
+      <fieldset class="quiz-step" data-step="3" data-name="miejsce" hidden>
+        <legend>Gdzie trenujesz?</legend>
+        <div class="quiz-tiles quiz-tiles-1">
+          <label class="quiz-tile"><input type="radio" name="miejsce" value="dom"><span>W domu</span></label>
+          <label class="quiz-tile"><input type="radio" name="miejsce" value="silownia"><span>Na siłowni</span></label>
+          <label class="quiz-tile"><input type="radio" name="miejsce" value="oba"><span>Dom i siłownia</span></label>
         </div>
-        <span class="raport-error" data-error-for="inwestycja"></span>
       </fieldset>
 
-      <label class="elite-consent"><input type="checkbox" name="zgoda_przetwarzanie" required> <span>Zgadzam się na przetwarzanie moich danych podanych w ankiecie w celu jej analizy i przesłania mi propozycji współpracy. <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityka prywatności</a>. *</span></label>
-      <span class="raport-error raport-error-consent" data-error-for="zgoda_przetwarzanie"></span>
-      <label class="elite-consent"><input type="checkbox" name="zgoda_marketing"> <span>Wyrażam zgodę na otrzymywanie od Jakuba Gabriela prowadzącego SYSTEM FORMY informacji handlowych i marketingowych na podany przeze mnie adres e-mail. Zgodę mogę wycofać w dowolnym momencie. <small>(opcjonalnie)</small></span></label>
+      <fieldset class="quiz-step" data-step="4" data-name="dni" hidden>
+        <legend>Ile dni w tygodniu realnie możesz trenować?</legend>
+        <div class="quiz-days">
+          <label class="quiz-day"><input type="radio" name="dni" value="1"><span>1</span></label>
+          <label class="quiz-day"><input type="radio" name="dni" value="2"><span>2</span></label>
+          <label class="quiz-day"><input type="radio" name="dni" value="3"><span>3</span></label>
+          <label class="quiz-day"><input type="radio" name="dni" value="4"><span>4</span></label>
+          <label class="quiz-day"><input type="radio" name="dni" value="5"><span>5</span></label>
+          <label class="quiz-day"><input type="radio" name="dni" value="6"><span>6</span></label>
+          <label class="quiz-day"><input type="radio" name="dni" value="7"><span>7</span></label>
+        </div>
+        <p class="quiz-hint">Realnie, nie w idealnym tygodniu. Lepiej mniej dni, które utrzymasz.</p>
+      </fieldset>
 
-      <label class="elite-honeypot" aria-hidden="true">Nie wypełniaj tego pola<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-      <button class="button button-light elite-submit" type="submit">WYŚLIJ ANKIETĘ I ODBIERZ EBOOK</button>
-      <p class="elite-form-status" id="lead-status" role="status" aria-live="polite"></p>
+      <fieldset class="quiz-step" data-step="5" data-name="dane" hidden>
+        <legend>Kilka liczb o Tobie</legend>
+        <p class="quiz-hint quiz-hint-top">Potrzebne, żeby dopasować wskazówki, np. ilość białka.</p>
+        <div class="quiz-fields-3">
+          <label class="quiz-field">WIEK<input type="number" name="wiek" min="16" max="90" step="1" inputmode="numeric" placeholder="np. 28" autocomplete="off"><span class="quiz-error" data-error-for="wiek"></span></label>
+          <label class="quiz-field">WZROST (CM)<input type="number" name="wzrost_cm" min="120" max="230" step="1" inputmode="numeric" placeholder="np. 180" autocomplete="off"><span class="quiz-error" data-error-for="wzrost_cm"></span></label>
+          <label class="quiz-field">WAGA (KG)<input type="text" name="waga_kg" inputmode="decimal" maxlength="6" placeholder="np. 82" autocomplete="off"><span class="quiz-error" data-error-for="waga_kg"></span></label>
+        </div>
+        <button class="button button-light quiz-next" type="button" data-next>DALEJ</button>
+      </fieldset>
+
+      <fieldset class="quiz-step" data-step="6" data-name="inwestycja" hidden>
+        <legend>Czy jesteś w stanie zainwestować w zmianę swojej sylwetki?</legend>
+        <div class="quiz-tiles">
+          <label class="quiz-tile"><input type="radio" name="inwestycja" value="tak"><span>Tak</span></label>
+          <label class="quiz-tile"><input type="radio" name="inwestycja" value="nie"><span>Nie</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="quiz-step" data-step="7" data-name="kontakt" hidden>
+        <legend>Gotowe. Gdzie wysłać ebook?</legend>
+        <p class="quiz-hint quiz-hint-top">Wskazówki zobaczysz od razu na następnym ekranie.</p>
+        <label class="quiz-field">IMIĘ<input type="text" name="imie" minlength="2" maxlength="80" autocomplete="given-name" placeholder="Twoje imię"><span class="quiz-error" data-error-for="imie"></span></label>
+        <label class="quiz-field">E-MAIL<input type="email" name="email" maxlength="254" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="twoj@email.pl"><span class="quiz-error" data-error-for="email"></span></label>
+        <label class="quiz-consent"><input type="checkbox" name="zgoda_przetwarzanie"> <span>Zgadzam się na przetwarzanie moich odpowiedzi i danych w celu przygotowania i przesłania mi wskazówek treningowych oraz informacji o możliwej współpracy. <a href="/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityka prywatności</a>. (wymagane)</span></label>
+        <span class="quiz-error" data-error-for="zgoda_przetwarzanie"></span>
+        <label class="quiz-consent"><input type="checkbox" name="zgoda_marketing"> <span>Chcę dostawać od Jakuba Gabriela, prowadzącego SYSTEM FORMY, informacje handlowe i marketingowe na podany e-mail. Zgodę mogę wycofać w każdej chwili. (opcjonalnie)</span></label>
+        <label class="quiz-honeypot" aria-hidden="true">Nie wypełniaj tego pola<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <button class="button button-light quiz-submit" type="submit">POKAŻ MOJE WSKAZÓWKI</button>
+        <p class="quiz-status" id="lead-status" role="status" aria-live="polite"></p>
+      </fieldset>
     </form>
 
-    <section class="elite-apply-success raport-success" id="lead-success" hidden tabindex="-1" aria-labelledby="lead-success-title">
-      <h2 id="lead-success-title">DZIĘKUJĘ ZA ZGŁOSZENIE.</h2>
-      <p class="raport-success-text">Przeanalizuję Twoje odpowiedzi i odeślę propozycję współpracy na podany adres e-mail. Staram się odpowiadać na zgłoszenia w ciągu 12 h.</p>
-      <div class="raport-ebook-box">
-        <p>Twój ebook „Zacznij trenować” jest gotowy.</p>
-        <a class="button button-light" href="/assets/ebook/system-formy-zacznij-trenowac.pdf" download="System-Formy-Zacznij-trenowac.pdf">POBIERZ EBOOK</a>
+    <section class="quiz-result" id="lead-success" hidden tabindex="-1" aria-labelledby="result-title">
+      <p class="quiz-eyebrow">TWOJE WSKAZÓWKI</p>
+      <h1 id="result-title">GOTOWE<span id="result-name"></span>. <span>TAK ZACZNIJ.</span></h1>
+      <ul class="result-chips" id="result-chips" aria-label="Twoje odpowiedzi"></ul>
+      <a class="result-ebook-quick" href="/assets/ebook/system-formy-zacznij-trenowac.pdf" download="System-Formy-Zacznij-trenowac.pdf"><span>Twój ebook jest gotowy</span><b>POBIERZ PDF</b></a>
+      <div class="result-cards" id="result-cards"></div>
+
+      <div class="result-ebook">
+        <img src="/assets/ebook/okladka-zacznij-trenowac.webp" alt="Okładka ebooka „Zacznij trenować”" width="480" height="680" loading="lazy">
+        <div>
+          <p class="quiz-eyebrow">TWÓJ EBOOK</p>
+          <h2>„ZACZNIJ TRENOWAĆ”</h2>
+          <p>17 krótkich rozdziałów: progresja, technika, regeneracja, odżywianie, pierwszy tydzień i pierwsze 4 tygodnie. Z dziennikiem treningowym do wypełnienia.</p>
+          <a class="button button-light" href="/assets/ebook/system-formy-zacznij-trenowac.pdf" download="System-Formy-Zacznij-trenowac.pdf">POBIERZ EBOOK</a>
+        </div>
+      </div>
+
+      <div class="result-next">
+        <h2>CO DALEJ?</h2>
+        <p>Przejrzę Twoje odpowiedzi osobiście i napiszę do Ciebie e-mail. Staram się odpowiadać na zgłoszenia w ciągu 12 h. Jeśli nie widzisz wiadomości, sprawdź folder Oferty lub Spam.</p>
+        <p class="result-disclaimer">To ogólne wskazówki edukacyjne, nie porada medyczna. Jeśli masz kontuzję, chorobę lub coś Cię boli — skonsultuj trening z lekarzem albo fizjoterapeutą.</p>
+        <p class="result-follow-title">CODZIENNIE NOWE PORADY:</p>
+        <div class="result-follow">
+          <a href="https://www.instagram.com/system_formy_" target="_blank" rel="noopener">INSTAGRAM</a>
+          <a href="https://www.tiktok.com/@system_formy" target="_blank" rel="noopener">TIKTOK</a>
+          <a href="https://www.youtube.com/@system_formy" target="_blank" rel="noopener">YOUTUBE</a>
+          <a href="https://www.facebook.com/share/1GqeoyNpNT/" target="_blank" rel="noopener">FACEBOOK</a>
+        </div>
       </div>
     </section>
   </main>
-  <footer class="site-footer product-footer"><a class="footer-brand" href="/"><img src="/assets/system-formy-logo.png" alt="SYSTEM FORMY" width="190" height="141"></a><nav class="footer-nav" aria-label="Dokumenty"><a href="/regulamin.html">REGULAMIN</a><a href="/polityka-prywatnosci.html">POLITYKA PRYWATNOŚCI</a><a href="#" data-open-cookie-settings>USTAWIENIA COOKIES</a></nav><p class="copyright">© <span id="current-year">2026</span> SYSTEM FORMY</p></footer>
-  <script src="/src/zgloszenie.js?v=20261110-1" defer></script>
+
+  <footer class="quiz-footer"><nav aria-label="Dokumenty"><a href="/regulamin.html">REGULAMIN</a><a href="/polityka-prywatnosci.html">PRYWATNOŚĆ</a><a href="#" data-open-cookie-settings>COOKIES</a></nav><p>© <span id="current-year">2026</span> SYSTEM FORMY</p></footer>
+  <script src="/src/zgloszenie.js?v=20261111-1" defer></script>
 </body>
 </html>

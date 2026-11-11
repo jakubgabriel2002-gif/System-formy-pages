@@ -7,7 +7,7 @@
   <meta name="referrer" content="same-origin">
   <meta name="theme-color" content="#111111">
   <title>Panel trenera | SYSTEM FORMY</title>
-  <link rel="stylesheet" href="/src/trainer-panel.css?v=20261108-2">
+  <link rel="stylesheet" href="/src/trainer-panel.css?v=20261111-1">
 </head>
 <body>
   <main class="app-shell">
@@ -104,7 +104,7 @@
       </section>
       <section class="elite-admin-view raport-admin-view" id="leads-admin-view" hidden>
         <div class="reviews-admin-toolbar">
-          <div><h2>Zgłoszenia z bezpłatnej ankiety</h2><p class="muted small">Osoby, które wypełniły ankietę na stronie i pobrały ebook. Odpisz e-mailem z propozycją i linkiem do płatności. <span id="leads-summary"></span></p></div>
+          <div><h2>Zgłoszenia z darmowej ankiety</h2><p class="muted small">Osoby, które wypełniły ankietę, zobaczyły wskazówki i pobrały ebook. Odpisz e-mailem z dodatkowymi wskazówkami i — jeśli pasuje — propozycją współpracy. <span id="leads-summary"></span></p></div>
           <div class="admin-review-actions">
             <select id="leads-status-filter" aria-label="Filtr statusu zgłoszeń">
               <option value="all">Wszystkie statusy</option>
@@ -117,6 +117,14 @@
             <button class="button button-outline" id="refresh-leads" type="button">ODŚWIEŻ ZGŁOSZENIA</button>
           </div>
         </div>
+        <section class="lead-funnel" aria-labelledby="lead-funnel-title">
+          <div class="lead-funnel-head">
+            <h3 id="lead-funnel-title">Lejek ankiety</h3>
+            <select id="lead-funnel-days" aria-label="Okres lejka"><option value="1">Dziś</option><option value="7" selected>Ostatnie 7 dni</option><option value="30">Ostatnie 30 dni</option></select>
+          </div>
+          <div class="lead-funnel-rows" id="lead-funnel-rows"><div class="empty-state">Pobieranie lejka…</div></div>
+          <p class="muted small">Anonimowe liczniki: ile osób otworzyło ankietę (z włączonym JavaScriptem) i do którego pytania doszło. Bez danych osobowych.</p>
+        </section>
         <div class="elite-admin-layout">
           <div class="reviews-admin-list elite-admin-list" id="leads-admin-list" aria-live="polite"><div class="empty-state">Pobieranie zgłoszeń…</div></div>
           <section class="elite-admin-detail" id="leads-admin-detail" aria-live="polite"><div class="empty-state">Wybierz zgłoszenie z listy, aby zobaczyć szczegóły.</div></section>
@@ -185,6 +193,6 @@
     </section>
   </main>
   <script src="/src/payment-links.js?v=20261108-2" defer></script>
-  <script src="/src/trainer-panel.js?v=20261108-3" defer></script>
+  <script src="/src/trainer-panel.js?v=20261111-1" defer></script>
 </body>
 </html>

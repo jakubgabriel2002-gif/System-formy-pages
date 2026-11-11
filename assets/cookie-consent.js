@@ -28,16 +28,22 @@
   function apply(c){if(c&&c.analytics)loadCategory('analytics');if(c&&c.marketing)loadCategory('marketing');}
   function render(){
     if(document.getElementById('sf-cookie-banner'))return;
-    var b=document.createElement('section');b.id='sf-cookie-banner';b.setAttribute('role','dialog');b.setAttribute('aria-label','Ustawienia cookies');b.hidden=!!read();
-    b.innerHTML='<p><strong>Twoja prywatność ma znaczenie.</strong> Używamy technologii niezbędnych do działania strony. Za Twoją zgodą możemy też włączyć analitykę i piksel reklamowy. Możesz zaakceptować wszystkie, odrzucić opcjonalne albo wybrać kategorie. <a href="/cookies">Polityka cookies</a>.</p><div id="sf-cookie-actions"><button id="sf-cookie-accept">Akceptuj wszystkie</button><button id="sf-cookie-reject">Tylko niezbędne</button><button id="sf-cookie-settings">Ustawienia</button></div>';
+    var b=document.createElement('section');b.id='sf-cookie-banner';b.setAttribute('role','region');b.setAttribute('aria-label','Zgoda na cookies');b.hidden=!!read();
+    b.innerHTML='<p>Cookies niezbędne + piksel Meta za Twoją zgodą. <a href="/cookies">Szczegóły</a> · <button type="button" id="sf-cookie-settings">Ustawienia</button></p><div id="sf-cookie-actions"><button type="button" id="sf-cookie-reject">Odrzuć</button><button type="button" id="sf-cookie-accept">Akceptuj</button></div>';
     document.body.appendChild(b);
+    function sync(){var open=!b.hidden;document.body.classList.toggle('sf-cookie-open',open);document.body.style.paddingBottom=open?(b.offsetHeight+24)+'px':'';}
     var p=document.createElement('div');p.id='sf-cookie-panel';p.hidden=true;p.innerHTML='<div role="dialog" aria-modal="true" aria-labelledby="sf-cookie-title"><h2 id="sf-cookie-title">Ustawienia cookies</h2><p>Wybierz, na co wyrażasz zgodę. Niezbędne technologie są zawsze aktywne.</p><label class="sf-cookie-row"><input type="checkbox" checked disabled> Niezbędne</label><label><input id="sf-cookie-analytics" type="checkbox"> Analityczne</label><label><input id="sf-cookie-marketing" type="checkbox"> Marketingowe (piksel reklamowy)</label><div class="sf-cookie-actions"><button class="primary" id="sf-cookie-save">Zapisz wybór</button><button id="sf-cookie-cancel">Anuluj</button></div></div>';
     document.body.appendChild(p);
-    function save(c){write({necessary:true,analytics:!!c.analytics,marketing:!!c.marketing,updated:new Date().toISOString()});location.reload();}
+    // Bez przeładowania strony przy nadaniu zgody (nie gubimy np. odpowiedzi w ankiecie).
+    // Przeładowanie tylko przy wycofaniu zgody — żeby zatrzymać już uruchomione skrypty.
+    function save(c){var prev=read()||{};var next={necessary:true,analytics:!!c.analytics,marketing:!!c.marketing,updated:new Date().toISOString()};write(next);
+      if((prev.analytics&&!next.analytics)||(prev.marketing&&!next.marketing)){location.reload();return;}
+      apply(next);b.hidden=true;p.hidden=true;sync();}
     document.getElementById('sf-cookie-accept').onclick=function(){save({analytics:true,marketing:true});};
     document.getElementById('sf-cookie-reject').onclick=function(){save({analytics:false,marketing:false});};
     document.getElementById('sf-cookie-settings').onclick=function(){var c=read()||{};document.getElementById('sf-cookie-analytics').checked=!!c.analytics;document.getElementById('sf-cookie-marketing').checked=!!c.marketing;p.hidden=false;};
     document.getElementById('sf-cookie-cancel').onclick=function(){p.hidden=true;};
+    sync();window.addEventListener('resize',sync);
     document.getElementById('sf-cookie-save').onclick=function(){save({analytics:document.getElementById('sf-cookie-analytics').checked,marketing:document.getElementById('sf-cookie-marketing').checked});};
   }
   function ready(){var c=read();if(c)apply(c);render();document.querySelectorAll('[data-open-cookie-settings]').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();var c=read()||{};var a=document.getElementById('sf-cookie-analytics');var m=document.getElementById('sf-cookie-marketing');var p=document.getElementById('sf-cookie-panel');if(a)a.checked=!!c.analytics;if(m)m.checked=!!c.marketing;if(p)p.hidden=false;});});}

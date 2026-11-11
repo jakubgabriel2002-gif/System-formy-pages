@@ -57,3 +57,28 @@ html, body { overflow-x: clip; }
 @media (max-width: 760px) {
   .landing-guarantee .guarantee-card-trigger { margin-left: 0; }
 }
+
+/* Darmowa wartość: wskazówki + ebook (11.11.2026) */
+.free-value-card { grid-template-columns: 1.25fr .75fr; }
+.free-value-list { display: grid; gap: 0; margin: 18px 0 0; padding: 0; list-style: none; border-top: 1px solid #3a3a35; }
+.free-value-list li { display: flex; gap: 12px; align-items: baseline; padding: 11px 0; border-bottom: 1px solid #3a3a35; color: #ecece7; font-size: 13px; font-weight: 700; line-height: 1.45; }
+.free-value-list b { flex: 0 0 auto; color: var(--accent, #e7c84b); font: 800 14px/1 var(--display); }
+.free-value-cover { margin: 0; text-align: center; }
+.free-value-cover img { display: block; width: min(100%, 300px); height: auto; margin: 0 auto; border: 1px solid #2c2c29; box-shadow: 0 24px 60px rgba(0,0,0,.65), 0 0 0 1px rgba(231,200,75,.15); transform: rotate(2deg); }
+.free-value-cover figcaption { margin-top: 16px; color: #8f8f89; font-size: 10px; font-weight: 800; letter-spacing: .16em; }
+.free-value-cover figcaption b { color: var(--accent, #e7c84b); }
+@media (max-width: 760px) {
+  .free-value-card { grid-template-columns: 1fr; }
+  .free-value-cover { order: -1; }
+  .free-value-cover img { width: 180px; }
+}
+
+/* Przyklejony przycisk na telefonie */
+.sf-sticky-cta { display: none; }
+@media (max-width: 760px) {
+  .sf-sticky-cta { position: fixed; z-index: 90; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 16px; background: var(--accent, #e7c84b); color: var(--accent-ink, #10100c); font-size: 12px; font-weight: 900; letter-spacing: .12em; box-shadow: 0 12px 34px rgba(0,0,0,.55); transform: translateY(140%); transition: transform .25s ease; pointer-events: none; }
+  .sf-sticky-cta span { padding: 4px 6px; border: 1px solid rgba(16,16,12,.35); font-size: 9px; letter-spacing: .1em; }
+  .sf-sticky-cta.is-visible { transform: none; pointer-events: auto; }
+  body.sf-cookie-open .sf-sticky-cta { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .sf-sticky-cta { transition: none; } }
