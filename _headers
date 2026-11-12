@@ -12,3 +12,21 @@
 /ankieta-*
   X-Robots-Tag: noindex, nofollow
   Referrer-Policy: same-origin
+
+/trener-7e4b9c2d8a6f1b3e5c0d9a7f2b4e6c81
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: same-origin
+  Cache-Control: no-store
+  Content-Security-Policy: default-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+
+/oferta-tresc*
+  X-Robots-Tag: noindex
+/zgody-checkout*
+  X-Robots-Tag: noindex

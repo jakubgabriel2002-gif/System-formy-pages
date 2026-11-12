@@ -1095,3 +1095,18 @@ button:focus-visible, a:focus-visible, summary:focus-visible, .table-wrap:focus-
   .individual-page .individual-card h2 { min-height: 0; margin-top: 27px; }
   .individual-page .individual-faq { padding-top: 34px; }
 }
+
+/* ===== Spójny nagłówek i stopka na wszystkich stronach (12.11.2026) ===== */
+.brand picture, .footer-brand picture { display: block; }
+.header-mobile-cta { display: none; }
+@media (max-width: 760px) {
+  .header-mobile-cta { display: inline-flex; }
+  .site-header .main-nav a[aria-current="page"] { color: var(--accent); }
+}
+.main-nav a[aria-current="page"] { color: var(--white); }
+.footer-legal-links { grid-column: 1 / -1; }
+/* Długie nagłówki nie mogą wychodzić poza ekran na wąskich telefonach */
+h1, h2 { overflow-wrap: break-word; }
+@media (max-width: 420px) {
+  .individual-page .individual-hero h1 { font-size: clamp(42px, 12.4vw, 64px); }
+}
